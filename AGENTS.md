@@ -111,6 +111,10 @@ publik: tidak          # default SELALU "tidak"; hanya pengguna yang boleh mengu
 penerapan: belum-dicoba   # belum-dicoba | sedang-dicoba | diterapkan | ditolak (Bagian 19)
 penerapan-catatan: ""     # hasil/alasan dari pengguna, ditulis apa adanya; PRIBADI, tidak pernah dipublikasikan
 terakhir-ditinjau: <YYYY-MM-DD>   # diisi tanggal dibuat; diperbarui saat kartu muncul di ULASAN atau dibuka pengguna
+# Field opsional khusus kartu alat/workflow (AI, Bisnis, Sosmed, Digital Marketing):
+alat: []                  # contoh: [claude-fable, gemini-4-neon, capcut]
+tugas: ""                 # contoh: video-ai | clipping | artikel | coding | copywriting | seo | monetisasi | riset
+tahap-kerja: ""           # riset | skrip | produksi | edit | distribusi | monetisasi | semua
 ---
 
 ## Ide
@@ -699,3 +703,32 @@ Aturan untuk pembangun:
 - Bila ada hal yang tidak jelas dan memengaruhi hasil, tanyakan satu pertanyaan singkat. Jika tidak, ambil keputusan terbaik dan catat asumsinya di `log.md`.
 - Jangan menambah fitur di luar dokumen ini tanpa persetujuan pengguna. Usulan fitur disampaikan sebagai saran, bukan langsung dibangun.
 - Di setiap akhir fase: ringkas apa yang dibuat, cara mengujinya, dan apa yang akan dikerjakan di fase berikutnya, lalu **berhenti dan tunggu persetujuan**.
+
+---
+
+## 21. Lapisan Kecerdasan & Indeks Lokal
+
+Prinsip kerja: **skrip mempersempit, AI memutuskan, pengguna menyetujui.** Skrip lokal (cepat, deterministik, 0 dependensi) mencari kandidat dan menghitung; AI hanya membaca kandidat teratas untuk menilai makna; pengguna tetap pengambil keputusan.
+
+### 21.1 Aturan Emas
+1. **Markdown tetap satu-satunya sumber kebenaran.** Indeks SQLite (`.indeks.db`) dan `data.json` hanyalah turunan yang dapat dibangun ulang kapan saja dan tidak pernah masuk ke `situs/` maupun Git.
+2. **Transparan.** Setiap saran atau peringkat wajib menyebut alasan dan ID kartu dasarnya.
+3. **Bangun sesuai ambang data.** Jangan mengaktifkan algoritma statistik sebelum jumlah kartunya memadai (lihat tabel 21.2).
+4. **Bebas dependensi eksternal.** Pencarian awal memakai SQLite FTS5 (BM25) bawaan Python + perluasan kata kunci oleh AI. Embedding lokal sengaja ditunda sampai >3.000 kartu dan hanya bila FTS5 sering meleset.
+5. **Batas server lokal (`scripts/server_lokal.py`) & tarik link (`scripts/ambil_link.py`):** hanya mendengarkan `127.0.0.1`, hanya boleh (a) mengubah field `penerapan`, `penerapan-catatan`, `terakhir-ditinjau` pada `kartu/K-XXXX.md`, (b) membuat file sumber **baru** `sumber/S-XXXX.md` atas permintaan eksplisit pengguna (tidak pernah menimpa/menghapus sumber lama — P1) serta mencatat di `sumber/_katalog.md` dan `log.md`, dan (c) menarik preview URL publik (X oEmbed, transkrip YouTube, artikel web) hanya saat pengguna menekan tombol tarik link. Semua input divalidasi, dan `server_lokal.py` / `ambil_link.py` tidak pernah ikut ke `situs/`. `Teks Asli` sumber dimuat *on-demand* (tidak ditanam penuh di HTML).
+
+### 21.2 Peta Kemampuan & Ambang Data
+
+| Kemampuan | Teknik | Ambang Bangun |
+|---|---|---|
+| Pencarian cepat berperingkat | SQLite FTS5 (BM25) via `--cari` + perluasan sinonim oleh AI | Sekarang |
+| Deteksi duplikat & tetangga saat MASUKKAN | Top-20 FTS5 → kemiripan teks (`--tetangga`) → AI menilai relasi | Sekarang |
+| Filter bertingkat & tampilan tersimpan | `--filter` (bidang, tahap, jenis, kepercayaan, penerapan, penulis, tag) + *pertentangan terbuka*, *belum diverifikasi*, *kartu yatim* | Sekarang |
+| Pemindahan cabang massal | `--pindah-cabang` atomik untuk pecah cabang >30 kartu | Sekarang |
+| Perbandingan alat/metode & Playbook awal–akhir | `--bandingkan`, `--playbook`, `--tren` (TF-IDF distinctive terms, konsensus lintas sumber, pemetaan 6 tahap kerja, bobot kalibrasi penerapan) + skill `sintesis-playbook` | Sekarang |
+| Ulasan cerdas | Penjadwalan pengulangan berjarak (Leitner / SM-2 sederhana) | ±50 kartu |
+| Saran otomatis & deteksi gema | Skor transparan (tujuan × tahap × kepercayaan × belum dicoba) & jumlah penulis unik per cabang | ±100 kartu |
+| Urutan roadmap | Urut topologis relasi prasyarat + deteksi siklus | ±150 kartu |
+| Kartu fondasi, jembatan & kalibrasi sumber | Centrality/PageRank & ringkasan tingkat penerapan per penulis (informasi, bukan vonis) | ±200 kartu |
+| Usulan sub-cabang otomatis | Clustering teks → AI menamai | Cabang >30 kartu |
+| Pencarian makna (embedding lokal) | Model lokal (opsional) | >3.000 kartu |

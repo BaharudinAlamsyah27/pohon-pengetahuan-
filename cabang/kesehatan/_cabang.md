@@ -2,8 +2,8 @@
 cabang: kesehatan
 nama: Kesehatan
 induk: ""
-jumlah-kartu: 0
-jumlah-sumber: 0
+jumlah-kartu: 1
+jumlah-sumber: 1
 diperbarui: 2026-11-22
 catatan-sudut-pandang: "belum ada sumber"
 ---

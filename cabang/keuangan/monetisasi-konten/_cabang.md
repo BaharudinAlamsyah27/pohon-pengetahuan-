@@ -2,8 +2,8 @@
 cabang: keuangan/monetisasi-konten
 nama: Monetisasi Konten
 induk: keuangan
-jumlah-kartu: 2
-jumlah-sumber: 1
+jumlah-kartu: 3
+jumlah-sumber: 2
 diperbarui: 2026-11-22
 catatan-sudut-pandang: "hanya 1 sumber (postingan media sosial)"
 ---

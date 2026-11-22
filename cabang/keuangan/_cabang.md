@@ -2,8 +2,8 @@
 cabang: keuangan
 nama: Keuangan
 induk: ""
-jumlah-kartu: 2
-jumlah-sumber: 1
+jumlah-kartu: 3
+jumlah-sumber: 2
 diperbarui: 2026-11-22
 catatan-sudut-pandang: "hanya 1 sumber (postingan media sosial)"
 ---
@@ -16,7 +16,7 @@ Cabang keuangan saat ini baru memuat catatan awal mengenai monetisasi konten med
 - Terdapat klaim celah algoritma OCR dengan menyelingi postingan original (kepercayaan rendah) → [[K-0002]]
 
 ## Pertentangan / Perdebatan
-- (belum ada)
+- K-0004 | Nyolong konten orang India aja Kak, banyak tuh di Thread dan medsos2 | semua-usia | belum-diverifikasi
 
 ## Lanjutan Timeline
 - Sebelumnya: -

@@ -2,8 +2,8 @@
 cabang: motivasi-dan-mindset
 nama: Motivasi & Mindset
 induk: ""
-jumlah-kartu: 0
-jumlah-sumber: 0
+jumlah-kartu: 1
+jumlah-sumber: 1
 diperbarui: 2026-11-22
 catatan-sudut-pandang: "belum ada sumber"
 ---
@@ -25,4 +25,4 @@ Belum ada kartu pada cabang ini.
 - (belum ada)
 
 ## Daftar Kartu
-- (belum ada)
+- K-0006 | Imagine being 29, looking back at 25 and realizing you spent 4 | semua-usia | belum-diverifikasi

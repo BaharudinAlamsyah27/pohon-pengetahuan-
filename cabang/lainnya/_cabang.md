@@ -25,4 +25,4 @@ Belum ada kartu pada cabang ini.
 - (belum ada)
 
 ## Daftar Kartu
-- (belum ada)
+- K-0007 | Take care of your appearance. Lift the weights. Eat healthy food. Sleep | semua-usia | belum-diverifikasi
