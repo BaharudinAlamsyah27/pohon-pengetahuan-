@@ -1053,7 +1053,7 @@ def call_gemini_rag(question: str, rel_cards: list[dict], api_key: str, preferre
         body = {
             "systemInstruction": {"parts": [{"text": system_prompt}]},
             "contents": [{"role": "user", "parts": [{"text": user_prompt}]}],
-            "generationConfig": {"temperature": 0.2, "maxOutputTokens": 650},
+            "generationConfig": {"temperature": 0.2, "maxOutputTokens": 4096},
         }
         req = urllib.request.Request(
             endpoint,
@@ -1062,7 +1062,7 @@ def call_gemini_rag(question: str, rel_cards: list[dict], api_key: str, preferre
             method="POST",
         )
         try:
-            with urllib.request.urlopen(req, timeout=15) as resp:
+            with urllib.request.urlopen(req, timeout=25) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 cands = data.get("candidates") or []
                 parts = ((cands[0].get("content") or {}).get("parts") or []) if cands else []

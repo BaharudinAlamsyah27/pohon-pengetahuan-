@@ -114,11 +114,11 @@ async function callGeminiRag(question, relCards, apiKey, preferredModel) {
       const resp = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        signal: AbortSignal.timeout(15000),
+        signal: AbortSignal.timeout(25000),
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: systemPrompt }] },
           contents: [{ role: "user", parts: [{ text: `KARTU WAWASAN:\n\n${contextText}\n\nPERTANYAAN PENGGUNA:\n${question}` }] }],
-          generationConfig: { temperature: 0.2, maxOutputTokens: 650 },
+          generationConfig: { temperature: 0.2, maxOutputTokens: 4096 },
         }),
       });
       if (!resp.ok) {
