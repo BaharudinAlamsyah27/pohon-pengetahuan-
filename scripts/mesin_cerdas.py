@@ -530,26 +530,69 @@ def detect_workflow_stage(c: dict) -> str:
     return best_stage
 
 
-BILINGUAL_SYNONYMS: dict[str, tuple[str, ...]] = {
-    "reupload": ("repost", "daur", "ulang", "copy", "nyolong"),
-    "repost": ("reupload", "daur", "ulang"),
-    "tidur": ("sleep", "istirahat", "atlet", "athlete"),
-    "sleep": ("tidur", "istirahat", "athlete"),
-    "sehat": ("healthy", "kesehatan", "health", "nutrisi", "makan"),
-    "healthy": ("sehat", "kesehatan", "health", "eat", "makan"),
-    "angkat": ("lift", "weights", "beban", "gym", "workout", "olahraga"),
-    "lift": ("angkat", "weights", "beban", "gym", "workout", "olahraga"),
-    "penampilan": ("appearance", "posture", "postur", "berpakaian", "dress", "grooming"),
-    "appearance": ("penampilan", "posture", "postur", "grooming"),
-    "disiplin": ("discipline", "konsisten", "consistent", "habit", "kebiasaan", "routine"),
-    "discipline": ("disiplin", "konsisten", "habit", "kebiasaan", "routine"),
-    "keuangan": ("finance", "money", "uang", "gaji", "payout", "monetisasi"),
-    "bisnis": ("business", "jualan", "omzet", "revenue", "saas", "client"),
-    "seo": ("search", "google", "traffic", "artikel", "ranking"),
-    "video": ("clipping", "clip", "kling", "veo", "runway", "capcut", "youtube"),
-    "coding": ("code", "python", "cursor", "claude", "api", "github", "repo"),
-    "ai": ("llm", "claude", "gemini", "gpt", "chatgpt", "agent", "prompt"),
-}
+# Kamus Sinonim & Gugus Semantik Dwibahasa (ID <-> EN) untuk Pencarian, TextTiling, & Klasifikasi
+SYNONYM_CLUSTERS: tuple[tuple[str, ...], ...] = (
+    # Kesehatan, Tidur, Biologi, Olahraga & Nutrisi
+    ("tidur", "sleep", "istirahat", "rest", "insomnia", "begadang", "circadian", "sirkadian", "rem", "nap"),
+    ("sehat", "healthy", "kesehatan", "health", "kebugaran", "wellness", "longevity", "umur", "panjang"),
+    ("otak", "brain", "kognitif", "cognitive", "fog", "fokus", "focus", "memori", "memory", "konsentrasi"),
+    ("olahraga", "workout", "exercise", "gym", "fitness", "lift", "weights", "beban", "cardio", "lari", "jogging"),
+    ("otot", "muscle", "strength", "kekuatan", "atlet", "athlete", "recovery", "pemulihan", "stamina"),
+    ("makan", "eat", "nutrisi", "nutrition", "diet", "kalori", "calories", "protein", "puasa", "fasting", "gula", "sugar"),
+    ("stres", "stress", "cemas", "anxiety", "burnout", "lelah", "fatigue", "kortisol", "cortisol", "dopamin", "dopamine"),
+    ("penampilan", "appearance", "postur", "posture", "grooming", "skincare", "berpakaian", "dress", "rapi"),
+    ("biologis", "biological", "metabolisme", "metabolic", "hormon", "hormone", "imun", "immune", "energi", "energy"),
+    # Keuangan & Investasi
+    ("keuangan", "finance", "financial", "uang", "money", "dana", "cashflow", "anggaran", "budget"),
+    ("tabungan", "saving", "menabung", "darurat", "emergency", "hemat", "frugal", "pengeluaran", "expense"),
+    ("investasi", "investing", "investment", "saham", "stock", "reksadana", "obligasi", "crypto", "aset", "asset", "dividen"),
+    ("gaji", "salary", "income", "penghasilan", "pendapatan", "payout", "bayaran", "cuan", "profit", "margin"),
+    ("utang", "debt", "cicilan", "kredit", "pinjaman", "bunga", "interest", "inflasi", "inflation", "pajak", "tax"),
+    # Bisnis & Monetisasi
+    ("bisnis", "business", "usaha", "startup", "perusahaan", "company", "agency", "agensi", "saas", "microsaas"),
+    ("jualan", "sales", "penjualan", "closing", "omzet", "revenue", "arr", "mrr", "monetisasi", "monetize"),
+    ("klien", "client", "pelanggan", "customer", "pembeli", "buyer", "pasar", "market", "validasi", "validation"),
+    ("produk", "product", "digital", "layanan", "service", "harga", "pricing", "penawaran", "offer", "value"),
+    # Sosial Media & Konten
+    ("reupload", "repost", "daur", "ulang", "copy", "plagiat", "duplikat", "orisinal", "original"),
+    ("viral", "trending", "fyp", "algoritma", "algorithm", "impresi", "impression", "views", "tayangan", "reach"),
+    ("konten", "content", "postingan", "post", "thread", "hook", "storytelling", "kreator", "creator", "audiens"),
+    ("engagement", "interaksi", "reply", "balasan", "share", "retweet", "bookmark", "followers", "subscriber"),
+    ("sosmed", "twitter", "youtube", "tiktok", "instagram", "threads", "linkedin", "ocr"),
+    # Digital Marketing & SEO
+    ("seo", "search", "google", "traffic", "ranking", "peringkat", "keyword", "organik", "organic", "backlink"),
+    ("marketing", "pemasaran", "iklan", "ads", "funnel", "landing", "konversi", "conversion", "ctr", "lead", "prospek"),
+    ("copywriting", "naskah", "headline", "judul", "cta", "persuasi", "persuasion", "branding", "merek"),
+    # AI, Coding, Prompt, Video & Tulisan
+    ("ai", "llm", "claude", "gemini", "gpt", "chatgpt", "openai", "anthropic", "model", "deepseek", "grok"),
+    ("prompt", "agent", "agen", "agentic", "mcp", "skill", "workflow", "otomasi", "automation", "context", "rag"),
+    ("coding", "code", "kode", "program", "programming", "developer", "cursor", "python", "javascript", "typescript", "api", "github", "repo"),
+    ("frontend", "backend", "fullstack", "nextjs", "react", "astro", "vercel", "database", "sql", "supabase", "deploy"),
+    ("video", "clipping", "clip", "kling", "veo", "runway", "sora", "heygen", "capcut", "dubbing", "voiceover", "elevenlabs", "avatar"),
+    ("menulis", "writing", "tulisan", "artikel", "article", "blog", "newsletter", "gaya", "tone", "voice", "suara"),
+    ("benchmark", "perbandingan", "compare", "evaluasi", "akurasi", "latency", "token", "harga", "quota"),
+    # Kesuksesan, Karier & Pendidikan
+    ("karier", "karir", "career", "kerja", "pekerjaan", "job", "profesi", "promosi", "resign", "remote"),
+    ("cpns", "asn", "bumn", "beasiswa", "scholarship", "lpdp", "ausbildung", "magang", "internship", "kuliah", "studi"),
+    ("wawancara", "interview", "cv", "resume", "portofolio", "portfolio", "skill", "keahlian", "sertifikat"),
+    # Motivasi, Mindset & Produktivitas
+    ("disiplin", "discipline", "konsisten", "consistent", "kebiasaan", "habit", "habits", "rutinitas", "routine"),
+    ("mindset", "pola", "pikir", "mental", "mentalitas", "psikologi", "psychology", "stoik", "resiliensi"),
+    ("produktif", "productivity", "produktivitas", "efisien", "efficiency", "waktu", "time", "prioritas", "deepwork"),
+    ("overthinking", "perfeksionis", "prokrastinasi", "menunda", "malas", "takut", "fear", "gagal", "failure", "sukses"),
+    # Relasi & Komunikasi
+    ("relasi", "relationship", "hubungan", "keluarga", "family", "pasangan", "partner", "teman", "friends", "sosial"),
+    ("komunikasi", "communication", "negosiasi", "negotiation", "networking", "jejaring", "empati", "empathy", "konflik"),
+)
+
+BILINGUAL_SYNONYMS: dict[str, tuple[str, ...]] = {}
+for _cluster in SYNONYM_CLUSTERS:
+    for _word in _cluster:
+        _others = tuple(w for w in _cluster if w != _word)
+        if _word in BILINGUAL_SYNONYMS:
+            BILINGUAL_SYNONYMS[_word] = tuple(dict.fromkeys(BILINGUAL_SYNONYMS[_word] + _others))
+        else:
+            BILINGUAL_SYNONYMS[_word] = _others
 
 
 def expand_bilingual_tokens(toks: list[str]) -> list[str]:
@@ -559,6 +602,262 @@ def expand_bilingual_tokens(toks: list[str]) -> list[str]:
             if syn not in out:
                 out.append(syn)
     return out
+
+
+def compute_shingle_jaccard(text_a: str, text_b: str, k: int = 3) -> float:
+    """Kemiripan Jaccard berbasis k-word shingles untuk mendeteksi near-duplicate teks."""
+    wa = re.findall(r"[a-z0-9\u4e00-\u9fff]+", (text_a or "").lower())
+    wb = re.findall(r"[a-z0-9\u4e00-\u9fff]+", (text_b or "").lower())
+    if not wa or not wb:
+        return 0.0
+    if len(wa) < k or len(wb) < k:
+        sa, sb = set(wa), set(wb)
+    else:
+        sa = {tuple(wa[i : i + k]) for i in range(len(wa) - k + 1)}
+        sb = {tuple(wb[i : i + k]) for i in range(len(wb) - k + 1)}
+    union = len(sa | sb)
+    return (len(sa & sb) / union) if union else 0.0
+
+
+def find_near_duplicate_source(raw_text: str, existing_sources: dict[str, dict], threshold: float = 0.80) -> tuple[str | None, float]:
+    """Cari apakah ada sumber di perpustakaan yang hampir identik (Jaccard 3-gram >= threshold)."""
+    best_sid, best_sim = None, 0.0
+    for sid, src in existing_sources.items():
+        sim = compute_shingle_jaccard(raw_text, src.get("teks_asli") or "", k=3)
+        if sim > best_sim:
+            best_sim, best_sid = sim, sid
+    if best_sim >= threshold:
+        return best_sid, round(best_sim, 3)
+    return None, round(best_sim, 3)
+
+
+def multinomial_naive_bayes_branch(
+    text: str,
+    lexicon: dict[str, list[str]],
+    existing_cards: dict[str, dict] | None = None,
+    alpha: float = 1.0,
+) -> list[tuple[str, float]]:
+    """
+    Klasifikasi Multinomial Naive Bayes dengan Laplace Smoothing (alpha=1.0):
+      log P(c | d) = log P(c) + sum_{w in d} count(w, d) * log((count(w, c) + alpha) / (total_c + alpha * |V|))
+    Dilatih otomatis dari:
+      1) Kamus domain dwibahasa (lexicon) dengan bobot prior seimbang, DAN
+      2) Kartu aktif yang sudah tersimpan di Pohon (self-learning seiring pohon tumbuh!).
+    """
+    class_word_counts: dict[str, Counter] = defaultdict(Counter)
+    class_doc_counts: Counter = Counter()
+    vocab: set[str] = set()
+
+    # 1. Latih dari kamus domain (bobot 3x agar fondasi stabil saat kartu masih sedikit)
+    for branch, kws in lexicon.items():
+        class_doc_counts[branch] += 3
+        for kw in kws:
+            for tok in expand_bilingual_tokens(tokenize(kw) or [kw.lower()]):
+                class_word_counts[branch][tok] += 3
+                vocab.add(tok)
+
+    # 2. Latih otomatis dari koleksi kartu aktif pengguna (self-learning)
+    if existing_cards:
+        for c in existing_cards.values():
+            if c.get("status") != "aktif":
+                continue
+            b = c.get("cabang") or ""
+            if b not in lexicon:
+                b = b.split("/")[0] if b.split("/")[0] in lexicon else ""
+            if not b:
+                continue
+            class_doc_counts[b] += 1
+            blob = f"{c.get('ide', '')} {c.get('penjelasan', '')} {' '.join(c.get('tag') or [])}"
+            for tok in tokenize(blob):
+                class_word_counts[b][tok] += 1
+                vocab.add(tok)
+
+    q_toks = expand_bilingual_tokens(tokenize(text))
+    if not q_toks or not vocab:
+        return []
+
+    total_docs = sum(class_doc_counts.values()) or 1
+    v_size = max(len(vocab), 1)
+    q_tf = Counter(q_toks)
+    results: list[tuple[str, float]] = []
+
+    for branch in lexicon:
+        prior = math.log((class_doc_counts[branch] + 0.5) / (total_docs + 0.5 * len(lexicon)))
+        tot_w = sum(class_word_counts[branch].values())
+        denom = tot_w + alpha * v_size
+        log_prob = prior
+        matched_any = False
+        for w, cnt in q_tf.items():
+            wc = class_word_counts[branch][w]
+            if wc > 0:
+                matched_any = True
+            log_prob += cnt * math.log((wc + alpha) / denom)
+        if matched_any:
+            results.append((branch, round(log_prob, 4)))
+
+    results.sort(key=lambda x: x[1], reverse=True)
+    return results
+
+
+def infer_card_metadata_math(text: str, platform: str = "", url: str = "") -> dict:
+    """
+    Ekstraksi otomatis metadata kartu (jenis, dasar, kepercayaan, tahap, tag)
+    berbasis sinyal statistik, linguistik, dan pola bukti — 0 biaya API.
+    """
+    low = (text or "").lower()
+    url_low = (url or "").lower()
+
+    # 1. Deteksi jenis kartu
+    has_numbers = bool(re.search(r"\b\d+(?:[.,]\d+)?\s*(?:%|x|kali|jam|hr|hrs|juta|miliar|ribu|k|m|b|arr|mrr|\$|rp)\b", low))
+    has_research = bool(re.search(r"\b(riset|research|study|studi|paper|jurnal|journal|meta-analysis|survei|survey|eksperimen|experiment|data|statistik|benchmark|doi)\b", low))
+    has_advice = bool(re.search(r"\b(jangan|gunakan|mulai|hindari|pastikan|lakukan|tips|cara|langkah|stop|never|always|avoid|use|start|should|must|recommended)\b", low))
+    has_story = bool(re.search(r"\b(saya dulu|pengalaman saya|bulan lalu|tahun lalu|waktu itu|i spent|months ago|years ago|a month ago|we built|we tried|i tried)\b", low))
+    has_principle = bool(re.search(r"\b(hukum|prinsip|aturan|rumus|teori|law|principle|rule|math applies|queueing theory|pareto|compounding)\b", low))
+
+    if has_numbers and (has_research or "%" in low or "x" in low):
+        jenis = "data"
+    elif has_principle:
+        jenis = "prinsip"
+    elif has_story:
+        jenis = "kisah"
+    elif has_advice:
+        jenis = "nasihat"
+    elif has_research:
+        jenis = "fakta"
+    else:
+        jenis = "opini"
+
+    # 2. Deteksi dasar & kepercayaan secara jujur (AGENTS.md Bagian 9)
+    is_official = any(d in url_low for d in ("github.com", "arxiv.org", "nature.com", "pubmed", "docs.", "developers.google", "openai.com", "anthropic.com", "vercel.com"))
+    if has_research or is_official:
+        dasar = "riset"
+        kepercayaan = "sedang" if platform.lower() in ("x", "threads", "instagram", "tiktok", "facebook") else "tinggi"
+    elif has_story:
+        dasar = "pengalaman-pribadi"
+        kepercayaan = "sedang" if has_numbers else "belum-diverifikasi"
+    elif has_principle or has_advice:
+        dasar = "opini-umum"
+        kepercayaan = "belum-diverifikasi"
+    else:
+        dasar = "tidak-jelas"
+        kepercayaan = "belum-diverifikasi"
+
+    # 3. Deteksi tahap hidup otomatis jika usia disebut jelas
+    tahap = "semua-usia"
+    if re.search(r"\b(sma|remaja|teen|sebelum 20|usia 1[5-9]|di bawah 20)\b", low):
+        tahap = "sebelum-20"
+    elif re.search(r"\b(20-25|usia 2[0-4]|umur 2[0-4]|early 20s|fresh graduate|kuliah|magang|internship|mahasiswa)\b", low):
+        tahap = "20-25"
+    elif re.search(r"\b(25-30|usia 2[5-9]|umur 2[5-9]|late 20s|quarter life)\b", low):
+        tahap = "25-30"
+    elif re.search(r"\b(30-40|usia 3\d|umur 3\d|30s|thirties|kepala tiga)\b", low):
+        tahap = "30-40"
+    elif re.search(r"\b(40-50|usia 4\d|umur 4\d|40s|forties|kepala empat)\b", low):
+        tahap = "40-50"
+    elif re.search(r"\b(50\+|usia 5\d|pensiun|retire|retirement|lansia)\b", low):
+        tahap = "50+"
+
+    # 4. Ekstraksi Top-4 Tag Domain otomatis berbasis frekuensi & bobot entropi kata
+    toks = tokenize(text)
+    freq = Counter(t for t in toks if len(t) >= 4 and not t.isdigit() and t not in SOCIAL_NOISE_TOKENS)
+    auto_tags = [w for w, _ in freq.most_common(4)]
+
+    return {
+        "jenis": jenis,
+        "dasar": dasar,
+        "kepercayaan": kepercayaan,
+        "tahap": tahap,
+        "tags": auto_tags,
+    }
+
+
+def find_auto_relations(ide_text: str, penjelasan: str, existing_cards: dict[str, dict], limit: int = 2) -> list[dict]:
+    """Temukan hingga 2 kartu tetangga paling mirip (Cosine TF-IDF >= 0.30) untuk relasi otomatis."""
+    active = {cid: c for cid, c in existing_cards.items() if c.get("status") == "aktif"}
+    if not active:
+        return []
+    vectors = build_tfidf(active)
+    q_toks = tokenize(f"{ide_text} {penjelasan}")
+    if not q_toks:
+        return []
+    tf = Counter(q_toks)
+    norm = math.sqrt(sum((1.0 + math.log(v)) ** 2 for v in tf.values())) or 1.0
+    q_vec = {w: (1.0 + math.log(v)) / norm for w, v in tf.items()}
+
+    scored = []
+    for cid, vec in vectors.items():
+        sim = cosine_sim(q_vec, vec)
+        if sim >= 0.20:
+            scored.append((cid, sim))
+    scored.sort(key=lambda x: x[1], reverse=True)
+    rels = []
+    for cid, sim in scored[:limit]:
+        tipe = "memperkuat" if sim >= 0.42 else "terkait"
+        rels.append({"tipe": tipe, "ke": cid, "skor": round(sim, 3)})
+    return rels
+
+
+def _is_mostly_non_indonesian(text: str) -> bool:
+    """Deteksi cepat apakah teks dominan Inggris/Mandarin/non-Indonesia."""
+    if re.search(r"[\u4e00-\u9fff\u3040-\u30ff]", text or ""):
+        return True
+    low = (text or "").lower()
+    en_hits = len(re.findall(r"\b(the|and|your|that|with|this|from|have|about|people|system|because|without|when|more|than|sleep|work|time)\b", low))
+    id_hits = len(re.findall(r"\b(yang|dan|untuk|dengan|dari|pada|adalah|tidak|bisa|akan|dalam|atau|juga|karena|saat|jika)\b", low))
+    return en_hits >= 2 and en_hits > id_hits
+
+
+def translate_and_polish_card_gemini(ide_text: str, penjelasan: str) -> tuple[str, str]:
+    """
+    Jika kartu hasil ekstraksi berbahasa asing (Inggris/Mandarin) dan GEMINI_API_KEY aktif,
+    terjemahkan & rapikan menjadi Bahasa Indonesia alami (<1 detik, thinkingBudget: 0).
+    Teks Asli di sumber/ tetap suci tidak pernah diubah.
+    """
+    if not _is_mostly_non_indonesian(f"{ide_text} {penjelasan}"):
+        return ide_text, penjelasan
+    local_env = load_local_env()
+    api_key = (os.environ.get("GEMINI_API_KEY") or local_env.get("GEMINI_API_KEY") or "").strip()
+    if not api_key:
+        return ide_text, penjelasan
+
+    prompt = (
+        "Terjemahkan dan rapikan wawasan berikut ke Bahasa Indonesia yang jelas, natural, dan setia pada isi (jangan mengarang tambahan).\n"
+        "Balas HANYA format JSON valid: {\"ide\": \"1-2 kalimat inti\", \"penjelasan\": \"2-4 kalimat penjelasan\"}.\n\n"
+        f"IDE ASLI: {ide_text}\n"
+        f"PENJELASAN ASLI: {penjelasan}"
+    )
+    for mdl in ("gemini-2.5-flash-lite", "gemini-2.5-flash"):
+        try:
+            endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
+            body = {
+                "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                "generationConfig": {"temperature": 0.1, "maxOutputTokens": 512, "thinkingConfig": {"thinkingBudget": 0}},
+            }
+            req = urllib.request.Request(
+                endpoint,
+                data=json.dumps(body).encode("utf-8"),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            cands = data.get("candidates") or []
+            parts = ((cands[0].get("content") or {}).get("parts") or []) if cands else []
+            raw = "".join(p.get("text", "") for p in parts).strip()
+            m = re.search(r"\{[\s\S]*\}", raw)
+            if m:
+                parsed = json.loads(m.group(0))
+                new_ide = str(parsed.get("ide") or "").strip().replace('"', "'")
+                new_penj = str(parsed.get("penjelasan") or "").strip()
+                if len(new_ide) >= 12:
+                    return new_ide[:240], (new_penj or penjelasan)[:600]
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                continue
+            break
+        except Exception:
+            break
+    return ide_text, penjelasan
 
 
 def query_relevant_cards(query: str, cards: dict[str, dict], limit: int = 80) -> list[dict]:

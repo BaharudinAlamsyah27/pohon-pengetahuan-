@@ -61,20 +61,98 @@ def next_card_id() -> str:
 
 
 BIDANG_KEYWORDS = {
-    "ai/video-dan-clipping": ["video ai", "clipping", "kling", "veo", "runway", "sora", "heygen", "capcut", "opus clip", "dubbing", "avatar ai", "storyboard", "elevenlabs"],
-    "ai/tulisan-dan-artikel": ["tone-of-voice", "tone of voice", "artikel ai", "sample writing", "blog ai", "thread ai", "copywriting ai"],
-    "ai/coding-dan-proyek": ["claude code", "cursor", "coding", "bikin app", "github", "repo", "api", "python", "nextjs", "vercel", "ui slop", "frontend", "typescript", "javascript", "colab"],
-    "ai/prompt-dan-agen": ["prompt", "ai agent", "agents", "agentic", "skill", "skills", "mcp", "workflow", "context engineering", "n8n", "otomasi", "automation"],
-    "ai/perbandingan-model": ["fable", "opus", "sonnet", "gemini", "benchmark", "tonality", "dibanding model", "perbandingan model", "gpt-5", "claude", "vs gpt", "vs claude", "vs gemini"],
-    "ai": ["ai", "llm", "claude", "gemini", "gpt", "chatgpt", "artificial intelligence", "machine learning", "openai", "anthropic"],
-    "digital-marketing": ["seo", "ai-search", "digital marketing", "copywriting", "funnel", "landing page", "iklan", "ads", "konversi", "ctr", "lead", "marketing"],
-    "sosmed": ["ocr", "impresi", "reupload", "repost", "viral", "algoritma", "payout", "tiktok", "instagram", "threads", "youtube", "konten", "hook", "followers", "cenblu", "creator", "engagement"],
-    "bisnis": ["bisnis", "business", "produk digital", "validasi", "omzet", "jualan", "client", "agency", "saas", "micro-saas", "revenue", "scale", "pasar", "startup", "monetize", "arr"],
-    "keuangan": ["tabungan", "investasi", "saham", "gaji", "utang", "dana darurat", "anggaran", "keuangan", "finance", "money", "saving", "investing", "income", "wealth"],
-    "kesehatan": ["tidur", "sleep", "olahraga", "workout", "gym", "lift", "weights", "athlete", "makan", "eat", "nutrisi", "nutrition", "diet", "healthy", "kesehatan", "health", "otot", "muscle", "postur", "posture", "appearance", "penampilan", "skincare", "grooming", "stres", "stress", "mental", "dokter", "medis", "fitness", "brain fog", "biological", "circadian", "longevity", "recovery", "istirahat", "begadang", "kafein", "caffeine", "hormon", "hormone", "tubuh", "otak", "fatigue", "burnout", "kalori", "protein"],
-    "kesuksesan": ["karier", "karir", "career", "cpns", "beasiswa", "scholarship", "ausbildung", "jepang", "jerman", "magang", "internship", "wawancara", "interview", "success", "achievement"],
-    "motivasi-dan-mindset": ["mindset", "disiplin", "discipline", "kebiasaan", "habit", "habits", "overthinking", "perfeksionis", "fokus", "focus", "konsisten", "consistent", "malas", "takut", "motivasi", "motivation", "routine", "self-improvement", "will be your year", "akan menjadi tahunmu"],
-    "relasi": ["relasi", "relationship", "komunikasi", "communication", "jejaring", "networking", "keluarga", "family", "pasangan", "teman", "friends", "negosiasi", "negotiation"],
+    "ai/video-dan-clipping": [
+        "video ai", "clipping", "kling", "veo", "runway", "sora", "heygen", "capcut", "opus clip",
+        "dubbing", "avatar ai", "storyboard", "elevenlabs", "voiceover", "lip sync", "lipsync",
+        "text to video", "image to video", "seedance", "luma", "pika", "midjourney video", "shorts ai",
+        "reels ai", "edit video ai", "faceless video", "b-roll", "subtitle otomatis",
+    ],
+    "ai/tulisan-dan-artikel": [
+        "tone-of-voice", "tone of voice", "artikel ai", "sample writing", "blog ai", "thread ai",
+        "copywriting ai", "menulis dengan ai", "gaya bahasa ai", "humanize ai", "ai writer",
+        "newsletter ai", "ghostwriting ai", "prompt menulis", "detektor ai", "anti ai slop",
+    ],
+    "ai/coding-dan-proyek": [
+        "claude code", "cursor", "coding", "bikin app", "github", "repo", "api", "python",
+        "nextjs", "next.js", "vercel", "ui slop", "frontend", "backend", "fullstack", "typescript",
+        "javascript", "colab", "supabase", "postgres", "sqlite", "docker", "vscode", "windsurf",
+        "antigravity", "vibe coding", "deploy", "astro", "react", "tailwind", "flutter", "android",
+        "sdk", "cli", "terminal", "debug", "refactor", "git", "codebase", "framework",
+    ],
+    "ai/prompt-dan-agen": [
+        "prompt", "prompting", "ai agent", "agents", "agentic", "skill", "skills", "mcp",
+        "workflow", "context engineering", "n8n", "otomasi", "automation", "rag", "embedding",
+        "vector database", "system prompt", "few-shot", "chain of thought", "tool calling",
+        "multi-agent", "subagent", "langchain", "langgraph", "crewai", "openclaw", "explee",
+    ],
+    "ai/perbandingan-model": [
+        "fable", "opus", "sonnet", "haiku", "gemini", "benchmark", "tonality", "dibanding model",
+        "perbandingan model", "gpt-5", "gpt-4", "claude", "vs gpt", "vs claude", "vs gemini",
+        "deepseek", "grok", "llama", "qwen", "mistral", "context window", "token pricing",
+        "model terbaik", "best model", "arena elo", "swe-bench",
+    ],
+    "ai": [
+        "ai", "llm", "claude", "gemini", "gpt", "chatgpt", "artificial intelligence",
+        "machine learning", "deep learning", "openai", "anthropic", "google ai", "ai studio",
+        "neural network", "transformer", "fine-tuning", "inference", "multimodal", "agi",
+    ],
+    "digital-marketing": [
+        "seo", "ai-search", "geo", "digital marketing", "copywriting", "funnel", "landing page",
+        "iklan", "ads", "meta ads", "google ads", "tiktok ads", "konversi", "conversion",
+        "ctr", "roas", "lead", "leads", "marketing", "pemasaran", "email marketing", "backlink",
+        "keyword research", "organic traffic", "programmatic seo", "cro", "retargeting",
+    ],
+    "sosmed": [
+        "ocr", "impresi", "impression", "reupload", "repost", "viral", "algoritma", "algorithm",
+        "payout", "tiktok", "instagram", "threads", "youtube", "konten", "hook", "followers",
+        "cenblu", "creator", "kreator", "engagement", "fyp", "retention", "watch time",
+        "thumbnail", "storytelling", "mutual reply", "bookmark", "reach", "monetisasi x",
+    ],
+    "bisnis": [
+        "bisnis", "business", "produk digital", "validasi", "omzet", "jualan", "client", "klien",
+        "agency", "agensi", "saas", "micro-saas", "revenue", "scale", "pasar", "market",
+        "startup", "monetize", "monetisasi", "arr", "mrr", "b2b", "b2c", "pricing", "offer",
+        "margin", "profit", "bootstrapping", "solopreneur", "gtm", "go-to-market", "sales rep",
+        "closing", "customer", "pelanggan", "mvp", "product-market fit",
+    ],
+    "keuangan": [
+        "tabungan", "menabung", "investasi", "investing", "saham", "stock", "reksadana",
+        "obligasi", "crypto", "bitcoin", "gaji", "salary", "utang", "debt", "dana darurat",
+        "emergency fund", "anggaran", "budget", "keuangan", "finance", "financial", "money",
+        "saving", "income", "wealth", "aset", "asset", "dividen", "inflasi", "pajak", "tax",
+        "cashflow", "arus kas", "passive income", "compounding", "bunga majemuk", "frugal",
+    ],
+    "kesehatan": [
+        "tidur", "sleep", "olahraga", "workout", "exercise", "gym", "lift", "weights", "athlete",
+        "makan", "eat", "nutrisi", "nutrition", "diet", "healthy", "kesehatan", "health", "otot",
+        "muscle", "postur", "posture", "appearance", "penampilan", "skincare", "grooming",
+        "stres", "stress", "mental", "dokter", "medis", "fitness", "brain fog", "biological",
+        "circadian", "sirkadian", "longevity", "recovery", "pemulihan", "istirahat", "begadang",
+        "insomnia", "kafein", "caffeine", "hormon", "hormone", "tubuh", "otak", "fatigue",
+        "burnout", "kalori", "protein", "puasa", "fasting", "cardio", "jogging", "lari",
+        "kortisol", "cortisol", "dopamin", "dopamine", "metabolisme", "metabolic", "imun",
+        "vitamin", "suplemen", "supplement", "hidrasi", "air putih", "gula darah", "blood sugar",
+    ],
+    "kesuksesan": [
+        "karier", "karir", "career", "cpns", "asn", "bumn", "beasiswa", "scholarship", "lpdp",
+        "ausbildung", "jepang", "jerman", "magang", "internship", "wawancara", "interview",
+        "success", "achievement", "promosi", "cv", "resume", "portofolio", "portfolio",
+        "fresh graduate", "lulusan baru", "kerja remote", "remote work", "freelance", "upskilling",
+    ],
+    "motivasi-dan-mindset": [
+        "mindset", "disiplin", "discipline", "kebiasaan", "habit", "habits", "overthinking",
+        "perfeksionis", "fokus", "focus", "konsisten", "consistent", "malas", "takut", "motivasi",
+        "motivation", "routine", "rutinitas", "self-improvement", "will be your year",
+        "akan menjadi tahunmu", "deep work", "prokrastinasi", "menunda", "stoik", "stoicism",
+        "resiliensi", "grit", "mentalitas", "produktivitas", "productivity", "time management",
+        "manajemen waktu", "prioritas", "pareto", "atomic habits",
+    ],
+    "relasi": [
+        "relasi", "relationship", "komunikasi", "communication", "jejaring", "networking",
+        "keluarga", "family", "pasangan", "partner", "teman", "friends", "negosiasi",
+        "negotiation", "empati", "empathy", "menikah", "marriage", "parenting", "persuasif",
+        "public speaking", "charisma", "karisma", "leadership", "kepemimpinan", "tim",
+    ],
 }
 
 TOP_BRANCHES = {
@@ -151,29 +229,49 @@ def _classify_branch_gemini(text: str) -> str | None:
 
 
 def guess_branch(text: str) -> tuple[str, int]:
-    # Lapis 1: Pemahaman makna otomatis via Gemini AI (jika GEMINI_API_KEY tersedia)
+    # Lapis 1: Pemahaman makna otomatis via Gemini AI (jika GEMINI_API_KEY tersedia & online)
     ai_branch = _classify_branch_gemini(text)
     if ai_branch:
         return ai_branch, 99
 
-    # Lapis 2 (Offline): Pencocokan kata utuh (word-boundary) agar 'ai' tidak cocok dengan 'brain' / 'daily'
+    # Lapis 2+3 (Offline — Reciprocal Rank Fusion):
+    # Gabungkan 3 sinyal matematika: (a) Word-Boundary Weighted Lexicon,
+    # (b) Multinomial Naive Bayes (Laplace smoothing, self-learning dari kartu/),
+    # (c) Nearest-Neighbor TF-IDF Cosine ke kartu yang sudah ada.
     low = text.lower()
-    best_b, best_score = "lainnya", 0
+    lex_scores: list[tuple[str, int]] = []
     for b, kws in BIDANG_KEYWORDS.items():
         score = 0
         for kw in kws:
             if re.search(rf"(?<![a-z0-9]){re.escape(kw)}(?![a-z0-9])", low):
                 score += 2 if " " in kw else 1
-        if score > best_score:
-            best_b, best_score = b, score
-    # Fallback TF-IDF ke kartu yang sudah ada jika kata kunci belum menangkap
-    if best_score == 0:
-        cards = bangun_pohon.load_cards(ROOT / "kartu")
-        if cards:
-            rel = mesin_cerdas.query_relevant_cards(text[:300], cards, limit=3)
-            if rel:
-                return rel[0]["cabang"], 1
-    return best_b, best_score
+        if score > 0:
+            lex_scores.append((b, score))
+    lex_scores.sort(key=lambda x: x[1], reverse=True)
+
+    cards = bangun_pohon.load_cards(ROOT / "kartu")
+    nb_ranked = mesin_cerdas.multinomial_naive_bayes_branch(text, BIDANG_KEYWORDS, existing_cards=cards)
+
+    rrf: dict[str, float] = {}
+    k_rrf = 12.0
+    # Bobot leksikon presisi lebih tinggi (1.4x) + Naive Bayes self-learning (1.0x)
+    for rank, (b, sc) in enumerate(lex_scores, 1):
+        rrf[b] = rrf.get(b, 0.0) + (1.4 / (k_rrf + rank)) + min(0.15, sc * 0.025)
+    for rank, (b, _lp) in enumerate(nb_ranked[:6], 1):
+        rrf[b] = rrf.get(b, 0.0) + (1.0 / (k_rrf + rank))
+
+    if cards:
+        rel = mesin_cerdas.query_relevant_cards(text[:400], cards, limit=3)
+        for rank, rc in enumerate(rel, 1):
+            cb = rc.get("cabang") or ""
+            if cb in VALID_BRANCHES:
+                rrf[cb] = rrf.get(cb, 0.0) + (0.6 / (k_rrf + rank))
+
+    if rrf:
+        best_b = max(rrf.items(), key=lambda x: x[1])[0]
+        raw_lex = dict(lex_scores).get(best_b, 0)
+        return best_b, max(1, raw_lex)
+    return "lainnya", 0
 
 
 def ensure_top_branch_exists(slug: str, today: str) -> str:
@@ -372,13 +470,25 @@ def create_new_source(
     clean_jenis = jenis if jenis in ALLOWED_JENIS else "postingan"
     raw_text = teks_asli.replace("\r\n", "\n").strip()
 
-    # Cegah duplikat klik ganda: periksa URL atau teks asli yang identik
+    # Normalisasi URL (buang parameter pelacakan ?s=20, ?t=..., ?utm_...) & cegah duplikat / near-duplicate
+    def _canon_url(u: str) -> str:
+        if not u or u == "tidak ada":
+            return ""
+        p = urlparse(u)
+        if p.hostname and any(d in p.hostname.lower() for d in ("x.com", "twitter.com")):
+            return f"https://x.com{p.path.rstrip('/')}"
+        return f"{p.scheme}://{p.netloc}{p.path.rstrip('/')}".lower()
+
+    canon_new = _canon_url(clean_url)
     existing_sources = bangun_pohon.load_sources(ROOT / "sumber")
     for esid, es in existing_sources.items():
-        if clean_url != "tidak ada" and (es.get("url") or "").strip() == clean_url:
+        if canon_new and _canon_url((es.get("url") or "").strip()) == canon_new:
             raise ValueError(f"Sumber dengan URL ini sudah tersimpan di {esid}.")
         if (es.get("teks_asli") or "").strip() == raw_text:
             raise ValueError(f"Teks sumber yang sama persis sudah tersimpan di {esid}.")
+    near_sid, near_sim = mesin_cerdas.find_near_duplicate_source(raw_text, existing_sources, threshold=0.82)
+    if near_sid:
+        raise ValueError(f"Postingan yang hampir identik ({int(near_sim * 100)}% mirip) sudah tersimpan di {near_sid}.")
 
     extra_tags: list[str] = []
     if subcabang_baru:
@@ -400,33 +510,47 @@ def create_new_source(
 
     bidang = cabang_slug.split("/")[0]
     valid_tahap = {"sebelum-20", "20-25", "25-30", "30-40", "40-50", "50+", "semua-usia"}
-    tahap = tahap_pilihan if tahap_pilihan in valid_tahap else "semua-usia"
+    meta_auto = mesin_cerdas.infer_card_metadata_math(f"{clean_judul} {raw_text}", platform=clean_platform, url=clean_url)
+    if tahap_pilihan in valid_tahap and tahap_pilihan != "semua-usia":
+        tahap = tahap_pilihan
+    else:
+        tahap = meta_auto["tahap"]
 
     created_cids: list[str] = []
     created_entries: list[tuple[str, str]] = []
     extracted_points = mesin_cerdas.extract_atomic_insights_math(raw_text, max_cards=max(1, min(5, int(max_daun or 3))))
+    existing_cards_snapshot = bangun_pohon.load_cards(ROOT / "kartu")
 
     if buat_draf:
         cur_num = int(next_card_id().split("-")[1])
         for idx_pt, pt in enumerate(extracted_points):
             cid = f"K-{cur_num + idx_pt:04d}"
             created_cids.append(cid)
-            ide_text = pt["ide"].strip().strip("[]")
+            raw_ide = pt["ide"].strip().strip("[]")
+            raw_penj = pt["penjelasan"]
+            # Terjemahkan & rapikan kartu asing ke Bahasa Indonesia alami (Teks Asli di sumber/ tetap suci!)
+            ide_text, penjelasan = mesin_cerdas.translate_and_polish_card_gemini(raw_ide, raw_penj)
+            ide_text = ide_text.replace('"', "'").strip()
             ide_short = " ".join(ide_text.split()[:12])
             created_entries.append((cid, ide_short))
-            penjelasan = pt["penjelasan"]
-            kutipan_2 = pt["kutipan"]
+            # Jaga kutipan pendukung ringkas (<=14 kata) agar selalu lolos audit anti-kebocoran situs publik
+            kutipan_words = (pt["kutipan"] or raw_ide).split()
+            kutipan_2 = " ".join(kutipan_words[:14]) + ("..." if len(kutipan_words) > 14 else "")
             detected_tools = pt["alat"]
             detected_stage = pt["tahap_kerja"]
             alat_yaml = f"[{', '.join(detected_tools)}]" if detected_tools else "[]"
-            tags_all = ["ekstraksi-matematika", clean_platform.lower()] + extra_tags
+            pt_meta = mesin_cerdas.infer_card_metadata_math(f"{raw_ide} {raw_penj}", platform=clean_platform, url=clean_url)
+            tags_all = pt_meta["tags"] + [clean_platform.lower()] + extra_tags
             tags_yaml = "[" + ", ".join(dict.fromkeys(tags_all)) + "]"
 
-            # Relasi berurutan antar Daun yang lahir dari Akar yang sama
-            rel_yaml = "[]"
+            # Relasi berurutan antar Daun dari Akar yang sama + auto-relasi ke kartu tetangga terdekat (Cosine >= 0.30)
+            rel_lines: list[str] = []
             if idx_pt > 0:
                 prev_cid = created_cids[idx_pt - 1]
-                rel_yaml = f"\n  - {{tipe: lanjutan-dari, ke: {prev_cid}}}"
+                rel_lines.append(f"  - {{tipe: lanjutan-dari, ke: {prev_cid}}}")
+            for auto_rel in mesin_cerdas.find_auto_relations(ide_text, penjelasan, existing_cards_snapshot, limit=2):
+                rel_lines.append(f"  - {{tipe: {auto_rel['tipe']}, ke: {auto_rel['ke']}}}")
+            rel_yaml = ("\n" + "\n".join(rel_lines)) if rel_lines else "[]"
 
             card_md = (
                 f"---\n"
@@ -435,9 +559,9 @@ def create_new_source(
                 f"bidang: {bidang}\n"
                 f"cabang: {cabang_slug}\n"
                 f"tahap: {tahap}\n"
-                f"jenis: opini\n"
-                f"kepercayaan: belum-diverifikasi\n"
-                f"dasar: tidak-jelas\n"
+                f"jenis: {pt_meta['jenis']}\n"
+                f"kepercayaan: {pt_meta['kepercayaan']}\n"
+                f"dasar: {pt_meta['dasar']}\n"
                 f"tag: {tags_yaml}\n"
                 f"sumber: [[{sid}]]\n"
                 f"relasi: {rel_yaml}\n"
@@ -456,7 +580,7 @@ def create_new_source(
                 f"## Ide\n{penjelasan}\n\n"
                 f"## Kutipan Pendukung\n> {kutipan_2}\n\n"
                 f"## Catatan Agen\n"
-                f"[inferensi AI] Diekstrak otomatis dengan pipeline matematika (TextTiling segmen #{pt['segmen'] + 1}, LexRank={pt['lexrank']}, Entropi={pt['entropi']}).\n"
+                f"[inferensi AI] Diekstrak otomatis (TextTiling #{pt['segmen'] + 1}, LexRank={pt['lexrank']}, Entropi={pt['entropi']}, jenis={pt_meta['jenis']}, dasar={pt_meta['dasar']}).\n"
             )
             (ROOT / "kartu" / f"{cid}.md").write_text(card_md, encoding="utf-8")
 
