@@ -456,7 +456,7 @@ def extract_image_text(image_b64: str, mime_type: str = "image/png", api_key: st
     if api_key:
         clean_b64 = base64.b64encode(raw_bytes).decode("ascii")
         last_exc = None
-        for mdl in ("gemini-2.5-flash-lite", "gemini-2.5-flash"):
+        for mdl in ("gemini-3.5-flash-lite", "gemini-2.5-flash"):
             try:
                 endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
                 payload = {

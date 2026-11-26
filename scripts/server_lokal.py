@@ -196,12 +196,12 @@ def _classify_branch_gemini(text: str) -> str | None:
         "Aturan: balas HANYA satu slug topik persis seperti di sebelah kiri tanda titik dua (contoh: kesehatan), tanpa penjelasan.\n\n"
         f"Teks:\n{text[:1200]}"
     )
-    for mdl in ("gemini-2.5-flash-lite", "gemini-2.5-flash"):
+    for mdl in ("gemini-3.5-flash-lite", "gemini-2.5-flash"):
         try:
             endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
             body = {
                 "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-                "generationConfig": {"temperature": 0.0, "maxOutputTokens": 256, "thinkingConfig": {"thinkingBudget": 0}},
+                "generationConfig": {"temperature": 0.0, "maxOutputTokens": 512},
             }
             req = urllib.request.Request(
                 endpoint,

@@ -946,7 +946,7 @@ def extract_structured_cards_gemini(
     )
 
     for attempt in range(2):
-        for mdl in ("gemini-2.5-flash", "gemini-2.5-flash-lite"):
+        for mdl in ("gemini-3.5-flash-lite", "gemini-2.5-flash"):
             try:
                 endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
                 body = {
@@ -955,7 +955,6 @@ def extract_structured_cards_gemini(
                         "temperature": 0.1,
                         "maxOutputTokens": 2048,
                         "responseMimeType": "application/json",
-                        "thinkingConfig": {"thinkingBudget": 0},
                     },
                 }
                 req = urllib.request.Request(

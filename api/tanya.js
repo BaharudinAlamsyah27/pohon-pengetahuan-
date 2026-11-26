@@ -173,7 +173,7 @@ module.exports = async function handler(req, res) {
     }));
 
     const apiKey = (process.env.GEMINI_API_KEY || "").trim();
-    const preferredModel = (process.env.GEMINI_MODEL || "gemini-2.5-flash-lite").trim();
+    const preferredModel = (process.env.GEMINI_MODEL || "gemini-3.5-flash-lite").trim();
 
     if (apiKey && relCards.length > 0) {
       const rag = await callGeminiRag(pertanyaan, relCards, apiKey, preferredModel);
