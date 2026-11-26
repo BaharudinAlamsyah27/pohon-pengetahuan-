@@ -888,9 +888,7 @@ def extract_structured_cards_gemini(
     menghasilkan kartu terjemahan Bahasa Indonesia, cabang per kartu (bisa multi-cabang),
     3-5 konsep abstrak (jembatan metafora), metadata valid, dan relasi (termasuk usulan pertentangan).
     """
-    local_env = load_local_env()
-    api_key = (os.environ.get("GEMINI_API_KEY") or local_env.get("GEMINI_API_KEY") or "").strip()
-    if not api_key or len((raw_text or "").strip()) < 15:
+    if not has_any_free_llm_key() or len((raw_text or "").strip()) < 15:
         return None
 
     neighbor_lines = []
@@ -951,107 +949,89 @@ def extract_structured_cards_gemini(
     )
 
     for attempt in range(2):
-        for mdl in ("gemini-3.5-flash-lite", "gemini-2.5-flash"):
-            try:
-                endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
-                body = {
-                    "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-                    "generationConfig": {
-                        "temperature": 0.1,
-                        "maxOutputTokens": 2048,
-                        "responseMimeType": "application/json",
-                    },
-                }
-                req = urllib.request.Request(
-                    endpoint,
-                    data=json.dumps(body).encode("utf-8"),
-                    headers={"Content-Type": "application/json"},
-                    method="POST",
-                )
-                with urllib.request.urlopen(req, timeout=25) as resp:
-                    data = json.loads(resp.read().decode("utf-8"))
-                cands = data.get("candidates") or []
-                parts = ((cands[0].get("content") or {}).get("parts") or []) if cands else []
-                raw = "".join(p.get("text", "") for p in parts).strip()
-                m = re.search(r"\{[\s\S]*\}", raw)
-                if not m:
-                    continue
-                parsed = json.loads(m.group(0))
-                raw_cards = parsed.get("kartu") or []
-                if not isinstance(raw_cards, list) or not raw_cards:
-                    continue
-
-                # Validasi ketat hasil AI (anti-halusinasi & kepatuhan skema)
-                validated_cards: list[dict] = []
-                for rc in raw_cards[: max(1, min(5, max_cards))]:
-                    if not isinstance(rc, dict):
-                        continue
-                    ide = str(rc.get("ide") or "").strip().replace('"', "'")
-                    if len(ide) < 10:
-                        continue
-                    penj = str(rc.get("penjelasan") or ide).strip()
-                    kutipan = _verify_quote_in_source(str(rc.get("kutipan") or ""), raw_text)
-                    cab = str(rc.get("cabang") or "").strip().lower()
-                    if cab not in valid_branches:
-                        cab = ""
-                    tahap = str(rc.get("tahap") or "semua-usia").strip()
-                    if tahap not in ALLOWED_TAHAP_KARTU:
-                        tahap = "semua-usia"
-                    jenis = str(rc.get("jenis") or "opini").strip()
-                    if jenis not in ALLOWED_JENIS_KARTU:
-                        jenis = "opini"
-                    dasar = str(rc.get("dasar") or "tidak-jelas").strip()
-                    if dasar not in ALLOWED_DASAR_KARTU:
-                        dasar = "tidak-jelas"
-                    trust = str(rc.get("kepercayaan") or "belum-diverifikasi").strip()
-                    if trust not in ALLOWED_TRUST_KARTU:
-                        trust = "belum-diverifikasi"
-                    if platform.lower() in ("x", "threads", "instagram", "tiktok", "facebook") and trust == "tinggi":
-                        trust = "sedang"
-                    konsep = [
-                        re.sub(r"[^a-z0-9-]+", "-", str(k).lower().strip()).strip("-")
-                        for k in (rc.get("konsep") or [])
-                        if str(k).strip()
-                    ]
-                    konsep = [k for k in dict.fromkeys(konsep) if len(k) >= 2][:5]
-                    tags = [
-                        re.sub(r"[^a-z0-9-]+", "-", str(t).lower().strip()).strip("-")
-                        for t in (rc.get("tag") or [])
-                        if str(t).strip()
-                    ]
-                    tags = [t for t in dict.fromkeys(tags) if len(t) >= 2][:4]
-                    rels = []
-                    for r in (rc.get("relasi") or []):
-                        if isinstance(r, dict):
-                            rt = str(r.get("tipe") or "").strip()
-                            rk = str(r.get("ke") or "").strip()
-                            if rt in ALLOWED_REL_TIPE and rk in valid_neighbor_ids:
-                                rels.append({"tipe": rt, "ke": rk})
-                    validated_cards.append({
-                        "ide": ide[:240],
-                        "penjelasan": penj[:1200],
-                        "kutipan": kutipan,
-                        "cabang": cab,
-                        "tahap": tahap,
-                        "jenis": jenis,
-                        "dasar": dasar,
-                        "kepercayaan": trust,
-                        "konsep": konsep,
-                        "tag": tags,
-                        "relasi": rels[:3],
-                    })
-                if validated_cards:
-                    dup = parsed.get("duplikat_dari")
-                    dup_id = str(dup).strip() if dup and str(dup).strip() in valid_neighbor_ids else None
-                    return {"duplikat_dari": dup_id, "kartu": validated_cards, "model": mdl}
-            except urllib.error.HTTPError as exc:
-                if exc.code == 404:
-                    continue
-                if exc.code == 429:
-                    continue
-                break
-            except Exception:
+        raw, used_mdl, _err = call_free_llm_cascade(
+            system_prompt="",
+            user_prompt=prompt,
+            json_mode=True,
+            max_tokens=2048,
+            temperature=0.1,
+        )
+        if not raw:
+            continue
+        try:
+            m = re.search(r"\{[\s\S]*\}", raw)
+            if not m:
                 continue
+            parsed = json.loads(m.group(0))
+            raw_cards = parsed.get("kartu") or []
+            if not isinstance(raw_cards, list) or not raw_cards:
+                continue
+
+            # Validasi ketat hasil AI (anti-halusinasi & kepatuhan skema)
+            validated_cards: list[dict] = []
+            for rc in raw_cards[: max(1, min(5, max_cards))]:
+                if not isinstance(rc, dict):
+                    continue
+                ide = str(rc.get("ide") or "").strip().replace('"', "'")
+                if len(ide) < 10:
+                    continue
+                penj = str(rc.get("penjelasan") or ide).strip()
+                kutipan = _verify_quote_in_source(str(rc.get("kutipan") or ""), raw_text)
+                cab = str(rc.get("cabang") or "").strip().lower()
+                if cab not in valid_branches:
+                    cab = ""
+                tahap = str(rc.get("tahap") or "semua-usia").strip()
+                if tahap not in ALLOWED_TAHAP_KARTU:
+                    tahap = "semua-usia"
+                jenis = str(rc.get("jenis") or "opini").strip()
+                if jenis not in ALLOWED_JENIS_KARTU:
+                    jenis = "opini"
+                dasar = str(rc.get("dasar") or "tidak-jelas").strip()
+                if dasar not in ALLOWED_DASAR_KARTU:
+                    dasar = "tidak-jelas"
+                trust = str(rc.get("kepercayaan") or "belum-diverifikasi").strip()
+                if trust not in ALLOWED_TRUST_KARTU:
+                    trust = "belum-diverifikasi"
+                if platform.lower() in ("x", "threads", "instagram", "tiktok", "facebook") and trust == "tinggi":
+                    trust = "sedang"
+                konsep = [
+                    re.sub(r"[^a-z0-9-]+", "-", str(k).lower().strip()).strip("-")
+                    for k in (rc.get("konsep") or [])
+                    if str(k).strip()
+                ]
+                konsep = [k for k in dict.fromkeys(konsep) if len(k) >= 2][:5]
+                tags = [
+                    re.sub(r"[^a-z0-9-]+", "-", str(t).lower().strip()).strip("-")
+                    for t in (rc.get("tag") or [])
+                    if str(t).strip()
+                ]
+                tags = [t for t in dict.fromkeys(tags) if len(t) >= 2][:4]
+                rels = []
+                for r in (rc.get("relasi") or []):
+                    if isinstance(r, dict):
+                        rt = str(r.get("tipe") or "").strip()
+                        rk = str(r.get("ke") or "").strip()
+                        if rt in ALLOWED_REL_TIPE and rk in valid_neighbor_ids:
+                            rels.append({"tipe": rt, "ke": rk})
+                validated_cards.append({
+                    "ide": ide[:240],
+                    "penjelasan": penj[:1200],
+                    "kutipan": kutipan,
+                    "cabang": cab,
+                    "tahap": tahap,
+                    "jenis": jenis,
+                    "dasar": dasar,
+                    "kepercayaan": trust,
+                    "konsep": konsep,
+                    "tag": tags,
+                    "relasi": rels[:3],
+                })
+            if validated_cards:
+                dup = parsed.get("duplikat_dari")
+                dup_id = str(dup).strip() if dup and str(dup).strip() in valid_neighbor_ids else None
+                return {"duplikat_dari": dup_id, "kartu": validated_cards, "model": used_mdl}
+        except Exception:
+            continue
     return None
 
 
@@ -1522,6 +1502,128 @@ def build_level1_answer(question: str, rel_cards: list[dict], cards: dict[str, d
     return "\n".join(lines), konflik_list
 
 
+FREE_OPENAI_PROVIDERS = [
+    ("GROQ_API_KEY", "groq", "https://api.groq.com/openai/v1/chat/completions", ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]),
+    ("OPENROUTER_API_KEY", "openrouter", "https://openrouter.ai/api/v1/chat/completions", ["openrouter/free"]),
+    ("MISTRAL_API_KEY", "mistral", "https://api.mistral.ai/v1/chat/completions", ["mistral-small-latest"]),
+    ("CEREBRAS_API_KEY", "cerebras", "https://api.cerebras.ai/v1/chat/completions", ["llama-3.3-70b", "qwen-3.8-27b"]),
+    ("NVIDIA_API_KEY", "nvidia-nim", "https://integrate.api.nvidia.com/v1/chat/completions", ["meta/llama-3.3-70b-instruct"]),
+]
+
+
+def has_any_free_llm_key() -> bool:
+    local_env = load_local_env()
+    keys = ["GEMINI_API_KEY"] + [p[0] for p in FREE_OPENAI_PROVIDERS]
+    return any((os.environ.get(k) or local_env.get(k) or "").strip() for k in keys)
+
+
+def call_free_llm_cascade(
+    system_prompt: str,
+    user_prompt: str,
+    json_mode: bool = False,
+    max_tokens: int = 2048,
+    temperature: float = 0.2,
+    preferred_gemini_model: str = "",
+) -> tuple[str | None, str, str]:
+    """
+    Cascade otomatis ke 6 penyedia LLM API 100% Gratis (tanpa kartu kredit):
+      1. Google AI Studio (GEMINI_API_KEY -> gemini-3.5-flash-lite / gemini-2.5-flash)
+      2. Groq (GROQ_API_KEY -> llama-3.3-70b-versatile / llama-3.1-8b-instant)
+      3. OpenRouter (OPENROUTER_API_KEY -> openrouter/free)
+      4. Mistral AI (MISTRAL_API_KEY -> mistral-small-latest)
+      5. Cerebras (CEREBRAS_API_KEY -> llama-3.3-70b)
+      6. NVIDIA NIM (NVIDIA_API_KEY -> meta/llama-3.3-70b-instruct)
+    Jika satu penyedia kena limit kuota (HTTP 429) atau error, otomatis pindah ke penyedia berikutnya.
+    """
+    local_env = load_local_env()
+    last_err = "Belum ada API key gratis di .env"
+
+    # 1. Google Gemini API (Native)
+    gem_key = (os.environ.get("GEMINI_API_KEY") or local_env.get("GEMINI_API_KEY") or "").strip()
+    if gem_key:
+        pref = preferred_gemini_model or (os.environ.get("GEMINI_MODEL") or local_env.get("GEMINI_MODEL") or "gemini-3.5-flash-lite").strip()
+        gem_models = list(dict.fromkeys([pref, "gemini-3.5-flash-lite", "gemini-2.5-flash"]))
+        for mdl in gem_models:
+            endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={gem_key}"
+            gen_cfg: dict = {"temperature": temperature, "maxOutputTokens": max_tokens}
+            if json_mode:
+                gen_cfg["responseMimeType"] = "application/json"
+            body: dict = {
+                "contents": [{"role": "user", "parts": [{"text": user_prompt}]}],
+                "generationConfig": gen_cfg,
+            }
+            if system_prompt:
+                body["systemInstruction"] = {"parts": [{"text": system_prompt}]}
+            req = urllib.request.Request(
+                endpoint,
+                data=json.dumps(body).encode("utf-8"),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=25) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                cands = data.get("candidates") or []
+                parts = ((cands[0].get("content") or {}).get("parts") or []) if cands else []
+                txt = "\n".join(p.get("text", "") for p in parts if p.get("text")).strip()
+                if txt:
+                    return txt, mdl, ""
+            except urllib.error.HTTPError as exc:
+                last_err = f"gemini {mdl} HTTP {exc.code}"
+                continue
+            except Exception as exc:
+                last_err = f"gemini {mdl}: {exc}"
+                continue
+
+    # 2..6. Penyedia OpenAI-Compatible Gratis (Groq, OpenRouter, Mistral, Cerebras, NVIDIA NIM)
+    for env_var, prov_name, endpoint, models in FREE_OPENAI_PROVIDERS:
+        key = (os.environ.get(env_var) or local_env.get(env_var) or "").strip()
+        if not key:
+            continue
+        for mdl in models:
+            msgs = []
+            if system_prompt:
+                msgs.append({"role": "system", "content": system_prompt})
+            msgs.append({"role": "user", "content": user_prompt})
+            payload: dict = {
+                "model": mdl,
+                "messages": msgs,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+            }
+            if json_mode and prov_name in ("groq", "mistral", "cerebras"):
+                payload["response_format"] = {"type": "json_object"}
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {key}",
+                "User-Agent": "PohonPengetahuan/1.0",
+            }
+            if prov_name == "openrouter":
+                headers["HTTP-Referer"] = "https://pohon-pengetahuan.vercel.app"
+                headers["X-Title"] = "Pohon Pengetahuan"
+            req = urllib.request.Request(
+                endpoint,
+                data=json.dumps(payload).encode("utf-8"),
+                headers=headers,
+                method="POST",
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=25) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                choices = data.get("choices") or []
+                txt = (((choices[0].get("message") or {}).get("content")) or "").strip() if choices else ""
+                if txt:
+                    return txt, f"{prov_name}/{mdl}", ""
+            except urllib.error.HTTPError as exc:
+                last_err = f"{prov_name}/{mdl} HTTP {exc.code}"
+                continue
+            except Exception as exc:
+                last_err = f"{prov_name}/{mdl}: {exc}"
+                continue
+
+    return None, "none", last_err
+
+
 def call_gemini_rag(question: str, rel_cards: list[dict], api_key: str, preferred_model: str) -> tuple[str | None, str, str]:
     context_items = []
     for c in rel_cards:
@@ -1536,43 +1638,14 @@ def call_gemini_rag(question: str, rel_cards: list[dict], api_key: str, preferre
         "katakan terus terang. Sebutkan tingkat kepercayaan atau pertentangan bila ada. Jawab ringkas dan langsung ke inti dalam Bahasa Indonesia."
     )
     user_prompt = f"KARTU WAWASAN:\n\n" + "\n\n---\n\n".join(context_items) + f"\n\nPERTANYAAN PENGGUNA:\n{question}"
-
-    models_to_try = [preferred_model]
-    if preferred_model != "gemini-2.5-flash":
-        models_to_try.append("gemini-2.5-flash")
-
-    last_err = ""
-    for mdl in models_to_try:
-        endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
-        body = {
-            "systemInstruction": {"parts": [{"text": system_prompt}]},
-            "contents": [{"role": "user", "parts": [{"text": user_prompt}]}],
-            "generationConfig": {"temperature": 0.2, "maxOutputTokens": 4096},
-        }
-        req = urllib.request.Request(
-            endpoint,
-            data=json.dumps(body).encode("utf-8"),
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
-        try:
-            with urllib.request.urlopen(req, timeout=25) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-                cands = data.get("candidates") or []
-                parts = ((cands[0].get("content") or {}).get("parts") or []) if cands else []
-                text = "\n".join(p.get("text", "") for p in parts if p.get("text")).strip()
-                if text:
-                    return text, mdl, ""
-                last_err = "Respon model kosong"
-        except urllib.error.HTTPError as exc:
-            last_err = f"HTTP {exc.code}"
-            if exc.code == 404:
-                continue
-            break
-        except Exception as exc:
-            last_err = str(exc)
-            break
-    return None, preferred_model, last_err
+    return call_free_llm_cascade(
+        system_prompt=system_prompt,
+        user_prompt=user_prompt,
+        json_mode=False,
+        max_tokens=4096,
+        temperature=0.2,
+        preferred_gemini_model=preferred_model,
+    )
 
 
 def answer_question(question: str) -> dict:
@@ -1603,7 +1676,7 @@ def answer_question(question: str) -> dict:
     api_key = (os.environ.get("GEMINI_API_KEY") or local_env.get("GEMINI_API_KEY") or "").strip()
     model_name = (os.environ.get("GEMINI_MODEL") or local_env.get("GEMINI_MODEL") or "gemini-3.5-flash-lite").strip()
 
-    if api_key and rel_cards:
+    if has_any_free_llm_key() and rel_cards:
         q_for_llm = f"{question}\n\nDATA ANALISIS LINGUISTIK KORPUS:\n{syntax_report['teks']}" if syntax_report else question
         ai_text, used_model, err = call_gemini_rag(q_for_llm, rel_cards, api_key, model_name)
         if ai_text:

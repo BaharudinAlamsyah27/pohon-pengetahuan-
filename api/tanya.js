@@ -94,49 +94,100 @@ function buildLevel1Synthesis(question, relCards) {
   return lines.join("\n");
 }
 
-async function callGeminiRag(question, relCards, apiKey, preferredModel) {
+const FREE_OPENAI_PROVIDERS = [
+  ["GROQ_API_KEY", "groq", "https://api.groq.com/openai/v1/chat/completions", ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]],
+  ["OPENROUTER_API_KEY", "openrouter", "https://openrouter.ai/api/v1/chat/completions", ["openrouter/free"]],
+  ["MISTRAL_API_KEY", "mistral", "https://api.mistral.ai/v1/chat/completions", ["mistral-small-latest"]],
+  ["CEREBRAS_API_KEY", "cerebras", "https://api.cerebras.ai/v1/chat/completions", ["llama-3.3-70b", "qwen-3.8-27b"]],
+  ["NVIDIA_API_KEY", "nvidia-nim", "https://integrate.api.nvidia.com/v1/chat/completions", ["meta/llama-3.3-70b-instruct"]],
+];
+
+async function callFreeLlmCascade(question, relCards) {
   const contextText = relCards
     .map(
       (c) =>
         `[${c.id}] cabang=${c.cabang} | tahap=${c.tahap} | kepercayaan=${c.kepercayaan} | dasar=${c.dasar}\nIde: ${c.ide}\nPenjelasan: ${(c.penjelasan || "").slice(0, 450)}`
     )
     .join("\n\n---\n\n");
-
   const systemPrompt =
-    "Kamu adalah asisten Pohon Pengetahuan. Jawab pertanyaan pengguna HANYA berdasarkan KARTU WAWASAN berikut. Wajib cantumkan ID kartu seperti [K-0001] pada setiap poin. Jangan mengarang; jika tidak cukup bukti di kartu, katakan terus terang. Sebutkan tingkat kepercayaan atau pertentangan bila ada. Jawab ringkas dan langsung ke inti dalam Bahasa Indonesia.";
+    "Kamu adalah asisten Pohon Pengetahuan. Jawab pertanyaan pengguna HANYA berdasarkan KARTU WAWASAN berikut. Wajib cantumkan ID kartu seperti [K-0001] pada setiap poin. Jangan mengarang; jika tidak cukup bukti di kartu, katakan terus terang. Sebutkan tingkat kepercayaan bila rendah/belum diverifikasi. Jawab ringkas dalam Bahasa Indonesia.";
+  const userPrompt = `KARTU WAWASAN:\n\n${contextText}\n\nPERTANYAAN PENGGUNA:\n${question}`;
 
-  const models = preferredModel === "gemini-2.5-flash" ? [preferredModel] : [preferredModel, "gemini-2.5-flash"];
-  let lastErr = "";
+  let lastErr = "Belum ada API key gratis";
 
-  for (const mdl of models) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${mdl}:generateContent?key=${encodeURIComponent(apiKey)}`;
-    try {
-      const resp = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: AbortSignal.timeout(25000),
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemPrompt }] },
-          contents: [{ role: "user", parts: [{ text: `KARTU WAWASAN:\n\n${contextText}\n\nPERTANYAAN PENGGUNA:\n${question}` }] }],
-          generationConfig: { temperature: 0.2, maxOutputTokens: 4096 },
-        }),
-      });
-      if (!resp.ok) {
-        lastErr = `HTTP ${resp.status}`;
-        if (resp.status === 404) continue;
-        break;
+  // 1. Google Gemini API
+  const gemKey = (process.env.GEMINI_API_KEY || "").trim();
+  if (gemKey) {
+    const preferredModel = (process.env.GEMINI_MODEL || "gemini-3.5-flash-lite").trim();
+    const models = [...new Set([preferredModel, "gemini-3.5-flash-lite", "gemini-2.5-flash"])];
+    for (const mdl of models) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${mdl}:generateContent?key=${encodeURIComponent(gemKey)}`;
+      try {
+        const resp = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: AbortSignal.timeout(25000),
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            contents: [{ role: "user", parts: [{ text: userPrompt }] }],
+            generationConfig: { temperature: 0.2, maxOutputTokens: 4096 },
+          }),
+        });
+        if (!resp.ok) {
+          lastErr = `gemini/${mdl} HTTP ${resp.status}`;
+          continue;
+        }
+        const data = await resp.json();
+        const parts = data?.candidates?.[0]?.content?.parts || [];
+        const text = parts.map((p) => p.text || "").join("\n").trim();
+        if (text) return { text, model: mdl, err: "" };
+      } catch (err) {
+        lastErr = err?.message || "Timeout/network";
       }
-      const data = await resp.json();
-      const parts = data?.candidates?.[0]?.content?.parts || [];
-      const text = parts.map((p) => p.text || "").join("\n").trim();
-      if (text) return { text, model: mdl, err: "" };
-      lastErr = "Respon kosong";
-    } catch (err) {
-      lastErr = err?.message || "Timeout/network";
-      break;
     }
   }
-  return { text: null, model: preferredModel, err: lastErr };
+
+  // 2..6. OpenAI-Compatible Free Providers (Groq, OpenRouter, Mistral, Cerebras, NVIDIA NIM)
+  for (const [envVar, provName, endpoint, models] of FREE_OPENAI_PROVIDERS) {
+    const key = (process.env[envVar] || "").trim();
+    if (!key) continue;
+    for (const mdl of models) {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${key}`,
+      };
+      if (provName === "openrouter") {
+        headers["HTTP-Referer"] = "https://pohon-pengetahuan.vercel.app";
+        headers["X-Title"] = "Pohon Pengetahuan";
+      }
+      try {
+        const resp = await fetch(endpoint, {
+          method: "POST",
+          headers,
+          signal: AbortSignal.timeout(25000),
+          body: JSON.stringify({
+            model: mdl,
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: userPrompt },
+            ],
+            temperature: 0.2,
+            max_tokens: 4096,
+          }),
+        });
+        if (!resp.ok) {
+          lastErr = `${provName}/${mdl} HTTP ${resp.status}`;
+          continue;
+        }
+        const data = await resp.json();
+        const text = (data?.choices?.[0]?.message?.content || "").trim();
+        if (text) return { text, model: `${provName}/${mdl}`, err: "" };
+      } catch (err) {
+        lastErr = err?.message || "Timeout/network";
+      }
+    }
+  }
+  return { text: null, model: "none", err: lastErr };
 }
 
 module.exports = async function handler(req, res) {
@@ -172,11 +223,12 @@ module.exports = async function handler(req, res) {
       kepercayaan: c.kepercayaan,
     }));
 
-    const apiKey = (process.env.GEMINI_API_KEY || "").trim();
-    const preferredModel = (process.env.GEMINI_MODEL || "gemini-3.5-flash-lite").trim();
+    const hasAnyKey = ["GEMINI_API_KEY", ...FREE_OPENAI_PROVIDERS.map((p) => p[0])].some((k) =>
+      Boolean((process.env[k] || "").trim())
+    );
 
-    if (apiKey && relCards.length > 0) {
-      const rag = await callGeminiRag(pertanyaan, relCards, apiKey, preferredModel);
+    if (hasAnyKey && relCards.length > 0) {
+      const rag = await callFreeLlmCascade(pertanyaan, relCards);
       if (rag.text) {
         res.status(200).json({ ok: true, mode: `ai-rag (${rag.model})`, jawaban: rag.text, rujukan, pertentangan: [] });
         return;
@@ -187,7 +239,7 @@ module.exports = async function handler(req, res) {
         jawaban: level1Text,
         rujukan,
         pertentangan: [],
-        info: `Gemini API tidak merespons (${rag.err}); menampilkan sintesis lokal.`,
+        info: `Penyedia AI tidak merespons (${rag.err}); menampilkan sintesis lokal.`,
       });
       return;
     }
