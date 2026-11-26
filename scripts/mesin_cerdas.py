@@ -1890,6 +1890,143 @@ def call_gemini_rag(question: str, rel_cards: list[dict], api_key: str, preferre
     )
 
 
+def advise_decision(dilemma: str) -> dict:
+    """
+    Mode Konsultasi Keputusan (Lensa CEO · COO · CFO):
+    Menilai dilema pengguna dari 3 sudut pandang eksekutif berbasis kartu Pohon Pengetahuan + persona.md.
+    """
+    cards, _sources, _ = load_active()
+    rel_cands = query_relevant_cards(dilemma, cards, limit=16)
+    rel_cards = rerank_cards_llm(dilemma, rel_cands, top_k=8) if len(rel_cands) > 8 else rel_cands[:8]
+
+    persona_fp = ROOT / "persona.md"
+    persona_txt = persona_fp.read_text(encoding="utf-8", errors="ignore")[:1800] if persona_fp.is_file() else "(persona.md belum diisi)"
+
+    rujukan = [
+        {"id": c["id"], "ide": c["ide"], "cabang": c["cabang"], "kepercayaan": c["kepercayaan"]}
+        for c in rel_cards
+    ]
+    conflicts = []
+    seen_c = set()
+    for c in rel_cards:
+        for r in c.get("relasi") or []:
+            if r.get("tipe") == "bertentangan-dengan":
+                pair = tuple(sorted([c["id"], r["ke"]]))
+                if pair not in seen_c:
+                    seen_c.add(pair)
+                    conflicts.append({"a": pair[0], "b": pair[1]})
+
+    context_blob = "\n\n".join(
+        f"[{c['id']}] cabang={c['cabang']} | kepercayaan={c['kepercayaan']} | kondisi={c.get('kondisi_berlaku') or 'umum'}\n"
+        f"Ide: {c['ide']}\nPenjelasan: {(c.get('penjelasan') or '')[:350]}"
+        for c in rel_cards
+    ) or "(Belum ada kartu relevan di Pohon Pengetahuan)"
+
+    if has_any_free_llm_key():
+        sys_p = (
+            "Kamu adalah Dewan Penasihat Eksekutif Pribadi (CEO, COO, CFO) untuk pemilik Pohon Pengetahuan. "
+            "Jawab HANYA berdasarkan KARTU WAWASAN dan PROFIL PERSONA berikut. Wajib sitasi [K-XXXX] untuk setiap poin dari kartu. "
+            "Tambahan di luar kartu wajib diberi label [inferensi AI]. Jangan menjamin hasil; gunakan bahasa realistis & Bahasa Indonesia tegas.\n\n"
+            "Format keluaran WAJIB 4 bagian:\n"
+            "## 🎯 Lensa CEO (Visi, Strategi & Jangka Panjang)\n"
+            "## ⚙️ Lensa COO (Eksekusi, Kapasitas & Langkah 7 Hari)\n"
+            "## 💰 Lensa CFO (Risiko, Biaya, Pertentangan & Celah Data)\n"
+            "## 🧭 Rekomendasi Keputusan Akhir"
+        )
+        usr_p = (
+            f"PROFIL PERSONA:\n{persona_txt}\n\n"
+            f"KARTU WAWASAN RELEVAN:\n{context_blob}\n\n"
+            f"DILEMA / KEPUTUSAN YANG DIHADAPI:\n{dilemma}"
+        )
+        ai_txt, used_mdl, _err = call_free_llm_cascade(sys_p, usr_p, json_mode=False, max_tokens=2048, temperature=0.2)
+        if ai_txt:
+            return {"ok": True, "mode": f"dewan-eksekutif ({used_mdl})", "analisis": ai_txt, "rujukan": rujukan, "pertentangan": conflicts}
+
+    # Cadangan offline 0-biaya
+    lines = [
+        "## 🎯 Lensa CEO (Visi & Strategi — Mode Offline)",
+        *(f"- [{c['id']}] ({c['cabang']}) {c['ide']}" for c in rel_cards[:3]),
+        "\n## ⚙️ Lensa COO (Langkah Eksekusi 7 Hari)",
+        "- Pilih 1 eksperimen terkecil berbiaya rendah dari kartu di atas, uji selama 7 hari, lalu catat hasilnya di Jurnal.",
+        "\n## 💰 Lensa CFO (Risiko & Catatan Kualitas)",
+        f"- Ditemukan {len(conflicts)} pertentangan terbuka dan {sum(1 for c in rel_cards if c['kepercayaan'] in ('rendah', 'belum-diverifikasi'))} kartu berkepercayaan rendah/belum diverifikasi.",
+    ]
+    return {"ok": True, "mode": "dewan-eksekutif (offline)", "analisis": "\n".join(lines), "rujukan": rujukan, "pertentangan": conflicts}
+
+
+def build_weekly_briefing() -> dict:
+    """
+    Briefing Mingguan Eksekutif:
+      1. Kartu baru 7 hari terakhir
+      2. 1 Eksperimen Prioritas Minggu Ini (SM-2 + persona)
+      3. Pertentangan terbuka & kartu ragu (perlu-tinjau-cabang / cek-kesetiaan)
+      4. Celah pengetahuan (cabang dengan <=1 sumber)
+    """
+    cards, sources, branches = load_active()
+    recent_cards = [c for c in cards.values() if days_since(c.get("dibuat", "")) <= 7]
+    recent_cards.sort(key=lambda c: c.get("dibuat", ""), reverse=True)
+
+    # Pilih 1 eksperimen prioritas (belum dicoba, kepercayaan sedang/tinggi, bukan kliping-hiburan)
+    exp_pool = [
+        c for c in cards.values()
+        if c.get("penerapan") == "belum-dicoba"
+        and c.get("cabang") != "kliping-hiburan"
+        and c.get("kepercayaan") in ("tinggi", "sedang")
+    ]
+    exp_pool.sort(key=lambda c: (-TRUST_WEIGHT.get(c["kepercayaan"], 0.5), -days_since(c.get("terakhir_ditinjau", "")), c["id"]))
+    top_exp = exp_pool[0] if exp_pool else (next(iter(cards.values()), None))
+
+    ragu_cards = [
+        {"id": c["id"], "ide": c["ide"][:110], "cabang": c["cabang"]}
+        for c in cards.values()
+        if any(t in ("perlu-tinjau-cabang", "cek-kesetiaan", "draf-ekstraktif") for t in (c.get("tag") or []))
+    ][:6]
+
+    conflicts = []
+    seen_p = set()
+    for c in cards.values():
+        for r in c.get("relasi") or []:
+            if r.get("tipe") == "bertentangan-dengan" and r["ke"] in cards:
+                p = tuple(sorted([c["id"], r["ke"]]))
+                if p not in seen_p:
+                    seen_p.add(p)
+                    conflicts.append({"a": p[0], "b": p[1], "ide_a": cards[p[0]]["ide"][:90], "ide_b": cards[p[1]]["ide"][:90]})
+
+    thin_branches = []
+    for slug, b in branches.items():
+        if slug in ("lainnya", "kliping-hiburan"):
+            continue
+        b_cards = [c for c in cards.values() if c["cabang"] == slug or c["cabang"].startswith(slug + "/")]
+        b_srcs = {s for c in b_cards for s in c["sumber"]}
+        if 0 < len(b_srcs) <= 1:
+            thin_branches.append({"cabang": slug, "kartu": len(b_cards), "sumber": len(b_srcs)})
+
+    applied_cnt = sum(1 for c in cards.values() if c.get("penerapan") == "diterapkan")
+    trying_cnt = sum(1 for c in cards.values() if c.get("penerapan") == "sedang-dicoba")
+
+    return {
+        "ok": True,
+        "tanggal": date.today().isoformat(),
+        "ringkasan_eksekutif": {
+            "total_kartu_aktif": len(cards),
+            "kartu_baru_7_hari": len(recent_cards),
+            "sudah_diterapkan": applied_cnt,
+            "sedang_dicoba": trying_cnt,
+            "rasio_eksekusi_persen": round((applied_cnt / max(1, len(cards))) * 100, 1),
+        },
+        "eksperimen_minggu_ini": {
+            "id": top_exp["id"],
+            "ide": top_exp["ide"],
+            "cabang": top_exp["cabang"],
+            "kepercayaan": top_exp["kepercayaan"],
+        } if top_exp else None,
+        "kartu_baru": [{"id": c["id"], "ide": c["ide"][:110], "cabang": c["cabang"]} for c in recent_cards[:6]],
+        "pertentangan_terbuka": conflicts[:5],
+        "kartu_perlu_tinjau": ragu_cards,
+        "celah_sumber_tunggal": thin_branches[:6],
+    }
+
+
 def answer_question(question: str) -> dict:
     cards, sources, _ = load_active()
     syntax_mode = is_syntax_or_viral_query(question)

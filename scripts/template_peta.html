@@ -3220,6 +3220,8 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
           <button type="button" class="btn-secondary" id="btn-an-playbook">2. Susun Langkah Kerja (6 Tahap)</button>
           <button type="button" class="btn-secondary" id="btn-an-tren">3. Ringkasan Tren Koleksi</button>
           <button type="button" class="btn-secondary" id="btn-an-sains">4. Cek Kelengkapan &amp; Kualitas</button>
+          <button type="button" class="btn-primary" id="btn-an-keputusan" title="Analisis dilema lewat lensa CEO, COO, & CFO berbasis kartu & persona">🎯 5. Konsultasi Keputusan (CEO·COO·CFO)</button>
+          <button type="button" class="btn-secondary" id="btn-an-briefing" title="Ringkasan 7 hari terakhir + 1 eksperimen prioritas minggu ini">☀️ 6. Briefing Mingguan</button>
         </div>
       </div>
       <div id="an-out" role="status" aria-live="polite"></div>
@@ -3446,6 +3448,81 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
     document.getElementById("btn-an-playbook").addEventListener("click", () => runAnalisis("playbook"));
     document.getElementById("btn-an-tren").addEventListener("click", () => runAnalisis("tren"));
     document.getElementById("btn-an-sains").addEventListener("click", () => runAnalisis("sains"));
+
+    document.getElementById("btn-an-keputusan")?.addEventListener("click", async () => {
+      if (!HAS_SERVER) { outEl.innerHTML = `<div class="panel">Jalankan <code>1-Buka-Aplikasi-Lokal.bat</code> untuk Konsultasi Keputusan Eksekutif.</div>`; return; }
+      const dilema = (document.getElementById("an-q")?.value || "").trim();
+      if (dilema.length < 4) {
+        outEl.innerHTML = `<div class="panel">Ketik dilema atau keputusan yang ingin dianalisis di kotak atas terlebih dahulu (misal: <em>Fokus bangun Micro-SaaS atau persiapkan CPNS dulu tahun ini?</em>), lalu klik <strong>🎯 5. Konsultasi Keputusan</strong>.</div>`;
+        return;
+      }
+      outEl.innerHTML = `<div class="panel">Dewan Eksekutif (CEO · COO · CFO) sedang menelaah kartu Pohon Pengetahuan &amp; persona.md...</div>`;
+      try {
+        const resp = await fetch("/api/keputusan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ dilema }),
+        });
+        const d = await resp.json();
+        if (!resp.ok || !d.ok) { outEl.innerHTML = `<div class="panel">${esc(d.error || "Gagal memproses.")}</div>`; return; }
+        const formatted = esc(d.analisis || "").replace(/\n/g, "<br>");
+        outEl.innerHTML = `
+          <div class="panel">
+            <div class="k-card-top" style="margin-bottom:10px">
+              <h2 style="margin:0">🎯 Dewan Penasihat Eksekutif (CEO · COO · CFO)</h2>
+              <span class="badge">${esc(d.mode || "eksekutif")}</span>
+            </div>
+            <div style="font-size:14px;line-height:1.65">${formatted}</div>
+            ${(d.rujukan || []).length ? `<div class="chat-cites" style="margin-top:14px">${d.rujukan.map(r => `<button type="button" class="cite-chip" data-open-card="${esc(r.id)}" title="${esc(r.ide)}">${esc(r.id)} · ${esc(r.cabang)}</button>`).join("")}</div>` : ""}
+          </div>`;
+        outEl.querySelectorAll("[data-open-card]").forEach(el => el.addEventListener("click", () => openCardPage(el.dataset.openCard)));
+      } catch {
+        outEl.innerHTML = `<div class="panel">Gagal menghubungi server lokal.</div>`;
+      }
+    });
+
+    document.getElementById("btn-an-briefing")?.addEventListener("click", async () => {
+      if (!HAS_SERVER) { outEl.innerHTML = `<div class="panel">Jalankan <code>1-Buka-Aplikasi-Lokal.bat</code> untuk Briefing Mingguan Eksekutif.</div>`; return; }
+      outEl.innerHTML = `<div class="panel">Menyusun Briefing Mingguan Eksekutif...</div>`;
+      try {
+        const resp = await fetch("/api/briefing");
+        const d = await resp.json();
+        if (!resp.ok || !d.ok) { outEl.innerHTML = `<div class="panel">${esc(d.error || "Gagal memuat briefing.")}</div>`; return; }
+        const rx = d.ringkasan_eksekutif || {};
+        const exp = d.eksperimen_minggu_ini;
+        outEl.innerHTML = `
+          <div class="panel" style="display:grid;gap:14px">
+            <div class="k-card-top">
+              <h2 style="margin:0">☀️ Briefing Mingguan Eksekutif (${esc(d.tanggal || "")})</h2>
+              <span class="badge">Rasio Eksekusi: ${esc(String(rx.rasio_eksekusi_persen || 0))}%</span>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <span class="badge">Kartu Aktif: ${rx.total_kartu_aktif || 0}</span>
+              <span class="badge">Baru 7 Hari: +${rx.kartu_baru_7_hari || 0}</span>
+              <span class="badge">Diterapkan: ${rx.sudah_diterapkan || 0}</span>
+              <span class="badge">Sedang Dicoba: ${rx.sedang_dicoba || 0}</span>
+            </div>
+            ${exp ? `
+              <div style="padding:12px 14px;border-radius:10px;background:var(--node-main-bg);color:var(--node-main-text);border:2px solid var(--border-strong)">
+                <div style="font-size:12px;font-weight:800;margin-bottom:4px">⚡ 1 EKSPERIMEN PRIORITAS MINGGU INI (COBA &amp; CATAT DI JURNAL)</div>
+                <div style="font-size:14px;font-weight:700;margin-bottom:6px">${esc(exp.id)} — ${esc(exp.ide)}</div>
+                <button type="button" class="btn-secondary" data-open-card="${esc(exp.id)}">Buka Kartu &amp; Mulai Uji Coba →</button>
+              </div>` : ""}
+            <div>
+              <h3 style="margin:0 0 6px">📌 Celah Pengetahuan (Cabang Bersumber Tunggal)</h3>
+              ${(d.celah_sumber_tunggal || []).length ? `<div style="display:flex;gap:6px;flex-wrap:wrap">${d.celah_sumber_tunggal.map(c => `<span class="badge">${esc(c.cabang)} (${c.sumber} sumber)</span>`).join("")}</div>` : `<span style="font-size:13px;color:var(--text-3)">Semua cabang aktif sudah memiliki beragam sumber.</span>`}
+            </div>
+            ${(d.pertentangan_terbuka || []).length ? `
+              <div>
+                <h3 style="margin:0 0 6px">⚡ Pertentangan Terbuka</h3>
+                <ul class="rel-list">${d.pertentangan_terbuka.map(p => `<li style="font-size:13px"><strong>${esc(p.a)}</strong> vs <strong>${esc(p.b)}</strong> — ${esc(p.ide_a)}</li>`).join("")}</ul>
+              </div>` : ""}
+          </div>`;
+        outEl.querySelectorAll("[data-open-card]").forEach(el => el.addEventListener("click", () => openCardPage(el.dataset.openCard)));
+      } catch {
+        outEl.innerHTML = `<div class="panel">Gagal menghubungi server lokal.</div>`;
+      }
+    });
     if (HAS_SERVER) runAnalisis("tren");
   }
 
