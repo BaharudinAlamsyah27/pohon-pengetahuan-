@@ -2572,7 +2572,21 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
           <p style="font-size:13.5px;color:var(--text-2);margin:0 0 16px">
             <strong>Langkah 1:</strong> Tempel link X, YouTube, atau web lalu klik <strong>Tarik Isi Link</strong> (atau tempel teks langsung / pilih gambar di bawah).
           </p>
-          ${!HAS_SERVER ? `<div class="copy-hint" style="margin-bottom:14px"><strong>Mode Antrean Browser (Laptop / Server Lokal Mati):</strong> Anda tetap bisa menempelkan link atau teks di bawah lalu klik <strong>Simpan</strong>! Catatan akan disimpan ke <strong>🎒 Kantong Antrean Browser</strong> di perangkat ini dan bisa disinkronkan 1-klik saat laptop menyala.</div>` : ""}
+          ${!HAS_SERVER ? `
+          <div style="margin-bottom:14px;padding:14px 16px;border-radius:10px;background:var(--node-main-bg);color:var(--node-main-text);border:2px solid var(--border-strong);box-shadow:3px 3px 0 var(--border-strong);font-size:13px;line-height:1.55">
+            <div style="font-weight:800;font-size:14px;margin-bottom:6px">📌 Anda Sedang Membuka Versi Web Online (Baca-Saja)</div>
+            <p style="margin:0 0 10px">Di versi online ini, tombol <strong>Tarik Isi Link</strong> otomatis tidak bisa mengambil teks dari X/YouTube karena tidak terhubung langsung ke mesin Python di laptop Anda. Tenang, Anda tetap bisa menyimpan catatan dengan 2 cara mudah:</p>
+            <div style="display:grid;gap:8px">
+              <div style="padding:9px 11px;border-radius:8px;background:var(--surface);border:1.5px solid var(--border-strong)">
+                <strong>📱 Cara 1 — Lagi di Luar / Pakai HP (Mode Antrean):</strong><br>
+                Salin (copy) teks postingannya → tempel langsung di kotak teks besar di bawah → klik <strong>Simpan</strong>. Catatan akan tersimpan aman di <strong>🎒 Kantong Antrean Browser</strong> HP Anda, lalu bisa dimasukkan 1-klik saat laptop menyala.
+              </div>
+              <div style="padding:9px 11px;border-radius:8px;background:var(--surface);border:1.5px solid var(--border-strong)">
+                <strong>💻 Cara 2 — Sedang di Depan Laptop (Serba Otomatis):</strong><br>
+                Jalankan <code>python scripts/server_lokal.py</code> di terminal laptop, lalu buka <code>http://127.0.0.1:8765/#tangkap</code>. Di sana tombol <strong>Tarik Isi Link</strong> langsung mengambil isi postingan &amp; memecahnya jadi kartu otomatis ke folder laptop Anda.
+              </div>
+            </div>
+          </div>` : ""}
           <div id="tk-offline-queue-box" style="margin-bottom:14px"></div>
 
           <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
@@ -2729,7 +2743,10 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       const url = document.getElementById("tk-url").value.trim();
       const msg = document.getElementById("tk-msg");
       if (!url) { msg.textContent = "Masukkan URL terlebih dahulu."; return; }
-      if (!HAS_SERVER) { msg.textContent = "Jalankan python scripts/server_lokal.py lalu buka http://127.0.0.1:8765/#tangkap"; return; }
+      if (!HAS_SERVER) {
+        msg.innerHTML = `<span style="display:inline-block;padding:8px 10px;border-radius:8px;background:var(--node-main-bg);border:1.5px solid var(--border-strong);color:var(--node-main-text)">⚠️ <strong>Tarik Link otomatis hanya aktif di laptop.</strong> Di web online ini, silakan salin teks postingannya lalu tempel langsung ke kotak teks di bawah dan klik <strong>Simpan</strong> (masuk ke 🎒 Kantong Antrean), atau buka <code>http://127.0.0.1:8765/#tangkap</code> saat laptop menyala.</span>`;
+        return;
+      }
       msg.textContent = "Menarik isi link...";
       try {
         const resp = await fetch("/api/ambil-link", {
@@ -2758,7 +2775,10 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       const file = e.target.files?.[0];
       const msg = document.getElementById("tk-msg");
       if (!file) return;
-      if (!HAS_SERVER) { msg.textContent = "Jalankan server_lokal.py untuk OCR gambar."; return; }
+      if (!HAS_SERVER) {
+        msg.innerHTML = `<span style="display:inline-block;padding:8px 10px;border-radius:8px;background:var(--node-main-bg);border:1.5px solid var(--border-strong);color:var(--node-main-text)">⚠️ <strong>Baca teks gambar (OCR) hanya aktif di laptop.</strong> Nyalakan <code>python scripts/server_lokal.py</code> lalu buka <code>http://127.0.0.1:8765/#tangkap</code>.</span>`;
+        return;
+      }
       msg.textContent = "Membaca teks gambar (Tesseract Lokal / Gemini Vision Gratis)...";
       const reader = new FileReader();
       reader.onload = async () => {
@@ -2797,7 +2817,7 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       }
       if (!HAS_SERVER) {
         box.style.display = "block";
-        box.textContent = "Jalankan server_lokal.py untuk pratinjau ekstraksi matematika.";
+        box.innerHTML = `⚠️ <strong>Pratinjau pemecah poin hanya aktif di laptop.</strong> Di web online ini, langsung klik <strong>Simpan</strong> saja agar masuk ke 🎒 Kantong Antrean Browser — nanti saat laptop menyala otomatis bisa dipecah jadi kartu.`;
         return;
       }
       box.style.display = "block";
@@ -3452,10 +3472,10 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
     tangkap: {
       title: "Cara Menyimpan Postingan, Link, atau Gambar Baru",
       steps: [
-        "<strong>Cara 1 (Tempel Link):</strong> Tempel link X, YouTube, atau artikel web di kotak paling atas → klik <strong>Tarik Isi Link</strong>. (Jika di dalam postingan X ada link ke GitHub/artikel lain, isinya ikut ditarik otomatis).",
-        "<strong>Cara 2 (Dari Gambar / Screenshot):</strong> Klik <strong>📷 Baca Teks dari Gambar / Screenshot</strong> untuk mengambil teks dari gambar.",
-        "<strong>Atur Jumlah Kartu:</strong> Pilih <em>Simpan Jadi 1 Kartu Utuh Saja</em> (bila ingin 1 postingan = 1 kartu) atau <em>Pecah Otomatis Jadi 1–3 Kartu Poin Inti</em> (bila ingin postingan panjang diperas jadi beberapa poin).",
-        "<strong>Buat Topik Baru (Opsional):</strong> Klik laci <em>Pengaturan Detail — Opsional</em> jika ingin memilih topik manual atau mengetik nama topik baru sendiri."
+        "<strong>💻 Sedang di Laptop (Serba Otomatis):</strong> Jalankan <code>python scripts/server_lokal.py</code> lalu buka <code>http://127.0.0.1:8765/#tangkap</code>. Tempel link X, YouTube, atau artikel web → klik <strong>Tarik Isi Link</strong> agar teks langsung terisi dan dipecah jadi kartu otomatis ke folder laptop.",
+        "<strong>📱 Sedang di HP / Web Online (Mode Antrean):</strong> Karena web online tidak terhubung ke harddisk laptop, cukup salin teks postingan → tempel langsung di kotak teks besar → klik <strong>Simpan</strong>. Catatan masuk ke <strong>🎒 Kantong Antrean Browser</strong> dan bisa disinkronkan 1-klik saat laptop menyala.",
+        "<strong>📷 Dari Gambar / Screenshot (Khusus Laptop):</strong> Klik <strong>📷 Baca Teks dari Gambar / Screenshot</strong> untuk menyalin teks dari tangkapan layar secara otomatis.",
+        "<strong>✂️ Atur Jumlah Kartu &amp; Topik:</strong> Pilih <em>Simpan Jadi 1 Kartu Utuh Saja</em> atau <em>Pecah Otomatis Jadi 1–3 Kartu Poin Inti</em>. Buka laci <em>Pengaturan Detail — Opsional</em> bila ingin memilih atau membuat topik baru sendiri."
       ]
     }
   };
