@@ -209,6 +209,7 @@ def load_cards(kartu_dir: Path) -> dict[str, dict]:
             "kepercayaan": _as_str(fm.get("kepercayaan"), "belum-diverifikasi"),
             "dasar": _as_str(fm.get("dasar"), "tidak-jelas"),
             "tag": fm.get("tag", []) if isinstance(fm.get("tag"), list) else parse_inline_list(str(fm.get("tag", ""))),
+            "konsep": fm.get("konsep", []) if isinstance(fm.get("konsep"), list) else parse_inline_list(str(fm.get("konsep", ""))),
             "sumber": extract_wikilinks(fm.get("sumber", "")),
             "relasi": clean_rel,
             "dibuat": _as_str(fm.get("dibuat"), ""),
@@ -311,7 +312,13 @@ def build_fts_index(cards: dict[str, dict], sources: dict[str, dict]) -> int:
                 penulis,
                 alat,
                 tugas,
-                tokenize='unicode61'
+                konsep,
+                tokenize='porter unicode61'
+            );
+            CREATE VIRTUAL TABLE kartu_trigram USING fts5(
+                id UNINDEXED,
+                teks_gabungan,
+                tokenize='trigram'
             );
         """)
         count = 0
@@ -322,6 +329,7 @@ def build_fts_index(cards: dict[str, dict], sources: dict[str, dict]) -> int:
             })
             penulis_str = ", ".join(penulis_list) if penulis_list else "tidak diketahui"
             tag_str = ", ".join(c["tag"])
+            konsep_str = ", ".join(c.get("konsep", []))
             alat_str = ", ".join(c.get("alat", []))
             tugas_str = str(c.get("tugas", ""))
             tahap_kerja_str = str(c.get("tahap_kerja", ""))
@@ -339,8 +347,13 @@ def build_fts_index(cards: dict[str, dict], sources: dict[str, dict]) -> int:
                 ),
             )
             cur.execute(
-                """INSERT INTO kartu_fts (id, ide, penjelasan, tag, cabang, penulis, alat, tugas) VALUES (?,?,?,?,?,?,?,?)""",
-                (cid, c["ide"], c["penjelasan"], tag_str, c["cabang"], penulis_str, alat_str, tugas_str),
+                """INSERT INTO kartu_fts (id, ide, penjelasan, tag, cabang, penulis, alat, tugas, konsep) VALUES (?,?,?,?,?,?,?,?,?)""",
+                (cid, c["ide"], c["penjelasan"], tag_str, c["cabang"], penulis_str, alat_str, tugas_str, konsep_str),
+            )
+            trigram_blob = f"{c['ide']} {c['penjelasan']} {tag_str} {konsep_str} {c['cabang']} {alat_str}"
+            cur.execute(
+                """INSERT INTO kartu_trigram (id, teks_gabungan) VALUES (?,?)""",
+                (cid, trigram_blob),
             )
             count += 1
         conn.commit()
@@ -372,7 +385,7 @@ def search_fts(query: str, limit: int = 20) -> list[dict]:
     try:
         rows = conn.execute(
             """
-            SELECT m.*, bm25(kartu_fts, 10.0, 4.0, 6.0, 3.0, 2.0, 8.0, 6.0) AS skor
+            SELECT m.*, bm25(kartu_fts, 10.0, 4.0, 6.0, 3.0, 2.0, 8.0, 6.0, 9.0) AS skor
             FROM kartu_fts
             JOIN kartu_meta m ON m.id = kartu_fts.id
             WHERE kartu_fts MATCH ? AND m.status = 'aktif'
@@ -381,7 +394,36 @@ def search_fts(query: str, limit: int = 20) -> list[dict]:
             """,
             (q_fts, limit),
         ).fetchall()
-        return [dict(r) for r in rows]
+        results = [dict(r) for r in rows]
+        seen_ids = {r["id"] for r in results}
+
+        # Indeks kedua (FTS5 Trigram) untuk menangkap imbuhan Indonesia (mis: investasi/berinvestasi)
+        if len(results) < limit:
+            tri_tokens = [t for t in re.findall(r"[a-z0-9]+", query.lower()) if len(t) >= 4][:6]
+            if tri_tokens:
+                q_tri = " OR ".join(f'"{t}"' for t in tri_tokens)
+                try:
+                    tri_rows = conn.execute(
+                        """
+                        SELECT m.*, bm25(kartu_trigram) AS skor
+                        FROM kartu_trigram
+                        JOIN kartu_meta m ON m.id = kartu_trigram.id
+                        WHERE kartu_trigram MATCH ? AND m.status = 'aktif'
+                        ORDER BY skor ASC
+                        LIMIT ?
+                        """,
+                        (q_tri, limit),
+                    ).fetchall()
+                    for tr in tri_rows:
+                        d = dict(tr)
+                        if d["id"] not in seen_ids:
+                            results.append(d)
+                            seen_ids.add(d["id"])
+                            if len(results) >= limit:
+                                break
+                except sqlite3.OperationalError:
+                    pass
+        return results
     finally:
         conn.close()
 

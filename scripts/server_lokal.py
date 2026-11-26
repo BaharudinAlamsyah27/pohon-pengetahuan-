@@ -425,6 +425,37 @@ def recount_branch_and_index(cabang_slug: str, today: str) -> None:
         idx_fp.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
 
 
+INVERSE_REL_MAP = {
+    "lanjutan-dari": "prasyarat-untuk",
+    "prasyarat-untuk": "lanjutan-dari",
+    "memperkuat": "memperkuat",
+    "bertentangan-dengan": "bertentangan-dengan",
+    "contoh-dari": "terkait",
+    "terkait": "terkait",
+}
+
+
+def add_inverse_relation(target_cid: str, rel_type: str, from_cid: str) -> None:
+    """Tulis relasi balik secara otomatis (2 arah) ke kartu lama sesuai tabel invers."""
+    inv_type = INVERSE_REL_MAP.get(rel_type)
+    if not inv_type or not CARD_ID_RE.match(target_cid) or target_cid == from_cid:
+        return
+    fp = ROOT / "kartu" / f"{target_cid}.md"
+    if not fp.is_file():
+        return
+    txt = fp.read_text(encoding="utf-8").replace("\r\n", "\n")
+    if f"ke: {from_cid}" in txt:
+        return
+    new_entry = f"  - {{tipe: {inv_type}, ke: {from_cid}}}"
+    if re.search(r"^relasi:\s*\[\s*\]\s*$", txt, flags=re.M):
+        txt = re.sub(r"^relasi:\s*\[\s*\]\s*$", f"relasi:\n{new_entry}", txt, count=1, flags=re.M)
+    elif re.search(r"^relasi:\s*$", txt, flags=re.M):
+        txt = re.sub(r"^relasi:\s*$", f"relasi:\n{new_entry}", txt, count=1, flags=re.M)
+    else:
+        return
+    fp.write_text(txt, encoding="utf-8")
+
+
 def sync_branch_and_index(cabang_slug: str, cid: str, ide_short: str, tahap: str, today: str) -> None:
     """Tambahkan entri draf kartu tepat di bawah '## Daftar Kartu' dan sinkronkan cabang induk & indeks.md."""
     cab_fp = ROOT / "cabang" / Path(*cabang_slug.split("/")) / "_cabang.md"
@@ -511,57 +542,112 @@ def create_new_source(
     bidang = cabang_slug.split("/")[0]
     valid_tahap = {"sebelum-20", "20-25", "25-30", "30-40", "40-50", "50+", "semua-usia"}
     meta_auto = mesin_cerdas.infer_card_metadata_math(f"{clean_judul} {raw_text}", platform=clean_platform, url=clean_url)
-    if tahap_pilihan in valid_tahap and tahap_pilihan != "semua-usia":
-        tahap = tahap_pilihan
-    else:
-        tahap = meta_auto["tahap"]
+    default_tahap = tahap_pilihan if (tahap_pilihan in valid_tahap and tahap_pilihan != "semua-usia") else meta_auto["tahap"]
 
     created_cids: list[str] = []
-    created_entries: list[tuple[str, str]] = []
-    extracted_points = mesin_cerdas.extract_atomic_insights_math(raw_text, max_cards=max(1, min(5, int(max_daun or 3))))
+    created_entries: list[tuple[str, str, str, str]] = []  # (cid, ide_short, card_cabang, card_tahap)
     existing_cards_snapshot = bangun_pohon.load_cards(ROOT / "kartu")
+    max_cards_lim = max(1, min(5, int(max_daun or 3)))
+
+    # Pipeline 1-Panggilan Terstruktur (Gemini JSON + Top-12 kartu tetangga + validasi anti-halusinasi)
+    candidate_neighbors = mesin_cerdas.query_relevant_cards(f"{clean_judul} {raw_text[:600]}", existing_cards_snapshot, limit=12)
+    structured_ai = mesin_cerdas.extract_structured_cards_gemini(
+        raw_text=raw_text,
+        candidate_neighbors=candidate_neighbors,
+        valid_branches=VALID_BRANCHES,
+        max_cards=max_cards_lim,
+        platform=clean_platform,
+    ) if buat_draf else None
+
+    extracted_points = []
+    if not structured_ai:
+        extracted_points = mesin_cerdas.extract_atomic_insights_math(raw_text, max_cards=max_cards_lim)
+
+    user_forced_branch = bool(subcabang_baru or bidang_pilihan)
+    source_saripati_items: list[str] = []
+    used_branches: set[str] = set()
 
     if buat_draf:
         cur_num = int(next_card_id().split("-")[1])
-        for idx_pt, pt in enumerate(extracted_points):
+        items_to_create = structured_ai["kartu"] if structured_ai else extracted_points
+        for idx_pt, pt in enumerate(items_to_create):
             cid = f"K-{cur_num + idx_pt:04d}"
             created_cids.append(cid)
-            raw_ide = pt["ide"].strip().strip("[]")
-            raw_penj = pt["penjelasan"]
-            # Terjemahkan & rapikan kartu asing ke Bahasa Indonesia alami (Teks Asli di sumber/ tetap suci!)
-            ide_text, penjelasan = mesin_cerdas.translate_and_polish_card_gemini(raw_ide, raw_penj)
-            ide_text = ide_text.replace('"', "'").strip()
+
+            if structured_ai:
+                ide_text = pt["ide"].replace('"', "'").strip()
+                penjelasan = pt["penjelasan"]
+                kutipan_2 = pt["kutipan"]
+                card_cabang = cabang_slug if user_forced_branch else (pt["cabang"] or cabang_slug)
+                card_bidang = card_cabang.split("/")[0]
+                card_tahap = default_tahap if (tahap_pilihan != "semua-usia") else (pt["tahap"] or default_tahap)
+                card_jenis = pt["jenis"]
+                card_trust = pt["kepercayaan"]
+                card_dasar = pt["dasar"]
+                konsep_list = pt.get("konsep") or []
+                tags_all = (pt.get("tag") or []) + [clean_platform.lower()] + extra_tags
+                dummy = {"ide": ide_text, "penjelasan": penjelasan, "tag": tags_all, "cabang": card_cabang, "alat": [], "tugas": "", "tahap_kerja": ""}
+                detected_tools = mesin_cerdas.detect_tools_in_card(dummy)
+                detected_stage = mesin_cerdas.detect_workflow_stage(dummy)
+                rel_list = list(pt.get("relasi") or [])
+                has_conflict_prop = any(r.get("tipe") == "bertentangan-dengan" for r in rel_list)
+                conflict_note = " | [usulan pertentangan otomatis — perlu konfirmasi pengguna]" if has_conflict_prop else ""
+                agent_note = f"[inferensi AI] Diekstrak lewat 1-panggilan terstruktur ({structured_ai['model']}), kutipan terverifikasi{conflict_note}."
+            else:
+                raw_ide = pt["ide"].strip().strip("[]")
+                raw_penj = pt["penjelasan"]
+                ide_text, penjelasan = raw_ide.replace('"', "'").strip(), raw_penj
+                kutipan_words = (pt["kutipan"] or raw_ide).split()
+                kutipan_2 = " ".join(kutipan_words[:14]) + ("..." if len(kutipan_words) > 14 else "")
+                card_cabang = cabang_slug
+                card_bidang = bidang
+                card_tahap = default_tahap
+                pt_meta = mesin_cerdas.infer_card_metadata_math(f"{raw_ide} {raw_penj}", platform=clean_platform, url=clean_url)
+                card_jenis = pt_meta["jenis"]
+                card_trust = pt_meta["kepercayaan"]
+                card_dasar = pt_meta["dasar"]
+                konsep_list = pt_meta["tags"][:3]
+                tags_all = ["draf-ekstraktif"] + pt_meta["tags"] + [clean_platform.lower()] + extra_tags
+                detected_tools = pt["alat"]
+                detected_stage = pt["tahap_kerja"]
+                rel_list = mesin_cerdas.find_auto_relations(ide_text, penjelasan, existing_cards_snapshot, limit=2)
+                agent_note = f"[inferensi AI] Draf ekstraktif offline (perlu ditinjau) — TextTiling #{pt['segmen'] + 1}, LexRank={pt['lexrank']}, Entropi={pt['entropi']}."
+
+            used_branches.add(card_cabang)
             ide_short = " ".join(ide_text.split()[:12])
-            created_entries.append((cid, ide_short))
-            # Jaga kutipan pendukung ringkas (<=14 kata) agar selalu lolos audit anti-kebocoran situs publik
-            kutipan_words = (pt["kutipan"] or raw_ide).split()
-            kutipan_2 = " ".join(kutipan_words[:14]) + ("..." if len(kutipan_words) > 14 else "")
-            detected_tools = pt["alat"]
-            detected_stage = pt["tahap_kerja"]
+            source_saripati_items.append(ide_text)
+            created_entries.append((cid, ide_short, card_cabang, card_tahap))
             alat_yaml = f"[{', '.join(detected_tools)}]" if detected_tools else "[]"
-            pt_meta = mesin_cerdas.infer_card_metadata_math(f"{raw_ide} {raw_penj}", platform=clean_platform, url=clean_url)
-            tags_all = pt_meta["tags"] + [clean_platform.lower()] + extra_tags
+            konsep_yaml = "[" + ", ".join(dict.fromkeys(konsep_list)) + "]" if konsep_list else "[]"
             tags_yaml = "[" + ", ".join(dict.fromkeys(tags_all)) + "]"
 
-            # Relasi berurutan antar Daun dari Akar yang sama + auto-relasi ke kartu tetangga terdekat (Cosine >= 0.30)
+            # Relasi berurutan antar Daun + relasi ke kartu lama (otomatis ditulis 2 arah!)
             rel_lines: list[str] = []
+            inverse_queue: list[tuple[str, str]] = []
             if idx_pt > 0:
                 prev_cid = created_cids[idx_pt - 1]
                 rel_lines.append(f"  - {{tipe: lanjutan-dari, ke: {prev_cid}}}")
-            for auto_rel in mesin_cerdas.find_auto_relations(ide_text, penjelasan, existing_cards_snapshot, limit=2):
-                rel_lines.append(f"  - {{tipe: {auto_rel['tipe']}, ke: {auto_rel['ke']}}}")
+                inverse_queue.append((prev_cid, "lanjutan-dari"))
+            seen_rel_targets: set[str] = {created_cids[idx_pt - 1]} if idx_pt > 0 else set()
+            for r in rel_list:
+                rk, rt = r.get("ke", ""), r.get("tipe", "terkait")
+                if rk and rk != cid and rk not in seen_rel_targets:
+                    rel_lines.append(f"  - {{tipe: {rt}, ke: {rk}}}")
+                    inverse_queue.append((rk, rt))
+                    seen_rel_targets.add(rk)
             rel_yaml = ("\n" + "\n".join(rel_lines)) if rel_lines else "[]"
 
             card_md = (
                 f"---\n"
                 f"id: {cid}\n"
                 f'ide: "{ide_text}"\n'
-                f"bidang: {bidang}\n"
-                f"cabang: {cabang_slug}\n"
-                f"tahap: {tahap}\n"
-                f"jenis: {pt_meta['jenis']}\n"
-                f"kepercayaan: {pt_meta['kepercayaan']}\n"
-                f"dasar: {pt_meta['dasar']}\n"
+                f"bidang: {card_bidang}\n"
+                f"cabang: {card_cabang}\n"
+                f"tahap: {card_tahap}\n"
+                f"jenis: {card_jenis}\n"
+                f"kepercayaan: {card_trust}\n"
+                f"dasar: {card_dasar}\n"
+                f"konsep: {konsep_yaml}\n"
                 f"tag: {tags_yaml}\n"
                 f"sumber: [[{sid}]]\n"
                 f"relasi: {rel_yaml}\n"
@@ -574,21 +660,23 @@ def create_new_source(
                 f"bintang: 0\n"
                 f'catatan-khusus: ""\n'
                 f"alat: {alat_yaml}\n"
-                f"tugas: {cabang_slug.split('/')[-1]}\n"
+                f"tugas: {card_cabang.split('/')[-1]}\n"
                 f"tahap-kerja: {detected_stage}\n"
                 f"---\n\n"
                 f"## Ide\n{penjelasan}\n\n"
                 f"## Kutipan Pendukung\n> {kutipan_2}\n\n"
                 f"## Catatan Agen\n"
-                f"[inferensi AI] Diekstrak otomatis (TextTiling #{pt['segmen'] + 1}, LexRank={pt['lexrank']}, Entropi={pt['entropi']}, jenis={pt_meta['jenis']}, dasar={pt_meta['dasar']}).\n"
+                f"{agent_note}\n"
             )
             (ROOT / "kartu" / f"{cid}.md").write_text(card_md, encoding="utf-8")
+            for target_cid, r_type in inverse_queue:
+                add_inverse_relation(target_cid, r_type, cid)
 
     created_cid = created_cids[0] if created_cids else None
     kartu_list_str = "[" + ", ".join(created_cids) + "]" if created_cids else "[]"
     saripati_txt = (
-        " | ".join(f"({i+1}) {p['ide']}" for i, p in enumerate(extracted_points))[:420]
-        if extracted_points else re.sub(r"\s+", " ", raw_text)[:320]
+        " | ".join(f"({i+1}) {txt}" for i, txt in enumerate(source_saripati_items))[:420]
+        if source_saripati_items else re.sub(r"\s+", " ", raw_text)[:320]
     )
 
     content = (
@@ -611,22 +699,23 @@ def create_new_source(
     )
     fp.write_text(content, encoding="utf-8")
 
-    for cid, ide_short in created_entries:
-        sync_branch_and_index(cabang_slug, cid, ide_short, tahap, today)
+    for cid, ide_short, c_cabang, c_tahap in created_entries:
+        sync_branch_and_index(c_cabang, cid, ide_short, c_tahap, today)
 
     # Append ke sumber/_katalog.md dan log.md
     kat_fp = ROOT / "sumber" / "_katalog.md"
+    branches_summary = ", ".join(sorted(used_branches)) if used_branches else cabang_slug
     with kat_fp.open("a", encoding="utf-8") as f:
         f.write(f'\n{sid} | {today} | {clean_jenis} | {clean_penulis} | "{clean_judul}" | bidang: {bidang} | {len(created_cids)} kartu')
 
     log_fp = ROOT / "log.md"
     with log_fp.open("a", encoding="utf-8") as f:
-        extra = f" -> daun {', '.join(created_cids)} ({cabang_slug})" if created_cids else " | menunggu ekstraksi kartu"
+        extra = f" -> daun {', '.join(created_cids)} ({branches_summary})" if created_cids else " | menunggu ekstraksi kartu"
         f.write(f'\n[{today}] TANGKAP {sid} | "{clean_judul}" ({clean_platform}){extra}')
 
     # Sinkronkan FTS5, data.json & peta-pohon.html lokal
     rebuild_local_artifacts()
-    return {"ok": True, "id": sid, "kartu_id": created_cid, "kartu_ids": created_cids, "bidang": cabang_slug, "file": f"sumber/{sid}.md"}
+    return {"ok": True, "id": sid, "kartu_id": created_cid, "kartu_ids": created_cids, "bidang": branches_summary, "file": f"sumber/{sid}.md"}
 
 
 def set_fm_field(content: str, key: str, val: str) -> str:

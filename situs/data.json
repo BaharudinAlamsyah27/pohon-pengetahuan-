@@ -271,9 +271,9 @@
       "nama": "Kesehatan",
       "induk": "",
       "file": "cabang/kesehatan/_cabang.md",
-      "jumlah_kartu_tercatat": 1,
-      "jumlah_sumber_tercatat": 1,
-      "diperbarui": "2026-11-22",
+      "jumlah_kartu_tercatat": 2,
+      "jumlah_sumber_tercatat": 2,
+      "diperbarui": "2026-11-26",
       "catatan_sudut_pandang": "belum ada sumber",
       "ringkasan": "Rawat penampilan, angkat beban, makan sehat, tidur seperti atlet, dan perbaiki postur tubuh karena penampilan adalah kartu nama pertama Anda.",
       "poin_kunci": [
@@ -331,6 +331,7 @@
         "risiko-akun",
         "media-sosial"
       ],
+      "konsep": [],
       "sumber": [
         "S-0001"
       ],
@@ -372,6 +373,7 @@
         "konten-original",
         "reupload"
       ],
+      "konsep": [],
       "sumber": [
         "S-0001"
       ],
@@ -414,6 +416,7 @@
         "skills",
         "otomasi"
       ],
+      "konsep": [],
       "sumber": [
         "S-0003"
       ],
@@ -459,6 +462,7 @@
         "skills",
         "web-design"
       ],
+      "konsep": [],
       "sumber": [
         "S-0005"
       ],
@@ -503,6 +507,7 @@
         "mindset",
         "keberanian"
       ],
+      "konsep": [],
       "sumber": [
         "S-0006"
       ],
@@ -540,6 +545,7 @@
         "postur",
         "disiplin"
       ],
+      "konsep": [],
       "sumber": [
         "S-0007"
       ],
@@ -576,6 +582,7 @@
         "promo",
         "langganan-ai"
       ],
+      "konsep": [],
       "sumber": [
         "S-0009"
       ],
@@ -619,6 +626,7 @@
         "impresi",
         "strategi-konten"
       ],
+      "konsep": [],
       "sumber": [
         "S-0011"
       ],
@@ -660,6 +668,7 @@
         "otomasi",
         "google-ai-ultra"
       ],
+      "konsep": [],
       "sumber": [
         "S-0012"
       ],
@@ -704,6 +713,7 @@
         "arr",
         "gtm"
       ],
+      "konsep": [],
       "sumber": [
         "S-0013"
       ],
@@ -740,6 +750,7 @@
         "gtm",
         "otomasi-bisnis"
       ],
+      "konsep": [],
       "sumber": [
         "S-0013"
       ],
@@ -777,6 +788,7 @@
         "tpu",
         "cloud-computing"
       ],
+      "konsep": [],
       "sumber": [
         "S-0014"
       ],
@@ -820,6 +832,7 @@
         "otomasi-cloud",
         "vm"
       ],
+      "konsep": [],
       "sumber": [
         "S-0014"
       ],
@@ -862,6 +875,7 @@
         "pip",
         "instalasi-cli"
       ],
+      "konsep": [],
       "sumber": [
         "S-0014"
       ],
@@ -901,6 +915,7 @@
         "audio-waveform",
         "youtube"
       ],
+      "konsep": [],
       "sumber": [
         "S-0015"
       ],
@@ -939,6 +954,7 @@
         "inauthentic-content",
         "audio-ai"
       ],
+      "konsep": [],
       "sumber": [
         "S-0015"
       ],
@@ -982,6 +998,7 @@
         "audio-editing",
         "trik-monetisasi"
       ],
+      "konsep": [],
       "sumber": [
         "S-0015"
       ],
@@ -1021,6 +1038,7 @@
         "biaya-tenaga-kerja",
         "agribisnis"
       ],
+      "konsep": [],
       "sumber": [
         "S-0016"
       ],
@@ -1052,6 +1070,7 @@
         "ai-agent",
         "pengembangan-aplikasi"
       ],
+      "konsep": [],
       "sumber": [
         "S-0002"
       ],

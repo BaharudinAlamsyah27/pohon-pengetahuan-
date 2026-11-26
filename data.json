@@ -2,11 +2,11 @@
   "mode": "lokal",
   "dibangun": "2026-11-26",
   "ringkasan": {
-    "total_kartu": 20,
-    "total_sumber": 16,
+    "total_kartu": 21,
+    "total_sumber": 17,
     "total_cabang": 16,
     "penerapan": {
-      "belum-dicoba": 20,
+      "belum-dicoba": 21,
       "sedang-dicoba": 0,
       "diterapkan": 0,
       "ditolak": 0
@@ -318,9 +318,9 @@
       "nama": "Kesehatan",
       "induk": "",
       "file": "cabang/kesehatan/_cabang.md",
-      "jumlah_kartu_tercatat": 1,
-      "jumlah_sumber_tercatat": 1,
-      "diperbarui": "2026-11-22",
+      "jumlah_kartu_tercatat": 2,
+      "jumlah_sumber_tercatat": 2,
+      "diperbarui": "2026-11-26",
       "catatan_sudut_pandang": "belum ada sumber",
       "ringkasan": "Belum ada kartu pada cabang ini.",
       "poin_kunci": [],
@@ -330,8 +330,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 1,
-      "jumlah_sumber": 1,
+      "jumlah_kartu": 2,
+      "jumlah_sumber": 2,
       "urutan": 6
     },
     {
@@ -416,6 +416,7 @@
         "risiko-akun",
         "media-sosial"
       ],
+      "konsep": [],
       "sumber": [
         "S-0001"
       ],
@@ -466,6 +467,7 @@
         "konten-original",
         "reupload"
       ],
+      "konsep": [],
       "sumber": [
         "S-0001"
       ],
@@ -517,6 +519,7 @@
         "skills",
         "otomasi"
       ],
+      "konsep": [],
       "sumber": [
         "S-0003"
       ],
@@ -566,6 +569,7 @@
         "monetisasi",
         "klaim-ekstrem"
       ],
+      "konsep": [],
       "sumber": [
         "S-0004"
       ],
@@ -616,6 +620,7 @@
         "skills",
         "web-design"
       ],
+      "konsep": [],
       "sumber": [
         "S-0005"
       ],
@@ -665,6 +670,7 @@
         "mindset",
         "keberanian"
       ],
+      "konsep": [],
       "sumber": [
         "S-0006"
       ],
@@ -707,6 +713,7 @@
         "postur",
         "disiplin"
       ],
+      "konsep": [],
       "sumber": [
         "S-0007"
       ],
@@ -748,6 +755,7 @@
         "promo",
         "langganan-ai"
       ],
+      "konsep": [],
       "sumber": [
         "S-0009"
       ],
@@ -796,6 +804,7 @@
         "impresi",
         "strategi-konten"
       ],
+      "konsep": [],
       "sumber": [
         "S-0011"
       ],
@@ -846,6 +855,7 @@
         "otomasi",
         "google-ai-ultra"
       ],
+      "konsep": [],
       "sumber": [
         "S-0012"
       ],
@@ -895,6 +905,7 @@
         "arr",
         "gtm"
       ],
+      "konsep": [],
       "sumber": [
         "S-0013"
       ],
@@ -936,6 +947,7 @@
         "gtm",
         "otomasi-bisnis"
       ],
+      "konsep": [],
       "sumber": [
         "S-0013"
       ],
@@ -978,6 +990,7 @@
         "tpu",
         "cloud-computing"
       ],
+      "konsep": [],
       "sumber": [
         "S-0014"
       ],
@@ -1026,6 +1039,7 @@
         "otomasi-cloud",
         "vm"
       ],
+      "konsep": [],
       "sumber": [
         "S-0014"
       ],
@@ -1073,6 +1087,7 @@
         "pip",
         "instalasi-cli"
       ],
+      "konsep": [],
       "sumber": [
         "S-0014"
       ],
@@ -1117,6 +1132,7 @@
         "audio-waveform",
         "youtube"
       ],
+      "konsep": [],
       "sumber": [
         "S-0015"
       ],
@@ -1160,6 +1176,7 @@
         "inauthentic-content",
         "audio-ai"
       ],
+      "konsep": [],
       "sumber": [
         "S-0015"
       ],
@@ -1208,6 +1225,7 @@
         "audio-editing",
         "trik-monetisasi"
       ],
+      "konsep": [],
       "sumber": [
         "S-0015"
       ],
@@ -1252,6 +1270,7 @@
         "biaya-tenaga-kerja",
         "agribisnis"
       ],
+      "konsep": [],
       "sumber": [
         "S-0016"
       ],
@@ -1288,6 +1307,7 @@
         "ai-agent",
         "pengembangan-aplikasi"
       ],
+      "konsep": [],
       "sumber": [
         "S-0002"
       ],
@@ -1316,6 +1336,41 @@
       "kutipan": "Sangat recommended bikin tone-of-voice guideline bagi AI agents.",
       "catatan_agen": "[inferensi AI] Diekstrak dari sumber S-0002 yang sebelumnya masih berstatus menunggu ekstraksi.",
       "penulis": "Ibrahim Arief (@ibamarief)"
+    },
+    {
+      "id": "K-0023",
+      "file": "kartu/K-0023.md",
+      "ide": "6hr vs 8hr pushes your system near 100% capacity, multiplying errors, brain fog, and biological debt by 12x.",
+      "bidang": "kesehatan",
+      "cabang": "kesehatan",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "belum-diverifikasi",
+      "dasar": "tidak-jelas",
+      "tag": [
+        "ekstraksi-matematika",
+        "x"
+      ],
+      "konsep": [],
+      "sumber": [
+        "S-0017"
+      ],
+      "relasi": [],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "publik": false,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-26",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "kesehatan",
+      "tahap_kerja": "produksi",
+      "penjelasan": "People mistakenly believe it's wasted time. 6hr vs 8hr pushes your system near 100% capacity, multiplying errors, brain fog, and biological debt by 12x.",
+      "kutipan": "6hr vs 8hr pushes your system near 100% capacity, multiplying errors, brain fog, and biological debt by 12x.",
+      "catatan_agen": "[inferensi AI] Diekstrak otomatis dengan pipeline matematika (TextTiling segmen #1, LexRank=1.0, Entropi=4.2939).",
+      "penulis": "Bryan Johnson (@bryan_johnson)"
     }
   ],
   "sumber": [
@@ -1615,6 +1670,24 @@
         "K-0021"
       ],
       "saripati": "Diskusi mengenai kelayakan ekonomis penggunaan mesin penjahit pita benih seledri dan wortel jika diterapkan di Indonesia yang memiliki biaya tenaga kerja terjangkau."
+    },
+    {
+      "id": "S-0017",
+      "file": "sumber/S-0017.md",
+      "judul": "Same math applies to sleep.",
+      "jenis": "postingan",
+      "penulis": "Bryan Johnson (@bryan_johnson)",
+      "platform": "X",
+      "url": "https://x.com/bryan_johnson/status/2125683008334446828?a=MPPbB5WFZ8LJoxO7Wwg&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "kesehatan"
+      ],
+      "kartu": [
+        "K-0023"
+      ],
+      "saripati": "(1) 6hr vs 8hr pushes your system near 100% capacity, multiplying errors, brain fog, and biological debt by 12x."
     }
   ]
 }

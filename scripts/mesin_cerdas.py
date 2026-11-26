@@ -51,9 +51,46 @@ TRUST_WEIGHT = {"tinggi": 1.0, "sedang": 0.8, "rendah": 0.45, "belum-diverifikas
 STATUS_WEIGHT = {"belum-dicoba": 1.0, "sedang-dicoba": 0.85, "diterapkan": 0.3, "ditolak": 0.1}
 
 
+def stem_id(word: str) -> str:
+    """Stemmer imbuhan Bahasa Indonesia ringan (0 dependensi) untuk menyatukan kata dasar."""
+    w = (word or "").lower().strip()
+    if len(w) <= 4 or not w.isalpha():
+        return w
+    # 1. Hapus partikel & posesif akhir (-lah, -kah, -pun, -nya, -ku, -mu)
+    for suf in ("lah", "kah", "tah", "pun", "nya"):
+        if w.endswith(suf) and len(w) - len(suf) >= 4:
+            w = w[: -len(suf)]
+            break
+    # 2. Hapus awalan umum (meng-, meny-, mem-, men-, me-, ber-, ter-, per-, di-, ke-, se-, pe-)
+    for pref, repl in (
+        ("meng", ""), ("meny", "s"), ("mem", ""), ("men", ""), ("ber", ""),
+        ("ter", ""), ("per", ""), ("peng", ""), ("peny", "s"), ("pem", ""), ("pen", ""),
+        ("di", ""), ("ke", ""), ("se", ""), ("me", ""), ("pe", ""),
+    ):
+        if w.startswith(pref) and len(w) - len(pref) >= 4:
+            cand = repl + w[len(pref) :]
+            if len(cand) >= 4:
+                w = cand
+                break
+    # 3. Hapus akhiran derivasi (-kan, -an, -i)
+    for suf in ("kan", "an", "i"):
+        if w.endswith(suf) and len(w) - len(suf) >= 4:
+            w = w[: -len(suf)]
+            break
+    return w
+
+
 def tokenize(text: str) -> list[str]:
     words = re.findall(r"[a-z0-9]+", (text or "").lower())
-    return [w for w in words if len(w) >= 3 and w not in STOPWORDS]
+    out: list[str] = []
+    for w in words:
+        if len(w) < 3 or w in STOPWORDS:
+            continue
+        out.append(w)
+        st = stem_id(w)
+        if st != w and len(st) >= 3 and st not in STOPWORDS:
+            out.append(st)
+    return out
 
 
 def days_since(iso_date: str) -> int:
@@ -815,49 +852,369 @@ def translate_and_polish_card_gemini(ide_text: str, penjelasan: str) -> tuple[st
     """
     if not _is_mostly_non_indonesian(f"{ide_text} {penjelasan}"):
         return ide_text, penjelasan
+
+    local_env = load_local_env()
+    api_key = (os.environ.get("GEMINI_API_KEY") or local_env.get("GEMINI_API_KEY") or "").strip()
+    if not api_key or len((raw_text or "").strip()) < 15:
+        return None
+
+    neighbor_lines = []
+    valid_neighbor_ids = set()
+    for nb in candidate_neighbors[:12]:
+        nid = nb.get("id", "")
+        if nid:
+            valid_neighbor_ids.add(nid)
+            neighbor_lines.append(f"- [{nid}] ({nb.get('cabang', '')}): {nb.get('ide', '')[:160]}")
+    neighbors_blob = "\n".join(neighbor_lines) if neighbor_lines else "(belum ada kartu tetangga)"
+
+    prompt = (
+        "Kamu adalah analis Pohon Pengetahuan. Ekstrak teks sumber menjadi 1 hingga "
+        f"{max(1, min(5, max_cards))} kartu wawasan atomik dalam Bahasa Indonesia yang alami dan setia pada sumber.\n"
+        "JANGAN mengarang di luar isi sumber. Satu sumber BOLEH menghasilkan kartu di cabang berbeda jika topiknya berbeda.\n\n"
+        "DAFTAR CABANG YANG DIIZINKAN:\n"
+        "- kesehatan (tidur/sleep, olahraga, nutrisi, otak, brain fog, biologi, medis)\n"
+        "- keuangan (tabungan, gaji, investasi, saham, utang, dana darurat)\n"
+        "- bisnis (startup, SaaS, omzet, klien, produk digital, jualan)\n"
+        "- sosmed (algoritma X/YouTube/TikTok/IG, OCR X, konten viral, impresi, kreator)\n"
+        "- digital-marketing (SEO, iklan/ads, funnel, copywriting, konversi)\n"
+        "- kesuksesan (karier, CPNS, beasiswa, magang, kerja, wawancara)\n"
+        "- motivasi-dan-mindset (disiplin, kebiasaan, fokus, overthinking, produktivitas)\n"
+        "- relasi (hubungan, komunikasi, keluarga, pasangan, negosiasi)\n"
+        "- ai/coding-dan-proyek (coding AI, Cursor, Claude Code, Python, GitHub, API)\n"
+        "- ai/prompt-dan-agen (prompt, agen AI, MCP, skill AI, workflow otomasi)\n"
+        "- ai/video-dan-clipping (video AI, Kling, Veo, Runway, CapCut, ElevenLabs)\n"
+        "- ai/tulisan-dan-artikel (menulis AI, tone-of-voice, artikel AI)\n"
+        "- ai/perbandingan-model (perbandingan model LLM, benchmark Claude/Gemini/GPT)\n"
+        "- ai (AI umum lainnya)\n"
+        "- lainnya\n\n"
+        f"KARTU TETANGGA YANG SUDAH ADA (untuk cek duplikat & relasi):\n{neighbors_blob}\n\n"
+        "Balas HANYA JSON valid persis dengan skema ini:\n"
+        '{\n'
+        '  "duplikat_dari": null atau "K-XXXX" jika seluruh teks sama persis idenya dengan kartu lama,\n'
+        '  "kartu": [\n'
+        '    {\n'
+        '      "ide": "1-2 kalimat inti dalam Bahasa Indonesia",\n'
+        '      "penjelasan": "2-4 kalimat penjelasan setia sumber dalam Bahasa Indonesia",\n'
+        '      "kutipan": "kutipan singkat <=12 kata yang PERSIS ada di teks asli",\n'
+        '      "cabang": "salah satu slug cabang di atas",\n'
+        '      "tahap": "sebelum-20|20-25|25-30|30-40|40-50|50+|semua-usia",\n'
+        '      "jenis": "fakta|data|nasihat|opini|kisah|prinsip",\n'
+        '      "dasar": "riset|pengalaman-pribadi|opini-umum|tidak-jelas",\n'
+        '      "kepercayaan": "sedang|rendah|belum-diverifikasi",\n'
+        '      "konsep": ["3 sampai 5 konsep abstrak huruf-kecil-strip, misal: manajemen-risiko, diversifikasi"],\n'
+        '      "tag": ["2 sampai 4 tag spesifik"],\n'
+        '      "relasi": [{"tipe": "memperkuat|terkait|lanjutan-dari|prasyarat-untuk|bertentangan-dengan", "ke": "K-XXXX"}]\n'
+        '    }\n'
+        '  ]\n'
+        '}\n\n'
+        f"TEKS SUMBER ({platform}):\n{raw_text[:5500]}"
+    )
+
+    for attempt in range(2):
+        for mdl in ("gemini-2.5-flash", "gemini-2.5-flash-lite"):
+            try:
+                endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
+                body = {
+                    "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                    "generationConfig": {
+                        "temperature": 0.1,
+                        "maxOutputTokens": 2048,
+                        "responseMimeType": "application/json",
+                        "thinkingConfig": {"thinkingBudget": 0},
+                    },
+                }
+                req = urllib.request.Request(
+                    endpoint,
+                    data=json.dumps(body).encode("utf-8"),
+                    headers={"Content-Type": "application/json"},
+                    method="POST",
+                )
+                with urllib.request.urlopen(req, timeout=20) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                cands = data.get("candidates") or []
+                parts = ((cands[0].get("content") or {}).get("parts") or []) if cands else []
+                raw = "".join(p.get("text", "") for p in parts).strip()
+                m = re.search(r"\{[\s\S]*\}", raw)
+                if not m:
+                    continue
+                parsed = json.loads(m.group(0))
+                raw_cards = parsed.get("kartu") or []
+                if not isinstance(raw_cards, list) or not raw_cards:
+                    continue
+
+                # Validasi ketat hasil AI (anti-halusinasi & kepatuhan skema)
+                validated_cards: list[dict] = []
+                for rc in raw_cards[: max(1, min(5, max_cards))]:
+                    if not isinstance(rc, dict):
+                        continue
+                    ide = str(rc.get("ide") or "").strip().replace('"', "'")
+                    if len(ide) < 10:
+                        continue
+                    penj = str(rc.get("penjelasan") or ide).strip()
+                    kutipan = _verify_quote_in_source(str(rc.get("kutipan") or ""), raw_text)
+                    cab = str(rc.get("cabang") or "").strip().lower()
+                    if cab not in valid_branches:
+                        cab = ""
+                    tahap = str(rc.get("tahap") or "semua-usia").strip()
+                    if tahap not in ALLOWED_TAHAP_KARTU:
+                        tahap = "semua-usia"
+                    jenis = str(rc.get("jenis") or "opini").strip()
+                    if jenis not in ALLOWED_JENIS_KARTU:
+                        jenis = "opini"
+                    dasar = str(rc.get("dasar") or "tidak-jelas").strip()
+                    if dasar not in ALLOWED_DASAR_KARTU:
+                        dasar = "tidak-jelas"
+                    trust = str(rc.get("kepercayaan") or "belum-diverifikasi").strip()
+                    if trust not in ALLOWED_TRUST_KARTU:
+                        trust = "belum-diverifikasi"
+                    if platform.lower() in ("x", "threads", "instagram", "tiktok", "facebook") and trust == "tinggi":
+                        trust = "sedang"
+                    konsep = [
+                        re.sub(r"[^a-z0-9-]+", "-", str(k).lower().strip()).strip("-")
+                        for k in (rc.get("konsep") or [])
+                        if str(k).strip()
+                    ]
+                    konsep = [k for k in dict.fromkeys(konsep) if len(k) >= 2][:5]
+                    tags = [
+                        re.sub(r"[^a-z0-9-]+", "-", str(t).lower().strip()).strip("-")
+                        for t in (rc.get("tag") or [])
+                        if str(t).strip()
+                    ]
+                    tags = [t for t in dict.fromkeys(tags) if len(t) >= 2][:4]
+                    rels = []
+                    for r in (rc.get("relasi") or []):
+                        if isinstance(r, dict):
+                            rt = str(r.get("tipe") or "").strip()
+                            rk = str(r.get("ke") or "").strip()
+                            if rt in ALLOWED_REL_TIPE and rk in valid_neighbor_ids:
+                                rels.append({"tipe": rt, "ke": rk})
+                    validated_cards.append({
+                        "ide": ide[:240],
+                        "penjelasan": penj[:650],
+                        "kutipan": kutipan,
+                        "cabang": cab,
+                        "tahap": tahap,
+                        "jenis": jenis,
+                        "dasar": dasar,
+                        "kepercayaan": trust,
+                        "konsep": konsep,
+                        "tag": tags,
+                        "relasi": rels[:3],
+                    })
+                if validated_cards:
+                    dup = parsed.get("duplikat_dari")
+                    dup_id = str(dup).strip() if dup and str(dup).strip() in valid_neighbor_ids else None
+                    return {"duplikat_dari": dup_id, "kartu": validated_cards, "model": mdl}
+            except urllib.error.HTTPError as exc:
+                if exc.code == 404:
+                    continue
+                break
+            except Exception:
+                continue
+    return None
     local_env = load_local_env()
     api_key = (os.environ.get("GEMINI_API_KEY") or local_env.get("GEMINI_API_KEY") or "").strip()
     if not api_key:
         return ide_text, penjelasan
 
+    if not api_key:
+        return ide_text, penjelasan
+
+
+ALLOWED_JENIS_KARTU = {"fakta", "data", "nasihat", "opini", "kisah", "prinsip"}
+ALLOWED_DASAR_KARTU = {"riset", "pengalaman-pribadi", "opini-umum", "tidak-jelas"}
+ALLOWED_TRUST_KARTU = {"tinggi", "sedang", "rendah", "belum-diverifikasi"}
+ALLOWED_TAHAP_KARTU = {"sebelum-20", "20-25", "25-30", "30-40", "40-50", "50+", "semua-usia"}
+ALLOWED_REL_TIPE = {"lanjutan-dari", "prasyarat-untuk", "memperkuat", "bertentangan-dengan", "contoh-dari", "terkait"}
+
+
+def _verify_quote_in_source(quote: str, raw_text: str) -> str:
+    """Pencegah halusinasi: pastikan kata-kata kutipan benar-benar ada di teks asli (<=14 kata)."""
+    q_clean = re.sub(r"\s+", " ", (quote or "").strip().strip('"\'“”'))
+    raw_low = (raw_text or "").lower()
+    q_words = re.findall(r"[a-z0-9\u4e00-\u9fff]+", q_clean.lower())
+    if q_words:
+        hits = sum(1 for w in q_words if w in raw_low)
+        if hits / len(q_words) >= 0.70:
+            ws = q_clean.split()
+            return " ".join(ws[:14]) + ("..." if len(ws) > 14 else "")
+    # Fallback: ambil potongan kalimat pertama yang pasti ada di raw_text
+    fallback_ws = re.sub(r"\s+", " ", (raw_text or "").strip()).split()[:14]
+    return " ".join(fallback_ws) + ("..." if len(fallback_ws) == 14 else "")
+
+
+def extract_structured_cards_gemini(
+    raw_text: str,
+    candidate_neighbors: list[dict],
+    valid_branches: set[str],
+    max_cards: int = 3,
+    platform: str = "X",
+) -> dict | None:
+    """
+    Pipeline 1-Panggilan Terstruktur (Arsitektur Claude):
+    Mengirim teks sumber + Top-12 kartu tetangga dalam 1x panggilan Gemini JSON,
+    menghasilkan kartu terjemahan Bahasa Indonesia, cabang per kartu (bisa multi-cabang),
+    3-5 konsep abstrak (jembatan metafora), metadata valid, dan relasi (termasuk usulan pertentangan).
+    """
+    local_env = load_local_env()
+    api_key = (os.environ.get("GEMINI_API_KEY") or local_env.get("GEMINI_API_KEY") or "").strip()
+    if not api_key or len((raw_text or "").strip()) < 15:
+        return None
+
+    neighbor_lines = []
+    valid_neighbor_ids = set()
+    for nb in candidate_neighbors[:12]:
+        nid = nb.get("id", "")
+        if nid:
+            valid_neighbor_ids.add(nid)
+            neighbor_lines.append(f"- [{nid}] ({nb.get('cabang', '')}): {nb.get('ide', '')[:160]}")
+    neighbors_blob = "\n".join(neighbor_lines) if neighbor_lines else "(belum ada kartu tetangga)"
+
     prompt = (
-        "Terjemahkan dan rapikan wawasan berikut ke Bahasa Indonesia yang jelas, natural, dan setia pada isi (jangan mengarang tambahan).\n"
-        "Balas HANYA format JSON valid: {\"ide\": \"1-2 kalimat inti\", \"penjelasan\": \"2-4 kalimat penjelasan\"}.\n\n"
-        f"IDE ASLI: {ide_text}\n"
-        f"PENJELASAN ASLI: {penjelasan}"
+        "Kamu adalah analis Pohon Pengetahuan. Ekstrak teks sumber menjadi 1 hingga "
+        f"{max(1, min(5, max_cards))} kartu wawasan atomik dalam Bahasa Indonesia yang alami dan setia pada sumber.\n"
+        "JANGAN mengarang di luar isi sumber. Satu sumber BOLEH menghasilkan kartu di cabang berbeda jika topiknya berbeda.\n\n"
+        "DAFTAR CABANG YANG DIIZINKAN:\n"
+        "- kesehatan (tidur/sleep, olahraga, nutrisi, otak, brain fog, biologi, medis)\n"
+        "- keuangan (tabungan, gaji, investasi, saham, utang, dana darurat)\n"
+        "- bisnis (startup, SaaS, omzet, klien, produk digital, jualan)\n"
+        "- sosmed (algoritma X/YouTube/TikTok/IG, OCR X, konten viral, impresi, kreator)\n"
+        "- digital-marketing (SEO, iklan/ads, funnel, copywriting, konversi)\n"
+        "- kesuksesan (karier, CPNS, beasiswa, magang, kerja, wawancara)\n"
+        "- motivasi-dan-mindset (disiplin, kebiasaan, fokus, overthinking, produktivitas)\n"
+        "- relasi (hubungan, komunikasi, keluarga, pasangan, negosiasi)\n"
+        "- ai/coding-dan-proyek (coding AI, Cursor, Claude Code, Python, GitHub, API)\n"
+        "- ai/prompt-dan-agen (prompt, agen AI, MCP, skill AI, workflow otomasi)\n"
+        "- ai/video-dan-clipping (video AI, Kling, Veo, Runway, CapCut, ElevenLabs)\n"
+        "- ai/tulisan-dan-artikel (menulis AI, tone-of-voice, artikel AI)\n"
+        "- ai/perbandingan-model (perbandingan model LLM, benchmark Claude/Gemini/GPT)\n"
+        "- ai (AI umum lainnya)\n"
+        "- lainnya\n\n"
+        f"KARTU TETANGGA YANG SUDAH ADA (untuk cek duplikat & relasi):\n{neighbors_blob}\n\n"
+        "Balas HANYA JSON valid persis dengan skema ini:\n"
+        '{\n'
+        '  "duplikat_dari": null atau "K-XXXX" jika seluruh teks sama persis idenya dengan kartu lama,\n'
+        '  "kartu": [\n'
+        '    {\n'
+        '      "ide": "1-2 kalimat inti dalam Bahasa Indonesia",\n'
+        '      "penjelasan": "2-4 kalimat penjelasan setia sumber dalam Bahasa Indonesia",\n'
+        '      "kutipan": "kutipan singkat <=12 kata yang PERSIS ada di teks asli",\n'
+        '      "cabang": "salah satu slug cabang di atas",\n'
+        '      "tahap": "sebelum-20|20-25|25-30|30-40|40-50|50+|semua-usia",\n'
+        '      "jenis": "fakta|data|nasihat|opini|kisah|prinsip",\n'
+        '      "dasar": "riset|pengalaman-pribadi|opini-umum|tidak-jelas",\n'
+        '      "kepercayaan": "sedang|rendah|belum-diverifikasi",\n'
+        '      "konsep": ["3 sampai 5 konsep abstrak huruf-kecil-strip, misal: manajemen-risiko, diversifikasi"],\n'
+        '      "tag": ["2 sampai 4 tag spesifik"],\n'
+        '      "relasi": [{"tipe": "memperkuat|terkait|lanjutan-dari|prasyarat-untuk|bertentangan-dengan", "ke": "K-XXXX"}]\n'
+        '    }\n'
+        '  ]\n'
+        '}\n\n'
+        f"TEKS SUMBER ({platform}):\n{raw_text[:5500]}"
     )
-    for mdl in ("gemini-2.5-flash-lite", "gemini-2.5-flash"):
-        try:
-            endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
-            body = {
-                "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-                "generationConfig": {"temperature": 0.1, "maxOutputTokens": 512, "thinkingConfig": {"thinkingBudget": 0}},
-            }
-            req = urllib.request.Request(
-                endpoint,
-                data=json.dumps(body).encode("utf-8"),
-                headers={"Content-Type": "application/json"},
-                method="POST",
-            )
-            with urllib.request.urlopen(req, timeout=10) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-            cands = data.get("candidates") or []
-            parts = ((cands[0].get("content") or {}).get("parts") or []) if cands else []
-            raw = "".join(p.get("text", "") for p in parts).strip()
-            m = re.search(r"\{[\s\S]*\}", raw)
-            if m:
+
+    for attempt in range(2):
+        for mdl in ("gemini-2.5-flash", "gemini-2.5-flash-lite"):
+            try:
+                endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
+                body = {
+                    "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                    "generationConfig": {
+                        "temperature": 0.1,
+                        "maxOutputTokens": 2048,
+                        "responseMimeType": "application/json",
+                        "thinkingConfig": {"thinkingBudget": 0},
+                    },
+                }
+                req = urllib.request.Request(
+                    endpoint,
+                    data=json.dumps(body).encode("utf-8"),
+                    headers={"Content-Type": "application/json"},
+                    method="POST",
+                )
+                with urllib.request.urlopen(req, timeout=20) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                cands = data.get("candidates") or []
+                parts = ((cands[0].get("content") or {}).get("parts") or []) if cands else []
+                raw = "".join(p.get("text", "") for p in parts).strip()
+                m = re.search(r"\{[\s\S]*\}", raw)
+                if not m:
+                    continue
                 parsed = json.loads(m.group(0))
-                new_ide = str(parsed.get("ide") or "").strip().replace('"', "'")
-                new_penj = str(parsed.get("penjelasan") or "").strip()
-                if len(new_ide) >= 12:
-                    return new_ide[:240], (new_penj or penjelasan)[:600]
-        except urllib.error.HTTPError as exc:
-            if exc.code == 404:
+                raw_cards = parsed.get("kartu") or []
+                if not isinstance(raw_cards, list) or not raw_cards:
+                    continue
+
+                # Validasi ketat hasil AI (anti-halusinasi & kepatuhan skema)
+                validated_cards: list[dict] = []
+                for rc in raw_cards[: max(1, min(5, max_cards))]:
+                    if not isinstance(rc, dict):
+                        continue
+                    ide = str(rc.get("ide") or "").strip().replace('"', "'")
+                    if len(ide) < 10:
+                        continue
+                    penj = str(rc.get("penjelasan") or ide).strip()
+                    kutipan = _verify_quote_in_source(str(rc.get("kutipan") or ""), raw_text)
+                    cab = str(rc.get("cabang") or "").strip().lower()
+                    if cab not in valid_branches:
+                        cab = ""
+                    tahap = str(rc.get("tahap") or "semua-usia").strip()
+                    if tahap not in ALLOWED_TAHAP_KARTU:
+                        tahap = "semua-usia"
+                    jenis = str(rc.get("jenis") or "opini").strip()
+                    if jenis not in ALLOWED_JENIS_KARTU:
+                        jenis = "opini"
+                    dasar = str(rc.get("dasar") or "tidak-jelas").strip()
+                    if dasar not in ALLOWED_DASAR_KARTU:
+                        dasar = "tidak-jelas"
+                    trust = str(rc.get("kepercayaan") or "belum-diverifikasi").strip()
+                    if trust not in ALLOWED_TRUST_KARTU:
+                        trust = "belum-diverifikasi"
+                    if platform.lower() in ("x", "threads", "instagram", "tiktok", "facebook") and trust == "tinggi":
+                        trust = "sedang"
+                    konsep = [
+                        re.sub(r"[^a-z0-9-]+", "-", str(k).lower().strip()).strip("-")
+                        for k in (rc.get("konsep") or [])
+                        if str(k).strip()
+                    ]
+                    konsep = [k for k in dict.fromkeys(konsep) if len(k) >= 2][:5]
+                    tags = [
+                        re.sub(r"[^a-z0-9-]+", "-", str(t).lower().strip()).strip("-")
+                        for t in (rc.get("tag") or [])
+                        if str(t).strip()
+                    ]
+                    tags = [t for t in dict.fromkeys(tags) if len(t) >= 2][:4]
+                    rels = []
+                    for r in (rc.get("relasi") or []):
+                        if isinstance(r, dict):
+                            rt = str(r.get("tipe") or "").strip()
+                            rk = str(r.get("ke") or "").strip()
+                            if rt in ALLOWED_REL_TIPE and rk in valid_neighbor_ids:
+                                rels.append({"tipe": rt, "ke": rk})
+                    validated_cards.append({
+                        "ide": ide[:240],
+                        "penjelasan": penj[:650],
+                        "kutipan": kutipan,
+                        "cabang": cab,
+                        "tahap": tahap,
+                        "jenis": jenis,
+                        "dasar": dasar,
+                        "kepercayaan": trust,
+                        "konsep": konsep,
+                        "tag": tags,
+                        "relasi": rels[:3],
+                    })
+                if validated_cards:
+                    dup = parsed.get("duplikat_dari")
+                    dup_id = str(dup).strip() if dup and str(dup).strip() in valid_neighbor_ids else None
+                    return {"duplikat_dari": dup_id, "kartu": validated_cards, "model": mdl}
+            except urllib.error.HTTPError as exc:
+                if exc.code == 404:
+                    continue
+                break
+            except Exception:
                 continue
-            break
-        except Exception:
-            break
-    return ide_text, penjelasan
+    return None
 
 
 def query_relevant_cards(query: str, cards: dict[str, dict], limit: int = 80) -> list[dict]:

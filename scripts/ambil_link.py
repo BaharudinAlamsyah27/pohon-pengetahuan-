@@ -157,7 +157,29 @@ def fetch_x_fxtwitter(url: str) -> dict | None:
     chain.reverse()  # Urutkan dari tweet pertama (1/N) ke terakhir
 
     text_blocks: list[str] = []
-    photo_items: list[tuple[str, str]] = []  # (url, altText)
+    photo_items: list[tuple[str, str, str]] = []  # (url, altText, owner_label)
+    quote_count = 0
+
+    def _collect_quotes(tweet_obj: dict, depth: int = 0) -> None:
+        nonlocal quote_count
+        if depth >= 2:
+            return
+        q = tweet_obj.get("quote")
+        if not isinstance(q, dict):
+            return
+        q_author = q.get("author") or {}
+        q_name = q_author.get("name") or "penulis-lain"
+        q_screen = q_author.get("screen_name") or "unknown"
+        q_label = f"{q_name} (@{q_screen})"
+        q_txt = (q.get("text") or "").strip()
+        if q_txt:
+            quote_count += 1
+            text_blocks.append(f"--- Dikutip oleh penulis dari {q_label} ---\n{q_txt}")
+        for qph in ((q.get("media") or {}).get("photos") or []):
+            if isinstance(qph, dict) and qph.get("url") and len(photo_items) < 4:
+                photo_items.append((qph["url"], (qph.get("altText") or "").strip(), f"kutipan {q_label}"))
+        _collect_quotes(q, depth + 1)
+
     for idx, item in enumerate(chain, 1):
         t = (item.get("text") or "").strip()
         if t:
@@ -166,7 +188,8 @@ def fetch_x_fxtwitter(url: str) -> dict | None:
         photos = ((item.get("media") or {}).get("photos") or [])
         for ph in photos:
             if isinstance(ph, dict) and ph.get("url") and len(photo_items) < 4:
-                photo_items.append((ph["url"], (ph.get("altText") or "").strip()))
+                photo_items.append((ph["url"], (ph.get("altText") or "").strip(), penulis))
+        _collect_quotes(item, 0)
 
     teks = "\n\n".join(text_blocks).strip()
     if not teks and not photo_items:
@@ -175,8 +198,9 @@ def fetch_x_fxtwitter(url: str) -> dict | None:
     # 2. Ekstrak teks dari foto lampiran (maks 4 foto) memakai altText atau Gemini Vision / Tesseract
     ocr_blocks: list[str] = []
     api_key, _ = _load_local_gemini_key()
-    for p_idx, (p_url, alt_txt) in enumerate(photo_items, 1):
+    for p_idx, (p_url, alt_txt, p_owner) in enumerate(photo_items, 1):
         extracted = ""
+        is_ai_ocr = False
         if alt_txt and len(alt_txt) >= 15:
             extracted = alt_txt
         else:
@@ -188,12 +212,14 @@ def fetch_x_fxtwitter(url: str) -> dict | None:
                 ocr_res = extract_text_from_image(raw_img, ctype, api_key=api_key)
                 if ocr_res.get("ok") and ocr_res.get("teks_asli"):
                     extracted = ocr_res["teks_asli"].strip()
+                    is_ai_ocr = True
             except Exception:
                 pass
         if extracted:
-            ocr_blocks.append(f"--- Isi Teks dari Foto ({p_idx}/{len(photo_items)}) ---\n{extracted}")
+            ai_tag = " [teks dari gambar, ditranskrip AI]" if is_ai_ocr else " [alt-text gambar]"
+            ocr_blocks.append(f"--- Isi Teks dari Foto ({p_idx}/{len(photo_items)} · {p_owner}){ai_tag} ---\n{extracted}")
         else:
-            ocr_blocks.append(f"--- Lampiran Foto ({p_idx}/{len(photo_items)}) ---\n{p_url}")
+            ocr_blocks.append(f"--- Lampiran Foto ({p_idx}/{len(photo_items)} · {p_owner}) ---\n{p_url}")
 
     if ocr_blocks:
         teks = (teks + "\n\n" + "\n\n".join(ocr_blocks)).strip()
@@ -202,6 +228,8 @@ def fetch_x_fxtwitter(url: str) -> dict | None:
     notes = ["Teks penuh berhasil ditarik."]
     if len(chain) > 1:
         notes.append(f"Thread utuh {len(chain)} tweet berhasil digabung otomatis.")
+    if quote_count > 0:
+        notes.append(f"{quote_count} quote tweet ikut diekstrak terpisah beserta penulis aslinya.")
     if photo_items:
         notes.append(f"{len(photo_items)} foto lampiran ikut diproses.")
     return {
