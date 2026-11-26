@@ -98,11 +98,24 @@ def _classify_branch_gemini(text: str) -> str | None:
         return None
     import urllib.request
     import urllib.error
-    branches_list = ", ".join(sorted(VALID_BRANCHES))
     prompt = (
-        f"Pilih TEPAT SATU nama topik paling cocok untuk teks berikut dari daftar ini:\n"
-        f"{branches_list}\n\n"
-        f"Aturan: balas HANYA nama topik yang persis sama dengan salah satu di daftar (contoh: kesehatan), tanpa tanda baca atau penjelasan lain.\n\n"
+        "Pilih TEPAT SATU nama topik paling cocok untuk teks berikut:\n"
+        "- kesehatan: tidur/sleep, olahraga, nutrisi, diet, tubuh, otak, brain fog, biologis, kebugaran, energi, medis\n"
+        "- keuangan: tabungan, gaji, investasi, saham, utang, dana darurat, finansial\n"
+        "- bisnis: startup, SaaS, omzet, klien, produk digital, jualan, strategi usaha\n"
+        "- sosmed: konten viral, algoritma X/YouTube/TikTok/IG, OCR X, impresi, engagement, kreator\n"
+        "- digital-marketing: SEO, iklan/ads, funnel, landing page, copywriting, konversi\n"
+        "- kesuksesan: karier, CPNS, beasiswa, magang, kerja, wawancara, pencapaian\n"
+        "- motivasi-dan-mindset: disiplin, kebiasaan, fokus, overthinking, mentalitas, psikologi diri\n"
+        "- relasi: hubungan, komunikasi, keluarga, pasangan, teman, networking\n"
+        "- ai/coding-dan-proyek: coding dengan AI, Claude Code, Cursor, Python, GitHub, API, bikin aplikasi\n"
+        "- ai/prompt-dan-agen: prompt engineering, agen AI, MCP, skill AI, workflow otomasi\n"
+        "- ai/video-dan-clipping: video AI, dubbing, voiceover, CapCut, Kling, Veo, Runway, Sora\n"
+        "- ai/tulisan-dan-artikel: menulis dengan AI, gaya bahasa/tone-of-voice, artikel/blog AI\n"
+        "- ai/perbandingan-model: membandingkan model AI (Claude vs Gemini vs GPT), benchmark LLM\n"
+        "- ai: berita/konsep AI umum di luar sub-topik AI di atas\n"
+        "- lainnya: jika tidak masuk semua topik di atas\n\n"
+        "Aturan: balas HANYA satu slug topik persis seperti di sebelah kiri tanda titik dua (contoh: kesehatan), tanpa penjelasan.\n\n"
         f"Teks:\n{text[:1200]}"
     )
     for mdl in ("gemini-2.5-flash-lite", "gemini-2.5-flash"):
