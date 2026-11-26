@@ -17,6 +17,7 @@ Lalu buka:
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 from datetime import date
@@ -60,19 +61,19 @@ def next_card_id() -> str:
 
 
 BIDANG_KEYWORDS = {
-    "ai/video-dan-clipping": ["video ai", "clipping", "clip", "kling", "veo", "runway", "sora", "heygen", "capcut", "opus clip", "dubbing", "avatar", "storyboard"],
-    "ai/tulisan-dan-artikel": ["tone-of-voice", "tone of voice", "artikel ai", "menulis", "writing", "sample writing", "blog ai", "thread ai", "copywriting ai"],
-    "ai/coding-dan-proyek": ["claude code", "cursor", "coding", "bikin app", "github", "repo", "api", "python", "nextjs", "vercel", "ui slop", "frontend", "typescript", "javascript"],
-    "ai/prompt-dan-agen": ["prompt", "agent", "agents", "skill", "skills", "mcp", "workflow", "context engineering", "n8n", "otomasi", "automation"],
-    "ai/perbandingan-model": ["fable", "opus", "sonnet", "gemini", "benchmark", "vs", "tonality", "dibanding model", "gpt-5", "claude"],
-    "ai": ["ai", "llm", "claude", "gemini", "gpt", "chatgpt", "model", "artificial intelligence", "machine learning"],
+    "ai/video-dan-clipping": ["video ai", "clipping", "kling", "veo", "runway", "sora", "heygen", "capcut", "opus clip", "dubbing", "avatar ai", "storyboard", "elevenlabs"],
+    "ai/tulisan-dan-artikel": ["tone-of-voice", "tone of voice", "artikel ai", "sample writing", "blog ai", "thread ai", "copywriting ai"],
+    "ai/coding-dan-proyek": ["claude code", "cursor", "coding", "bikin app", "github", "repo", "api", "python", "nextjs", "vercel", "ui slop", "frontend", "typescript", "javascript", "colab"],
+    "ai/prompt-dan-agen": ["prompt", "ai agent", "agents", "agentic", "skill", "skills", "mcp", "workflow", "context engineering", "n8n", "otomasi", "automation"],
+    "ai/perbandingan-model": ["fable", "opus", "sonnet", "gemini", "benchmark", "tonality", "dibanding model", "perbandingan model", "gpt-5", "claude", "vs gpt", "vs claude", "vs gemini"],
+    "ai": ["ai", "llm", "claude", "gemini", "gpt", "chatgpt", "artificial intelligence", "machine learning", "openai", "anthropic"],
     "digital-marketing": ["seo", "ai-search", "digital marketing", "copywriting", "funnel", "landing page", "iklan", "ads", "konversi", "ctr", "lead", "marketing"],
     "sosmed": ["ocr", "impresi", "reupload", "repost", "viral", "algoritma", "payout", "tiktok", "instagram", "threads", "youtube", "konten", "hook", "followers", "cenblu", "creator", "engagement"],
-    "bisnis": ["bisnis", "business", "produk digital", "validasi", "omzet", "jualan", "client", "agency", "saas", "micro-saas", "revenue", "scale", "pasar", "startup", "monetize"],
+    "bisnis": ["bisnis", "business", "produk digital", "validasi", "omzet", "jualan", "client", "agency", "saas", "micro-saas", "revenue", "scale", "pasar", "startup", "monetize", "arr"],
     "keuangan": ["tabungan", "investasi", "saham", "gaji", "utang", "dana darurat", "anggaran", "keuangan", "finance", "money", "saving", "investing", "income", "wealth"],
-    "kesehatan": ["tidur", "sleep", "olahraga", "workout", "gym", "lift", "weights", "athlete", "makan", "eat", "nutrisi", "nutrition", "diet", "healthy", "kesehatan", "health", "otot", "muscle", "postur", "posture", "appearance", "penampilan", "skincare", "grooming", "stres", "mental", "dokter", "medis", "fitness"],
+    "kesehatan": ["tidur", "sleep", "olahraga", "workout", "gym", "lift", "weights", "athlete", "makan", "eat", "nutrisi", "nutrition", "diet", "healthy", "kesehatan", "health", "otot", "muscle", "postur", "posture", "appearance", "penampilan", "skincare", "grooming", "stres", "stress", "mental", "dokter", "medis", "fitness", "brain fog", "biological", "circadian", "longevity", "recovery", "istirahat", "begadang", "kafein", "caffeine", "hormon", "hormone", "tubuh", "otak", "fatigue", "burnout", "kalori", "protein"],
     "kesuksesan": ["karier", "karir", "career", "cpns", "beasiswa", "scholarship", "ausbildung", "jepang", "jerman", "magang", "internship", "wawancara", "interview", "success", "achievement"],
-    "motivasi-dan-mindset": ["mindset", "disiplin", "discipline", "kebiasaan", "habit", "habits", "overthinking", "perfeksionis", "fokus", "focus", "konsisten", "consistent", "malas", "takut", "motivasi", "motivation", "routine", "self-improvement", "will be your year", "akan menjadi tahunmu", "peduli", "care"],
+    "motivasi-dan-mindset": ["mindset", "disiplin", "discipline", "kebiasaan", "habit", "habits", "overthinking", "perfeksionis", "fokus", "focus", "konsisten", "consistent", "malas", "takut", "motivasi", "motivation", "routine", "self-improvement", "will be your year", "akan menjadi tahunmu"],
     "relasi": ["relasi", "relationship", "komunikasi", "communication", "jejaring", "networking", "keluarga", "family", "pasangan", "teman", "friends", "negosiasi", "negotiation"],
 }
 
@@ -89,13 +90,67 @@ VALID_BRANCHES = {
 }
 
 
+def _classify_branch_gemini(text: str) -> str | None:
+    """Lapis 1: Klasifikasi topik berbasis pemahaman makna (semantik) via Gemini Free Tier."""
+    local_env = mesin_cerdas.load_local_env()
+    api_key = (os.environ.get("GEMINI_API_KEY") or local_env.get("GEMINI_API_KEY") or "").strip()
+    if not api_key:
+        return None
+    import urllib.request
+    import urllib.error
+    branches_list = ", ".join(sorted(VALID_BRANCHES))
+    prompt = (
+        f"Pilih TEPAT SATU nama topik paling cocok untuk teks berikut dari daftar ini:\n"
+        f"{branches_list}\n\n"
+        f"Aturan: balas HANYA nama topik yang persis sama dengan salah satu di daftar (contoh: kesehatan), tanpa tanda baca atau penjelasan lain.\n\n"
+        f"Teks:\n{text[:1200]}"
+    )
+    for mdl in ("gemini-2.5-flash-lite", "gemini-2.5-flash"):
+        try:
+            endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
+            body = {
+                "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                "generationConfig": {"temperature": 0.0, "maxOutputTokens": 256, "thinkingConfig": {"thinkingBudget": 0}},
+            }
+            req = urllib.request.Request(
+                endpoint,
+                data=json.dumps(body).encode("utf-8"),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            cands = data.get("candidates") or []
+            parts = ((cands[0].get("content") or {}).get("parts") or []) if cands else []
+            ans = "".join(p.get("text", "") for p in parts).strip().lower().strip("`\"'. \n")
+            if ans in VALID_BRANCHES:
+                return ans
+            for b in sorted(VALID_BRANCHES, key=len, reverse=True):
+                if b in ans:
+                    return b
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                continue
+            break
+        except Exception:
+            break
+    return None
+
+
 def guess_branch(text: str) -> tuple[str, int]:
+    # Lapis 1: Pemahaman makna otomatis via Gemini AI (jika GEMINI_API_KEY tersedia)
+    ai_branch = _classify_branch_gemini(text)
+    if ai_branch:
+        return ai_branch, 99
+
+    # Lapis 2 (Offline): Pencocokan kata utuh (word-boundary) agar 'ai' tidak cocok dengan 'brain' / 'daily'
     low = text.lower()
     best_b, best_score = "lainnya", 0
     for b, kws in BIDANG_KEYWORDS.items():
-        # Sub-cabang mendapat bobot sedikit lebih tinggi bila cocok kata spesifik
-        weight = 2 if "/" in b else 1
-        score = sum(weight for kw in kws if kw in low)
+        score = 0
+        for kw in kws:
+            if re.search(rf"(?<![a-z0-9]){re.escape(kw)}(?![a-z0-9])", low):
+                score += 2 if " " in kw else 1
         if score > best_score:
             best_b, best_score = b, score
     # Fallback TF-IDF ke kartu yang sudah ada jika kata kunci belum menangkap
