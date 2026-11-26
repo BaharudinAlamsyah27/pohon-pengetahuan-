@@ -924,6 +924,112 @@ def synthesize_branch_summary_llm(cabang_slug: str, old_summary: str, active_car
         pass
     return None
 
+PROMPT_VERSION = "v2.1"
+KAMUS_KONSEP_PATH = ROOT / "scripts" / "kamus_konsep.json"
+
+
+def normalize_concepts(raw_concepts: list[str]) -> list[str]:
+    """Normalisasi konsep memakai kamus alias yang tumbuh sendiri (duit/uang/finansial -> keuangan-pribadi)."""
+    alias_map: dict[str, str] = {}
+    if KAMUS_KONSEP_PATH.is_file():
+        try:
+            data = json.loads(KAMUS_KONSEP_PATH.read_text(encoding="utf-8"))
+            for canon, aliases in data.items():
+                alias_map[canon] = canon
+                for a in aliases:
+                    alias_map[str(a).lower().strip()] = canon
+        except Exception:
+            pass
+    out: list[str] = []
+    for k in raw_concepts or []:
+        slug = re.sub(r"[^a-z0-9-]+", "-", str(k).lower().strip()).strip("-")
+        if len(slug) < 2:
+            continue
+        out.append(alias_map.get(slug, slug))
+    return list(dict.fromkeys(out))[:5]
+
+
+def check_grounding_score(ide: str, penjelasan: str, raw_text: str) -> float:
+    """Pemeriksa kesetiaan (grounding) deterministik: cek angka & istilah kunci terhadap teks sumber."""
+    raw_low = (raw_text or "").lower()
+    # Cek apakah angka spesifik di ide/penjelasan benar-benar ada di sumber (cegah halusinasi angka)
+    nums = re.findall(r"\b\d+(?:[.,]\d+)?%?\b", f"{ide} {penjelasan}")
+    if nums:
+        num_hits = sum(1 for n in nums if n.rstrip("%") in raw_low)
+        num_score = num_hits / len(nums)
+    else:
+        num_score = 1.0
+    # Cek tumpang tindih istilah (termasuk sinonim dwibahasa agar tetap adil untuk terjemahan EN->ID)
+    card_toks = set(expand_bilingual_tokens(tokenize(f"{ide} {penjelasan}")))
+    src_toks = set(expand_bilingual_tokens(tokenize(raw_text)))
+    if not card_toks or not src_toks:
+        return round(num_score, 2)
+    lex_overlap = len(card_toks & src_toks) / max(1, min(len(card_toks), 12))
+    return round(min(1.0, 0.55 * num_score + 0.45 * min(1.0, lex_overlap)), 2)
+
+
+def rerank_cards_llm(question: str, candidates: list[dict], top_k: int = 6) -> list[dict]:
+    """Re-ranking ringan oleh AI: menyaring Top-20 kandidat FTS/TF-IDF menjadi Top-6 paling presisi."""
+    if len(candidates) <= top_k or not has_any_free_llm_key():
+        return candidates[:top_k]
+    lines = "\n".join(
+        f"- {c['id']} ({c['cabang']}): {c['ide'][:130]}"
+        for c in candidates[:20]
+    )
+    prompt = (
+        f"Pilih maksimal {top_k} ID kartu paling relevan untuk menjawab pertanyaan berikut, urutkan dari paling relevan.\n"
+        'Balas HANYA JSON valid: {"ids": ["K-XXXX", ...]}.\n\n'
+        f"PERTANYAAN: {question}\n\nKANDIDAT:\n{lines}"
+    )
+    raw, _mdl, _err = call_free_llm_cascade("", prompt, json_mode=True, max_tokens=256, temperature=0.0)
+    if raw:
+        try:
+            m = re.search(r"\{[\s\S]*\}", raw)
+            if m:
+                ids = json.loads(m.group(0)).get("ids") or []
+                cmap = {c["id"]: c for c in candidates}
+                ranked = [cmap[i] for i in ids if i in cmap]
+                if ranked:
+                    for c in candidates:
+                        if c["id"] not in {r["id"] for r in ranked} and len(ranked) < top_k:
+                            ranked.append(c)
+                    return ranked[:top_k]
+        except Exception:
+            pass
+    return candidates[:top_k]
+
+
+def parse_nl_filter(query: str) -> dict:
+    """Parser filter bahasa alami (0 biaya): ubah kalimat biasa jadi filter terstruktur."""
+    low = (query or "").lower().strip()
+    out = {"bidang": "", "kepercayaan": "", "penerapan": "", "tahap": "", "sisa_q": low}
+    for b in ("kesehatan", "keuangan", "bisnis", "sosmed", "digital-marketing", "kesuksesan", "motivasi-dan-mindset", "relasi", "ai"):
+        if re.search(rf"\b{re.escape(b)}\b", low):
+            out["bidang"] = b
+            break
+    if re.search(r"\b(kepercayaan tinggi|terpercaya|tinggi)\b", low):
+        out["kepercayaan"] = "tinggi"
+    elif re.search(r"\b(kepercayaan sedang|sedang)\b", low):
+        out["kepercayaan"] = "sedang"
+    elif re.search(r"\b(kepercayaan rendah|rendah)\b", low):
+        out["kepercayaan"] = "rendah"
+    elif re.search(r"\b(belum diverifikasi|belum dicek)\b", low):
+        out["kepercayaan"] = "belum-diverifikasi"
+    if re.search(r"\b(belum dicoba|belum diterapkan)\b", low):
+        out["penerapan"] = "belum-dicoba"
+    elif re.search(r"\b(sedang dicoba)\b", low):
+        out["penerapan"] = "sedang-dicoba"
+    elif re.search(r"\b(sudah diterapkan|diterapkan)\b", low):
+        out["penerapan"] = "diterapkan"
+    elif re.search(r"\b(ditolak)\b", low):
+        out["penerapan"] = "ditolak"
+    for th in ("sebelum-20", "20-25", "25-30", "30-40", "40-50", "50+"):
+        if th in low:
+            out["tahap"] = th
+            break
+    return out
+
+
 ALLOWED_JENIS_KARTU = {"fakta", "data", "nasihat", "opini", "kisah", "prinsip"}
 ALLOWED_DASAR_KARTU = {"riset", "pengalaman-pribadi", "opini-umum", "tidak-jelas"}
 ALLOWED_TRUST_KARTU = {"tinggi", "sedang", "rendah", "belum-diverifikasi"}
@@ -1002,8 +1108,10 @@ def extract_structured_cards_gemini(
         '  "duplikat_dari": null atau "K-XXXX" jika seluruh teks sama persis idenya dengan kartu lama,\n'
         '  "kartu": [\n'
         '    {\n'
-        '      "ide": "1-2 kalimat inti dalam Bahasa Indonesia",\n'
-        '      "penjelasan": "2-4 kalimat penjelasan setia sumber dalam Bahasa Indonesia",\n'
+        '      "ide": "1-2 kalimat klaim inti dalam Bahasa Indonesia",\n'
+        '      "penjelasan": "2-4 kalimat bukti & penjelasan setia sumber dalam Bahasa Indonesia",\n'
+        '      "kondisi_berlaku": "syarat berlaku singkat jika disebut (mis. pemula/modal kecil/usia 20-an) atau umum",\n'
+        '      "keyakinan": 0.0 sampai 1.0 (seberapa yakin cabang & ekstraksi ini tepat),\n'
         '      "kutipan": "kutipan singkat <=12 kata yang PERSIS ada di teks asli",\n'
         '      "cabang": "salah satu slug cabang di atas",\n'
         '      "tahap": "sebelum-20|20-25|25-30|30-40|40-50|50+|semua-usia",\n'
@@ -1065,12 +1173,13 @@ def extract_structured_cards_gemini(
                     trust = "belum-diverifikasi"
                 if platform.lower() in ("x", "threads", "instagram", "tiktok", "facebook") and trust == "tinggi":
                     trust = "sedang"
-                konsep = [
-                    re.sub(r"[^a-z0-9-]+", "-", str(k).lower().strip()).strip("-")
-                    for k in (rc.get("konsep") or [])
-                    if str(k).strip()
-                ]
-                konsep = [k for k in dict.fromkeys(konsep) if len(k) >= 2][:5]
+                konsep = normalize_concepts(rc.get("konsep") or [])
+                kondisi = str(rc.get("kondisi_berlaku") or "umum").strip().replace('"', "'")[:120]
+                try:
+                    keyakinan = max(0.0, min(1.0, float(rc.get("keyakinan", 0.85))))
+                except Exception:
+                    keyakinan = 0.85
+                grounding = check_grounding_score(ide, penj, raw_text)
                 tags = [
                     re.sub(r"[^a-z0-9-]+", "-", str(t).lower().strip()).strip("-")
                     for t in (rc.get("tag") or [])
@@ -1094,13 +1203,16 @@ def extract_structured_cards_gemini(
                     "dasar": dasar,
                     "kepercayaan": trust,
                     "konsep": konsep,
+                    "kondisi_berlaku": kondisi,
+                    "keyakinan": round(keyakinan, 2),
+                    "grounding": grounding,
                     "tag": tags,
                     "relasi": rels[:3],
                 })
             if validated_cards:
                 dup = parsed.get("duplikat_dari")
                 dup_id = str(dup).strip() if dup and str(dup).strip() in valid_neighbor_ids else None
-                return {"duplikat_dari": dup_id, "kartu": validated_cards, "model": used_mdl}
+                return {"duplikat_dari": dup_id, "kartu": validated_cards, "model": used_mdl, "versi_prompt": PROMPT_VERSION}
         except Exception:
             continue
     return None
@@ -1724,7 +1836,8 @@ def answer_question(question: str) -> dict:
     syntax_mode = is_syntax_or_viral_query(question)
     syntax_report = analyze_viral_syntax(cards, sources, question) if syntax_mode else None
 
-    rel_cards = query_relevant_cards(question, cards, limit=8)
+    rel_candidates = query_relevant_cards(question, cards, limit=20)
+    rel_cards = rerank_cards_llm(question, rel_candidates, top_k=8) if len(rel_candidates) > 8 else rel_candidates[:8]
     if syntax_report and len(rel_cards) < 4:
         seen_ids = {c["id"] for c in rel_cards}
         for sc in syntax_report["kartu"]:

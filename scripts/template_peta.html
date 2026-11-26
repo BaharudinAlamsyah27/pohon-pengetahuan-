@@ -2061,8 +2061,19 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
         if (!pt.includes(fPenulis)) return false;
       }
       if (q) {
-        const hay = `${c.id} ${c.ide} ${c.penjelasan} ${(c.konsep || []).join(" ")} ${(c.tag || []).join(" ")} ${c.cabang} ${c.penulis || ""} ${c.catatan_khusus || ""}`.toLowerCase();
-        if (!hay.includes(q)) return false;
+        // Filter Bahasa Alami (0 biaya): "kesehatan belum dicoba kepercayaan tinggi"
+        let qClean = q;
+        const nlBid = ["kesehatan", "keuangan", "bisnis", "sosmed", "digital-marketing", "kesuksesan", "motivasi-dan-mindset", "relasi", "ai"].find(b => new RegExp(`\\b${b}\\b`).test(qClean));
+        const nlTrust = /kepercayaan tinggi|terpercaya/.test(qClean) ? "tinggi" : (/kepercayaan sedang/.test(qClean) ? "sedang" : (/kepercayaan rendah/.test(qClean) ? "rendah" : (/belum diverifikasi|belum dicek/.test(qClean) ? "belum-diverifikasi" : "")));
+        const nlStatus = /belum dicoba|belum diterapkan/.test(qClean) ? "belum-dicoba" : (/sedang dicoba/.test(qClean) ? "sedang-dicoba" : (/sudah diterapkan|diterapkan/.test(qClean) ? "diterapkan" : (/ditolak/.test(qClean) ? "ditolak" : "")));
+        if (nlTrust || nlStatus) {
+          if (nlBid && !(c.bidang === nlBid || c.cabang.startsWith(nlBid + "/"))) return false;
+          if (nlTrust && c.kepercayaan !== nlTrust) return false;
+          if (nlStatus && getStatus(c) !== nlStatus) return false;
+        } else {
+          const hay = `${c.id} ${c.ide} ${c.penjelasan} ${(c.konsep || []).join(" ")} ${c.kondisi_berlaku || ""} ${(c.tag || []).join(" ")} ${c.cabang} ${c.penulis || ""} ${c.catatan_khusus || ""}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
       }
       return true;
     });
@@ -2215,6 +2226,7 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
           </div>
           <h1 style="font-size:22px;line-height:1.3">${esc(c.ide)}</h1>
           <p style="margin-top:14px">${esc(c.penjelasan || "")}</p>
+          ${c.kondisi_berlaku && c.kondisi_berlaku !== "umum" ? `<div style="margin-top:10px;font-size:13px;color:var(--text-2)"><strong>🎯 Kondisi berlaku:</strong> ${esc(c.kondisi_berlaku)}</div>` : ""}
           ${(c.konsep || []).length ? `
             <div style="margin-top:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
               <span style="font-size:12px;font-weight:700;color:var(--text-3)">🔗 Jembatan Konsep:</span>
@@ -2984,10 +2996,11 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
           const mathBox = document.getElementById("tk-math-preview");
           if (mathBox) { mathBox.style.display = "none"; mathBox.innerHTML = ""; }
           const daunList = (d.kartu_ids && d.kartu_ids.length) ? d.kartu_ids.join(", ") : d.kartu_id;
+          const raguHtml = (d.peringatan_ragu && d.peringatan_ragu.length) ? ` <span class="badge badge-conflict">⚠️ AI ragu — mohon cek: ${esc(d.peringatan_ragu.join(", "))}</span>` : "";
           out.innerHTML = d.digabung_ke
             ? `<strong>♻️ Duplikat Semantik Terdeteksi!</strong> Sumber <strong>${esc(d.id)}</strong> otomatis digabungkan ke kartu yang sudah ada <strong>${esc(d.digabung_ke)}</strong> (${esc(d.bidang)}). <button class="btn-secondary" onclick="location.hash='#kartu/${esc(d.digabung_ke)}';location.reload()">Lihat Kartu →</button>`
             : d.kartu_id
-            ? `<strong>Tersimpan!</strong> Akar <strong>${esc(d.id)}</strong> → Daun <strong>${esc(daunList)}</strong> (${esc(d.bidang)}). Form telah dibersihkan. <button class="btn-secondary" onclick="location.hash='#kartu/${esc(d.kartu_id)}';location.reload()">Lihat di Pohon →</button>`
+            ? `<strong>Tersimpan!</strong> Akar <strong>${esc(d.id)}</strong> → Daun <strong>${esc(daunList)}</strong> (${esc(d.bidang)}).${raguHtml} Form telah dibersihkan. <button class="btn-secondary" onclick="location.hash='#kartu/${esc(d.kartu_id)}';location.reload()">Lihat di Pohon →</button>`
             : `<strong>Tersimpan sebagai ${esc(d.id)}</strong> (${esc(d.file)}). Form telah dibersihkan.`;
         } else {
           out.textContent = d.error || "Gagal menyimpan.";

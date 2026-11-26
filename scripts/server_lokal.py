@@ -564,6 +564,7 @@ def create_new_source(
     user_forced_branch = bool(subcabang_baru or bidang_pilihan)
     source_saripati_items: list[str] = []
     used_branches: set[str] = set()
+    ragu_warnings: list[str] = []
 
     # Penanganan Duplikat Semantik (AGENTS.md Bagian 4 Langkah 4): tambahkan sumber baru ke kartu lama
     if buat_draf and structured_ai and structured_ai.get("duplikat_dari") and len(structured_ai.get("kartu") or []) <= 1:
@@ -597,14 +598,25 @@ def create_new_source(
                 card_trust = pt["kepercayaan"]
                 card_dasar = pt["dasar"]
                 konsep_list = pt.get("konsep") or []
+                kondisi_berlaku = pt.get("kondisi_berlaku") or "umum"
+                keyakinan_ai = float(pt.get("keyakinan", 0.85))
+                grounding_sc = float(pt.get("grounding", 1.0))
+                model_ekstrak = structured_ai.get("model") or "ai"
+                versi_prompt = structured_ai.get("versi_prompt") or mesin_cerdas.PROMPT_VERSION
                 tags_all = (pt.get("tag") or []) + [clean_platform.lower()] + extra_tags
+                if keyakinan_ai < 0.65:
+                    tags_all.append("perlu-tinjau-cabang")
+                    ragu_warnings.append(f"{cid} (keyakinan {int(keyakinan_ai*100)}%)")
+                if grounding_sc < 0.50:
+                    tags_all.append("cek-kesetiaan")
+                    ragu_warnings.append(f"{cid} (grounding {int(grounding_sc*100)}%)")
                 dummy = {"ide": ide_text, "penjelasan": penjelasan, "tag": tags_all, "cabang": card_cabang, "alat": [], "tugas": "", "tahap_kerja": ""}
                 detected_tools = mesin_cerdas.detect_tools_in_card(dummy)
                 detected_stage = mesin_cerdas.detect_workflow_stage(dummy)
                 rel_list = list(pt.get("relasi") or [])
                 has_conflict_prop = any(r.get("tipe") == "bertentangan-dengan" for r in rel_list)
                 conflict_note = " | [usulan pertentangan otomatis — perlu konfirmasi pengguna]" if has_conflict_prop else ""
-                agent_note = f"[inferensi AI] Diekstrak lewat 1-panggilan terstruktur ({structured_ai['model']}), kutipan terverifikasi{conflict_note}."
+                agent_note = f"[inferensi AI] 1-call terstruktur ({model_ekstrak}, prompt {versi_prompt}, keyakinan={keyakinan_ai}, grounding={grounding_sc}){conflict_note}."
             else:
                 raw_ide = pt["ide"].strip().strip("[]")
                 raw_penj = pt["penjelasan"]
@@ -618,7 +630,10 @@ def create_new_source(
                 card_jenis = pt_meta["jenis"]
                 card_trust = pt_meta["kepercayaan"]
                 card_dasar = pt_meta["dasar"]
-                konsep_list = pt_meta["tags"][:3]
+                konsep_list = mesin_cerdas.normalize_concepts(pt_meta["tags"][:3])
+                kondisi_berlaku = "umum"
+                model_ekstrak = "ekstraktif-offline"
+                versi_prompt = "math-v1"
                 tags_all = ["draf-ekstraktif"] + pt_meta["tags"] + [clean_platform.lower()] + extra_tags
                 detected_tools = pt["alat"]
                 detected_stage = pt["tahap_kerja"]
@@ -660,6 +675,9 @@ def create_new_source(
                 f"kepercayaan: {card_trust}\n"
                 f"dasar: {card_dasar}\n"
                 f"konsep: {konsep_yaml}\n"
+                f'kondisi-berlaku: "{kondisi_berlaku}"\n'
+                f"model-ekstrak: {model_ekstrak}\n"
+                f"versi-prompt: {versi_prompt}\n"
                 f"tag: {tags_yaml}\n"
                 f"sumber: [[{sid}]]\n"
                 f"relasi: {rel_yaml}\n"
@@ -738,6 +756,7 @@ def create_new_source(
         "kartu_id": created_cid,
         "kartu_ids": created_cids,
         "digabung_ke": merged_into_cid,
+        "peringatan_ragu": ragu_warnings,
         "bidang": branches_summary,
         "file": f"sumber/{sid}.md",
     }

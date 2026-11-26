@@ -1,0 +1,13 @@
+{
+  "keuangan-pribadi": ["duit", "uang", "finansial", "keuangan", "uang-bulanan", "atur-uang", "money", "personal-finance"],
+  "diversifikasi": ["telur-satu-keranjang", "sebar-risiko", "diversifikasi-aset", "diversifikasi-saham", "portfolio-diversification"],
+  "manajemen-tidur": ["tidur", "sleep", "kualitas-tidur", "kurang-tidur", "jam-tidur", "sleep-deprivation", "istirahat"],
+  "utang-biologis": ["biological-debt", "beban-biologis", "kelelahan-biologis", "utang-tidur", "sleep-debt"],
+  "kabut-otak": ["brain-fog", "otak-lemot", "kelelahan-mental", "brain-rot"],
+  "self-talk": ["dialog-batin", "bicara-diri", "self-talk-negatif", "afirmasi-diri", "inner-monologue"],
+  "reframing-mental": ["ubah-sudut-pandang", "reframing", "pola-pikir", "cognitive-reframing"],
+  "regulasi-emosi": ["kelola-emosi", "manajemen-emosi", "kecemasan", "anti-mengeluh", "emotional-regulation"],
+  "otomasi-ai": ["agen-ai", "ai-agent", "workflow-ai", "automasi", "automation", "mcp-server"],
+  "monetisasi-konten": ["ocr-x", "payout-x", "cuan-konten", "monetisasi-sosmed", "creator-monetization"],
+  "kualitas-konten": ["anti-ai-slop", "tone-of-voice", "gaya-bahasa", "orisinalitas", "reupload"]
+}
