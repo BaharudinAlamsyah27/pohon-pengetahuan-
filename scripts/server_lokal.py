@@ -1102,10 +1102,10 @@ class PohonHandler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:
         parsed = urlparse(self.path)
-        if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar", "/api/rapikan-draf", "/api/jurnal", "/api/jurnal/refleksi", "/api/jurnal/kompas"):
+        if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar", "/api/baca-pdf", "/api/rapikan-draf", "/api/jurnal", "/api/jurnal/refleksi", "/api/jurnal/kompas"):
             self.send_error(404, "Endpoint tidak dikenal")
             return
-        max_len = 8_000_000 if parsed.path == "/api/ocr-gambar" else (2_000_000 if parsed.path == "/api/jurnal" else (512_000 if parsed.path in ("/api/simpan-sumber", "/api/ekstrak-matematika") else (32_768 if parsed.path in ("/api/edit-kartu", "/api/jurnal/kompas") else 4096)))
+        max_len = 16_000_000 if parsed.path == "/api/baca-pdf" else (8_000_000 if parsed.path == "/api/ocr-gambar" else (2_000_000 if parsed.path == "/api/jurnal" else (512_000 if parsed.path in ("/api/simpan-sumber", "/api/ekstrak-matematika") else (32_768 if parsed.path in ("/api/edit-kartu", "/api/jurnal/kompas") else 4096))))
         try:
             length = int(self.headers.get("Content-Length", "0"))
             if length <= 0 or length > max_len:
@@ -1181,6 +1181,18 @@ class PohonHandler(BaseHTTPRequestHandler):
             pts = mesin_cerdas.extract_atomic_insights_math(teks, max_cards=max(1, min(5, max_daun)))
             cabang_guess, sc = guess_branch(teks)
             self._send_json(200, {"ok": True, "cabang_usulan": cabang_guess, "skor_cabang": sc, "daun": pts})
+            return
+
+        if parsed.path == "/api/baca-pdf":
+            file_b64 = str(payload.get("file_b64", "")).strip()
+            fname = str(payload.get("filename", "dokumen.pdf")).strip()[:140]
+            if not file_b64:
+                self._send_json(400, {"error": "File kosong"})
+                return
+            local_env = mesin_cerdas.load_local_env()
+            api_key = (local_env.get("GEMINI_API_KEY") or "").strip()
+            res = ambil_link.extract_pdf_text(file_b64, filename=fname, api_key=api_key)
+            self._send_json(200 if res.get("ok") else 422, res)
             return
 
         if parsed.path == "/api/ocr-gambar":

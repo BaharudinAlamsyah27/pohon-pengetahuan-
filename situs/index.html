@@ -2772,6 +2772,10 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-26", "ringkasan"
               📷 Baca Teks dari Gambar / Screenshot
               <input type="file" id="tk-img-input" accept="image/*" style="display:none">
             </label>
+            <label class="btn-secondary" style="cursor:pointer;font-size:12.5px">
+              📄 Unggah PDF / Dokumen (.pdf/.txt/.md)
+              <input type="file" id="tk-pdf-input" accept=".pdf,.txt,.md,application/pdf" style="display:none">
+            </label>
             <button type="button" class="btn-secondary" id="btn-preview-math" style="font-size:12.5px">🔍 Cek Poin yang Akan Diambil</button>
           </div>
           <div id="tk-math-preview" style="display:none;margin-bottom:10px;padding:12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface-alt);font-size:13px"></div>
@@ -2991,6 +2995,49 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-26", "ringkasan"
           }
         } catch {
           msg.textContent = "Gagal menghubungi server OCR lokal.";
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("tk-pdf-input")?.addEventListener("change", async e => {
+      const file = e.target.files?.[0];
+      const msg = document.getElementById("tk-msg");
+      if (!file) return;
+      if (!HAS_SERVER) {
+        msg.innerHTML = `<span style="display:inline-block;padding:8px 10px;border-radius:8px;background:var(--node-main-bg);border:1.5px solid var(--border-strong);color:var(--node-main-text)">⚠️ <strong>Unggah PDF hanya aktif di laptop.</strong> Nyalakan <code>1-Buka-Aplikasi-Lokal.bat</code> lalu buka <code>http://127.0.0.1:8765/#tangkap</code>.</span>`;
+        return;
+      }
+      if (file.size > 12 * 1024 * 1024) {
+        msg.textContent = "Ukuran PDF maksimal 12 MB agar tetap hemat memori.";
+        return;
+      }
+      msg.textContent = `Membaca dokumen ${file.name} (PDF Lokal 0-Biaya / Gemini PDF Gratis)...`;
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const resp = await fetch("/api/baca-pdf", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ file_b64: reader.result, filename: file.name }),
+          });
+          const d = await resp.json();
+          if (resp.ok && d.ok) {
+            document.getElementById("tk-teks").value = d.teks_asli || "";
+            if (!document.getElementById("tk-judul").value.trim()) {
+              document.getElementById("tk-judul").value = (d.judul || file.name).slice(0, 110);
+            }
+            document.getElementById("tk-platform").value = "lainnya";
+            document.getElementById("tk-jenis").value = "artikel";
+            if ((d.teks_asli || "").length > 3500) {
+              document.getElementById("tk-maxdaun").value = "5";
+            }
+            msg.textContent = `Dokumen berhasil diekstrak via ${d.mode} (${(d.teks_asli || "").length} karakter)!`;
+          } else {
+            msg.textContent = d.error || "Gagal membaca dokumen PDF.";
+          }
+        } catch {
+          msg.textContent = "Gagal menghubungi server lokal untuk membaca PDF.";
         }
       };
       reader.readAsDataURL(file);

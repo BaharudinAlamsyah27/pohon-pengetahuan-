@@ -28,6 +28,7 @@ import tempfile
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
+import zlib
 from pathlib import Path
 
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) PohonPengetahuan/1.0"
@@ -299,16 +300,46 @@ def fetch_youtube(url: str) -> dict:
     # Cari captionTracks publik untuk transkrip (prioritas id lalu en)
     transcript = ""
     note = ""
+    tracks: list[dict] = []
     tracks_m = re.search(r'"captionTracks":(\[.*?\])', page)
     if tracks_m:
         try:
             tracks = json.loads(tracks_m.group(1))
+        except Exception:
+            tracks = []
+
+    # Fallback: YouTube Innertube Player API (client ANDROID) bila halaman HTML menyembunyikan captionTracks
+    if not tracks:
+        vid_m = re.search(r"(?:v=|youtu\.be/|shorts/|embed/)([A-Za-z0-9_-]{11})", url)
+        if vid_m:
+            try:
+                it_payload = json.dumps({
+                    "videoId": vid_m.group(1),
+                    "context": {"client": {"clientName": "ANDROID", "clientVersion": "19.09.37", "hl": "id"}},
+                }).encode("utf-8")
+                it_req = urllib.request.Request(
+                    "https://www.youtube.com/youtubei/v1/player",
+                    data=it_payload,
+                    headers={"Content-Type": "application/json", "User-Agent": USER_AGENT},
+                    method="POST",
+                )
+                with urllib.request.urlopen(it_req, timeout=TIMEOUT) as resp:
+                    it_data = json.loads(resp.read().decode("utf-8", errors="replace"))
+                tracks = (
+                    ((it_data.get("captions") or {}).get("playerCaptionsTracklistRenderer") or {}).get("captionTracks")
+                    or []
+                )
+            except Exception:
+                tracks = []
+
+    if tracks:
+        try:
             chosen = None
             for lang in ("id", "en"):
                 chosen = next((t for t in tracks if str(t.get("languageCode", "")).startswith(lang)), None)
                 if chosen:
                     break
-            if not chosen and tracks:
+            if not chosen:
                 chosen = tracks[0]
             if chosen and chosen.get("baseUrl"):
                 xml_txt = http_get_text(chosen["baseUrl"])
@@ -321,7 +352,7 @@ def fetch_youtube(url: str) -> dict:
                     if txt:
                         lines.append(f"[{mm:02d}:{ss:02d}] {txt}")
                 transcript = "\n".join(lines)
-                note = f"Transkrip berhasil ditarik (bahasa: {chosen.get('languageCode', '?')})."
+                note = f"Transkrip YouTube berhasil ditarik ({len(lines)} baris, bahasa: {chosen.get('languageCode', '?')})."
         except Exception as exc:
             note = f"Subtitle terdeteksi tetapi gagal diurai ({exc}). Tempel transkrip manual."
     else:
@@ -514,6 +545,152 @@ def extract_image_text(image_b64: str, mime_type: str = "image/png", api_key: st
         "ok": False,
         "error": "Untuk membaca gambar gratis: pasang Tesseract OCR lokal (offline) atau isi GEMINI_API_KEY gratis di .env.",
     }
+
+
+def _extract_pdf_text_stdlib(raw_bytes: bytes, max_chars: int = 24000) -> str:
+    """
+    Ekstraktor PDF murni Python stdlib (0 dependensi, RAM rendah):
+    Membaca stream FlateDecode & teks literal PDF (Tj / TJ) secara streaming.
+    """
+    chunks: list[str] = []
+    total_len = 0
+
+    def _unescape_pdf_str(b: bytes) -> str:
+        s = b.decode("latin-1", errors="ignore")
+        s = s.replace(r"\n", "\n").replace(r"\r", " ").replace(r"\t", " ")
+        s = s.replace(r"\(", "(").replace(r"\)", ")").replace(r"\\", "\\")
+        return re.sub(r"[\x00-\x08\x0b-\x1f]", " ", s)
+
+    def _scan_content(content: bytes) -> None:
+        nonlocal total_len
+        for m in re.finditer(rb"\(([^()\\]*(?:\\.[^()\\]*)*)\)\s*Tj", content):
+            t = _unescape_pdf_str(m.group(1)).strip()
+            if len(t) >= 2:
+                chunks.append(t)
+                total_len += len(t)
+                if total_len >= max_chars:
+                    return
+        for arr_m in re.finditer(rb"\[(.*?)\]\s*TJ", content, flags=re.S):
+            parts = [_unescape_pdf_str(sm.group(1)) for sm in re.finditer(rb"\(([^()\\]*(?:\\.[^()\\]*)*)\)", arr_m.group(1))]
+            joined = "".join(parts).strip()
+            if len(joined) >= 2:
+                chunks.append(joined)
+                total_len += len(joined)
+                if total_len >= max_chars:
+                    return
+
+    # 1. Coba stream terkompresi FlateDecode
+    for sm in re.finditer(rb"stream\r?\n(.*?)\r?\nendstream", raw_bytes, flags=re.S):
+        if total_len >= max_chars:
+            break
+        raw_stream = sm.group(1)
+        try:
+            dec = zlib.decompress(raw_stream)
+            _scan_content(dec)
+        except Exception:
+            if b"Tj" in raw_stream or b"TJ" in raw_stream:
+                _scan_content(raw_stream)
+
+    text = re.sub(r"[ \t]{2,}", " ", " ".join(chunks))
+    text = re.sub(r"\n{3,}", "\n\n", text).strip()
+    # Pastikan hasil bukan sampah biner (minimal 65% karakter cetak normal)
+    if text:
+        printable = sum(1 for ch in text if ch.isprintable() or ch in "\n\t")
+        if printable / max(1, len(text)) < 0.70:
+            return ""
+    return text[:max_chars]
+
+
+def extract_pdf_text(file_b64: str, filename: str = "dokumen.pdf", api_key: str = "") -> dict:
+    """
+    Ekstraksi PDF / TXT / MD gratis & hemat memori (3 Lapis):
+      - File .txt / .md -> langsung baca UTF-8 (0 biaya)
+      - Lapis 0: pypdf streaming per halaman (jika terpasang, 0 biaya)
+      - Lapis 1: Pure-Python stdlib FlateDecode parser (0 biaya, 0 dependensi)
+      - Lapis 2: Gemini 3.5 Flash-Lite Native PDF Multimodal (100% gratis Free Tier, dukung PDF scan!)
+    """
+    b64_data = file_b64.split(",", 1)[1] if "," in file_b64 else file_b64
+    try:
+        raw_bytes = base64.b64decode(b64_data)
+    except Exception:
+        return {"ok": False, "error": "Data file base64 tidak valid."}
+
+    if len(raw_bytes) > 12 * 1024 * 1024:
+        return {"ok": False, "error": "Ukuran file maksimal 12 MB agar tetap hemat memori."}
+
+    low_name = (filename or "").lower()
+    if low_name.endswith((".txt", ".md")):
+        txt = raw_bytes.decode("utf-8", errors="replace").strip()[:28000]
+        return {"ok": True, "mode": "teks-langsung", "judul": Path(filename).stem, "teks_asli": txt}
+
+    # Lapis 0: pypdf jika tersedia di sistem
+    try:
+        import io
+        from pypdf import PdfReader  # type: ignore
+        reader = PdfReader(io.BytesIO(raw_bytes))
+        pages_txt = []
+        total_c = 0
+        for idx, page in enumerate(reader.pages[:40], 1):
+            pt = (page.extract_text() or "").strip()
+            if pt:
+                pages_txt.append(f"[Hal. {idx}]\n{pt}")
+                total_c += len(pt)
+                if total_c >= 24000:
+                    break
+        out = "\n\n".join(pages_txt).strip()
+        if len(out) >= 80:
+            return {"ok": True, "mode": f"pypdf-lokal ({len(reader.pages)} hal)", "judul": Path(filename).stem, "teks_asli": out}
+    except Exception:
+        pass
+
+    # Lapis 1: Pure-Python stdlib PDF stream parser (0 dependensi, 0 biaya)
+    stdlib_txt = _extract_pdf_text_stdlib(raw_bytes, max_chars=24000)
+    if len(stdlib_txt) >= 120:
+        return {"ok": True, "mode": "pdf-lokal-0biaya", "judul": Path(filename).stem, "teks_asli": stdlib_txt}
+
+    # Lapis 2: Gemini Native PDF Multimodal (Gratis Free Tier — bisa baca PDF hasil scan & tabel!)
+    if not api_key:
+        api_key, _ = _load_local_gemini_key()
+    if api_key:
+        clean_b64 = base64.b64encode(raw_bytes).decode("ascii")
+        last_exc = None
+        for mdl in ("gemini-3.5-flash-lite", "gemini-2.5-flash"):
+            try:
+                endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
+                payload = {
+                    "contents": [{
+                        "parts": [
+                            {"text": "Ekstrak seluruh inti gagasan, fakta penting, angka, dan poin utama dari dokumen PDF ini secara terstruktur dan setia pada isi (jangan mengarang)."},
+                            {"inline_data": {"mime_type": "application/pdf", "data": clean_b64}},
+                        ]
+                    }],
+                    "generationConfig": {"temperature": 0.1, "maxOutputTokens": 4096},
+                }
+                req = urllib.request.Request(
+                    endpoint,
+                    data=json.dumps(payload).encode("utf-8"),
+                    headers={"Content-Type": "application/json"},
+                    method="POST",
+                )
+                with urllib.request.urlopen(req, timeout=35) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                cands = data.get("candidates") or []
+                parts = ((cands[0].get("content") or {}).get("parts")) or [] if cands else []
+                out_txt = "\n".join(p.get("text", "") for p in parts if p.get("text")).strip()
+                if out_txt:
+                    return {"ok": True, "mode": f"gemini-pdf-gratis ({mdl})", "judul": Path(filename).stem, "teks_asli": out_txt}
+            except urllib.error.HTTPError as exc:
+                last_exc = exc
+                if exc.code in (404, 429):
+                    continue
+                break
+            except Exception as exc:
+                last_exc = exc
+                break
+        if last_exc:
+            return {"ok": False, "error": f"PDF terenkripsi/scan gagal dibaca via Gemini ({last_exc})."}
+
+    return {"ok": False, "error": "PDF tidak memuat teks polos (kemungkinan hasil scan). Isi GEMINI_API_KEY gratis di .env agar Gemini PDF Reader otomatis membacanya."}
 
 
 def fetch_web_article(url: str, chase: bool = True) -> dict:

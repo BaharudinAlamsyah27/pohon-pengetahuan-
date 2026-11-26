@@ -1052,6 +1052,30 @@ def _verify_quote_in_source(quote: str, raw_text: str) -> str:
     return " ".join(fallback_ws) + ("..." if len(fallback_ws) == 14 else "")
 
 
+def _split_long_text_chunks(raw_text: str, chunk_size: int = 4500, max_chunks: int = 4) -> list[str]:
+    """Pecah transkrip YouTube / artikel panjang / PDF per batas paragraf agar hemat memori & tidak terpotong."""
+    text = (raw_text or "").strip()
+    if len(text) <= chunk_size + 1000:
+        return [text]
+    paras = [p.strip() for p in re.split(r"\n{2,}", text) if p.strip()]
+    chunks: list[str] = []
+    buf: list[str] = []
+    cur_len = 0
+    for p in paras:
+        if cur_len + len(p) > chunk_size and buf:
+            chunks.append("\n\n".join(buf))
+            if len(chunks) >= max_chunks:
+                return chunks
+            buf = [p]
+            cur_len = len(p)
+        else:
+            buf.append(p)
+            cur_len += len(p) + 2
+    if buf and len(chunks) < max_chunks:
+        chunks.append("\n\n".join(buf))
+    return chunks or [text[:chunk_size]]
+
+
 def extract_structured_cards_gemini(
     raw_text: str,
     candidate_neighbors: list[dict],
@@ -1060,12 +1084,42 @@ def extract_structured_cards_gemini(
     platform: str = "X",
 ) -> dict | None:
     """
-    Pipeline 1-Panggilan Terstruktur (Arsitektur Claude):
-    Mengirim teks sumber + Top-12 kartu tetangga dalam 1x panggilan Gemini JSON,
+    Pipeline 1-Panggilan Terstruktur (Arsitektur Claude) + Chunked Map-Reduce untuk teks panjang (>5.500 karakter):
+    Mengirim teks sumber + Top-12 kartu tetangga dalam panggilan JSON terstruktur,
     menghasilkan kartu terjemahan Bahasa Indonesia, cabang per kartu (bisa multi-cabang),
     3-5 konsep abstrak (jembatan metafora), metadata valid, dan relasi (termasuk usulan pertentangan).
     """
     if not has_any_free_llm_key() or len((raw_text or "").strip()) < 15:
+        return None
+
+    # Jika teks sangat panjang (transkrip YouTube / PDF / X Article > 5.500 karakter), jalankan Chunked Map-Reduce!
+    chunks = _split_long_text_chunks(raw_text, chunk_size=4500, max_chunks=4)
+    if len(chunks) > 1:
+        merged_cards: list[dict] = []
+        used_model = ""
+        per_chunk_lim = max(1, (max(1, min(5, max_cards)) + len(chunks) - 1) // len(chunks))
+        for ch in chunks:
+            sub = extract_structured_cards_gemini(
+                raw_text=ch,
+                candidate_neighbors=candidate_neighbors,
+                valid_branches=valid_branches,
+                max_cards=per_chunk_lim,
+                platform=platform,
+            )
+            if sub and sub.get("kartu"):
+                used_model = used_model or sub.get("model", "ai")
+                for c in sub["kartu"]:
+                    if not any(compute_shingle_jaccard(c["ide"], ex["ide"], k=3) >= 0.65 for ex in merged_cards):
+                        merged_cards.append(c)
+            if len(merged_cards) >= max(1, min(5, max_cards)):
+                break
+        if merged_cards:
+            return {
+                "duplikat_dari": None,
+                "kartu": merged_cards[: max(1, min(5, max_cards))],
+                "model": f"{used_model} (map-reduce {len(chunks)} segmen)",
+                "versi_prompt": PROMPT_VERSION,
+            }
         return None
 
     neighbor_lines = []
