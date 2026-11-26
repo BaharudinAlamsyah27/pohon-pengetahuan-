@@ -102,7 +102,7 @@ def _load_local_gemini_key() -> tuple[str, str]:
                 api_key = v
             elif k == "GEMINI_MODEL" and not model:
                 model = v
-    return api_key, (model or "gemini-2.5-flash")
+    return api_key, (model or "gemini-3.5-flash-lite")
 
 
 def _fetch_fxtwitter_raw(user: str, status_id: str) -> dict | None:

@@ -902,9 +902,14 @@ def extract_structured_cards_gemini(
             neighbor_lines.append(f"- [{nid}] ({nb.get('cabang', '')}): {nb.get('ide', '')[:160]}")
     neighbors_blob = "\n".join(neighbor_lines) if neighbor_lines else "(belum ada kartu tetangga)"
 
+    max_c = max(1, min(5, max_cards))
+    card_count_rule = (
+        "Ekstrak teks sumber menjadi TEPAT 1 kartu utuh: buat 1 kalimat judul 'ide' utama yang kuat, lalu susun seluruh poin/langkah turunannya secara rapi (1., 2., 3., ...) di dalam 'penjelasan'."
+        if max_c == 1
+        else f"Ekstrak teks sumber menjadi 1 hingga {max_c} kartu wawasan atomik dalam Bahasa Indonesia yang alami dan setia pada sumber."
+    )
     prompt = (
-        "Kamu adalah analis Pohon Pengetahuan. Ekstrak teks sumber menjadi 1 hingga "
-        f"{max(1, min(5, max_cards))} kartu wawasan atomik dalam Bahasa Indonesia yang alami dan setia pada sumber.\n"
+        f"Kamu adalah analis Pohon Pengetahuan. {card_count_rule}\n"
         "JANGAN mengarang di luar isi sumber. Satu sumber BOLEH menghasilkan kartu di cabang berbeda jika topiknya berbeda.\n\n"
         "DAFTAR CABANG YANG DIIZINKAN:\n"
         "- kesehatan (tidur/sleep, olahraga, nutrisi, otak, brain fog, biologi, medis)\n"
@@ -1024,7 +1029,7 @@ def extract_structured_cards_gemini(
                                 rels.append({"tipe": rt, "ke": rk})
                     validated_cards.append({
                         "ide": ide[:240],
-                        "penjelasan": penj[:650],
+                        "penjelasan": penj[:1200],
                         "kutipan": kutipan,
                         "cabang": cab,
                         "tahap": tahap,
@@ -1596,7 +1601,7 @@ def answer_question(question: str) -> dict:
 
     local_env = load_local_env()
     api_key = (os.environ.get("GEMINI_API_KEY") or local_env.get("GEMINI_API_KEY") or "").strip()
-    model_name = (os.environ.get("GEMINI_MODEL") or local_env.get("GEMINI_MODEL") or "gemini-2.5-flash-lite").strip()
+    model_name = (os.environ.get("GEMINI_MODEL") or local_env.get("GEMINI_MODEL") or "gemini-3.5-flash-lite").strip()
 
     if api_key and rel_cards:
         q_for_llm = f"{question}\n\nDATA ANALISIS LINGUISTIK KORPUS:\n{syntax_report['teks']}" if syntax_report else question
