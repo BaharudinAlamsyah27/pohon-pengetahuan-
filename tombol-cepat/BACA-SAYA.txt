@@ -1,0 +1,16 @@
+TOMBOL CEPAT POHON PENGETAHUAN
+==============================
+
+1. Klik ganda "1-Buka-Aplikasi-Lokal.bat"
+   -> Otomatis menyalakan server laptop & membuka browser ke halaman Simpan Baru
+      (http://127.0.0.1:8765/#tangkap).
+   -> Bisa langsung Tarik Isi Link, baca teks foto X, & gabung thread X.
+
+2. Klik ganda "2-Update-Web-Vercel.bat"
+   -> Otomatis membangun ulang situs publik, cek anti-kebocoran, commit Git,
+      dan push ke GitHub agar https://pohon-pengetahuan.vercel.app/ ter-update.
+
+TIPS THREAD X:
+- Untuk thread X berantai (tweet 1 -> reply 2 -> reply 3), tempel LINK TWEET TERAKHIR
+  di tombol "Tarik Isi Link" agar sistem otomatis melacak seluruh thread dari awal sampai akhir!
+- Atau gunakan Bookmarklet 1-Klik di browser saat halaman thread sedang terbuka.

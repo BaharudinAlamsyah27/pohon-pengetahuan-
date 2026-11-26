@@ -87,23 +87,123 @@ def strip_html_tags(s: str) -> str:
     return s.strip()
 
 
+def _load_local_gemini_key() -> tuple[str, str]:
+    api_key = os.environ.get("GEMINI_API_KEY", "").strip()
+    model = os.environ.get("GEMINI_MODEL", "").strip()
+    env_fp = Path(__file__).resolve().parent.parent / ".env"
+    if env_fp.exists():
+        for line in env_fp.read_text(encoding="utf-8", errors="ignore").splitlines():
+            s = line.strip()
+            if not s or s.startswith("#") or "=" not in s:
+                continue
+            k, v = s.split("=", 1)
+            k, v = k.strip(), v.strip().strip('"').strip("'")
+            if k == "GEMINI_API_KEY" and not api_key:
+                api_key = v
+            elif k == "GEMINI_MODEL" and not model:
+                model = v
+    return api_key, (model or "gemini-2.5-flash")
+
+
+def _fetch_fxtwitter_raw(user: str, status_id: str) -> dict | None:
+    api_url = f"https://api.fxtwitter.com/{user}/status/{status_id}"
+    data = json.loads(http_get_text(api_url))
+    tw = data.get("tweet")
+    return tw if isinstance(tw, dict) else None
+
+
 def fetch_x_fxtwitter(url: str) -> dict | None:
-    """Ambil teks penuh postingan X (termasuk long-form >280 karakter) via API publik FxTwitter."""
+    """
+    Ambil teks penuh postingan X (termasuk long-form >280 karakter) via API publik FxTwitter.
+    Fitur tambahan:
+      1. Otomatis melacak thread berantai ke atas (self-reply) hingga 15 tweet jika ditempel link tweet akhir.
+      2. Otomatis membaca teks/infografis dari foto lampiran tweet (via altText / Tesseract / Gemini Vision Gratis).
+    """
     m = re.search(r"(?:x\.com|twitter\.com)/([^/]+)/status/(\d+)", url)
     if not m:
         return None
     user, status_id = m.group(1), m.group(2)
-    api_url = f"https://api.fxtwitter.com/{user}/status/{status_id}"
-    data = json.loads(http_get_text(api_url))
-    tw = data.get("tweet") or {}
-    teks = (tw.get("text") or "").strip()
-    if not teks:
+    tw = _fetch_fxtwitter_raw(user, status_id)
+    if not tw:
         return None
+
     author = tw.get("author") or {}
     name = author.get("name") or user
-    screen = author.get("screen_name") or user
-    penulis = f"{name} (@{screen})"
-    first_line = teks.splitlines()[0][:80]
+    screen = (author.get("screen_name") or user).lower()
+    penulis = f"{name} (@{author.get('screen_name') or user})"
+
+    # 1. Telusuri thread berantai ke atas jika penulis membalas tweetnya sendiri (maks 15 tweet)
+    chain = [tw]
+    visited = {str(tw.get("id") or status_id)}
+    curr = tw
+    for _ in range(14):
+        parent_id = str(curr.get("replying_to_status") or "").strip()
+        parent_user = str(curr.get("replying_to") or "").strip().lower()
+        if not parent_id or parent_id in visited or (parent_user and parent_user != screen):
+            break
+        try:
+            ptw = _fetch_fxtwitter_raw(parent_user or screen, parent_id)
+        except Exception:
+            break
+        if not ptw:
+            break
+        p_screen = str((ptw.get("author") or {}).get("screen_name") or "").lower()
+        if p_screen and p_screen != screen:
+            break
+        visited.add(parent_id)
+        chain.append(ptw)
+        curr = ptw
+
+    chain.reverse()  # Urutkan dari tweet pertama (1/N) ke terakhir
+
+    text_blocks: list[str] = []
+    photo_items: list[tuple[str, str]] = []  # (url, altText)
+    for idx, item in enumerate(chain, 1):
+        t = (item.get("text") or "").strip()
+        if t:
+            prefix = f"[{idx}/{len(chain)}] " if len(chain) > 1 else ""
+            text_blocks.append(f"{prefix}{t}")
+        photos = ((item.get("media") or {}).get("photos") or [])
+        for ph in photos:
+            if isinstance(ph, dict) and ph.get("url") and len(photo_items) < 4:
+                photo_items.append((ph["url"], (ph.get("altText") or "").strip()))
+
+    teks = "\n\n".join(text_blocks).strip()
+    if not teks and not photo_items:
+        return None
+
+    # 2. Ekstrak teks dari foto lampiran (maks 4 foto) memakai altText atau Gemini Vision / Tesseract
+    ocr_blocks: list[str] = []
+    api_key, _ = _load_local_gemini_key()
+    for p_idx, (p_url, alt_txt) in enumerate(photo_items, 1):
+        extracted = ""
+        if alt_txt and len(alt_txt) >= 15:
+            extracted = alt_txt
+        else:
+            try:
+                req = urllib.request.Request(p_url, headers={"User-Agent": USER_AGENT})
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    raw_img = resp.read(MAX_BYTES)
+                    ctype = (resp.headers.get("Content-Type") or "image/jpeg").split(";")[0].strip()
+                ocr_res = extract_text_from_image(raw_img, ctype, api_key=api_key)
+                if ocr_res.get("ok") and ocr_res.get("teks_asli"):
+                    extracted = ocr_res["teks_asli"].strip()
+            except Exception:
+                pass
+        if extracted:
+            ocr_blocks.append(f"--- Isi Teks dari Foto ({p_idx}/{len(photo_items)}) ---\n{extracted}")
+        else:
+            ocr_blocks.append(f"--- Lampiran Foto ({p_idx}/{len(photo_items)}) ---\n{p_url}")
+
+    if ocr_blocks:
+        teks = (teks + "\n\n" + "\n\n".join(ocr_blocks)).strip()
+
+    first_line = (teks.splitlines()[0] if teks else f"Postingan {penulis}")[:90]
+    notes = ["Teks penuh berhasil ditarik."]
+    if len(chain) > 1:
+        notes.append(f"Thread utuh {len(chain)} tweet berhasil digabung otomatis.")
+    if photo_items:
+        notes.append(f"{len(photo_items)} foto lampiran ikut diproses.")
     return {
         "ok": True,
         "platform": "X",
@@ -112,7 +212,7 @@ def fetch_x_fxtwitter(url: str) -> dict | None:
         "penulis": penulis,
         "url": url,
         "teks_asli": teks,
-        "peringatan": "Teks penuh berhasil ditarik (mendukung postingan panjang X).",
+        "peringatan": " ".join(notes),
     }
 
 
@@ -324,36 +424,46 @@ def extract_image_text(image_b64: str, mime_type: str = "image/png", api_key: st
         except Exception:
             pass
 
-    # Lapis 2: Gemini 2.5 Flash-Lite Multimodal (Free Tier)
+    # Lapis 2: Gemini Vision Multimodal (Free Tier)
     if api_key:
-        try:
-            clean_b64 = base64.b64encode(raw_bytes).decode("ascii")
-            endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key={api_key}"
-            payload = {
-                "contents": [{
-                    "parts": [
-                        {"text": "Ekstrak seluruh teks penting, angka, dan poin utama dari gambar/infografis ini secara akurat dalam bahasa aslinya (atau Bahasa Indonesia bila berupa diagram). Jangan mengarang."},
-                        {"inline_data": {"mime_type": mime_type or "image/png", "data": clean_b64}},
-                    ]
-                }],
-                "generationConfig": {"temperature": 0.1, "maxOutputTokens": 900},
-            }
-            req = urllib.request.Request(
-                endpoint,
-                data=json.dumps(payload).encode("utf-8"),
-                headers={"Content-Type": "application/json"},
-                method="POST",
-            )
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-            cands = data.get("candidates") or []
-            if cands:
-                parts = ((cands[0].get("content") or {}).get("parts")) or []
-                out_txt = "\n".join(p.get("text", "") for p in parts if p.get("text")).strip()
-                if out_txt:
-                    return {"ok": True, "mode": "gemini-vision-free", "teks_asli": out_txt}
-        except Exception as exc:
-            return {"ok": False, "error": f"Gagal membaca gambar via Gemini Vision: {exc}"}
+        clean_b64 = base64.b64encode(raw_bytes).decode("ascii")
+        last_exc = None
+        for mdl in ("gemini-2.5-flash-lite", "gemini-2.5-flash"):
+            try:
+                endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
+                payload = {
+                    "contents": [{
+                        "parts": [
+                            {"text": "Ekstrak seluruh teks penting, angka, dan poin utama dari gambar/infografis ini secara akurat dalam bahasa aslinya (atau Bahasa Indonesia bila berupa diagram). Jangan mengarang."},
+                            {"inline_data": {"mime_type": mime_type or "image/png", "data": clean_b64}},
+                        ]
+                    }],
+                    "generationConfig": {"temperature": 0.1, "maxOutputTokens": 2048},
+                }
+                req = urllib.request.Request(
+                    endpoint,
+                    data=json.dumps(payload).encode("utf-8"),
+                    headers={"Content-Type": "application/json"},
+                    method="POST",
+                )
+                with urllib.request.urlopen(req, timeout=25) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                cands = data.get("candidates") or []
+                if cands:
+                    parts = ((cands[0].get("content") or {}).get("parts")) or []
+                    out_txt = "\n".join(p.get("text", "") for p in parts if p.get("text")).strip()
+                    if out_txt:
+                        return {"ok": True, "mode": f"gemini-vision ({mdl})", "teks_asli": out_txt}
+            except urllib.error.HTTPError as exc:
+                last_exc = exc
+                if exc.code == 404:
+                    continue
+                break
+            except Exception as exc:
+                last_exc = exc
+                break
+        if last_exc:
+            return {"ok": False, "error": f"Gagal membaca gambar via Gemini Vision: {last_exc}"}
 
     return {
         "ok": False,
