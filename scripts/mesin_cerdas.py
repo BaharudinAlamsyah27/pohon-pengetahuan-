@@ -1043,6 +1043,8 @@ def extract_structured_cards_gemini(
             except urllib.error.HTTPError as exc:
                 if exc.code == 404:
                     continue
+                if exc.code == 429:
+                    continue
                 break
             except Exception:
                 continue
