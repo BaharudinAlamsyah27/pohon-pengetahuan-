@@ -4,7 +4,7 @@
   "ringkasan": {
     "total_kartu": 25,
     "total_sumber": 22,
-    "total_cabang": 16,
+    "total_cabang": 19,
     "penerapan": {
       "belum-dicoba": 25,
       "sedang-dicoba": 0,
@@ -22,7 +22,10 @@
     "kesehatan",
     "motivasi-dan-mindset",
     "relasi",
-    "lainnya"
+    "lainnya",
+    "agama",
+    "berita",
+    "kliping-hiburan"
   ],
   "tahap_baku": [
     "sebelum-20",
@@ -396,6 +399,69 @@
       "jumlah_kartu": 0,
       "jumlah_sumber": 0,
       "urutan": 9
+    },
+    {
+      "slug": "agama",
+      "nama": "Agama",
+      "induk": "-",
+      "file": "cabang/agama/_cabang.md",
+      "jumlah_kartu_tercatat": 0,
+      "jumlah_sumber_tercatat": 0,
+      "diperbarui": "2026-11-26",
+      "catatan_sudut_pandang": "belum ada sumber",
+      "ringkasan": "Cabang utama Agama (dibuat otomatis untuk topik baru).",
+      "poin_kunci": [],
+      "pertentangan": [],
+      "lanjutan_timeline": [
+        "Sebelumnya: -",
+        "Berikutnya: -"
+      ],
+      "sub_cabang": [],
+      "jumlah_kartu": 0,
+      "jumlah_sumber": 0,
+      "urutan": 10
+    },
+    {
+      "slug": "berita",
+      "nama": "Berita",
+      "induk": "-",
+      "file": "cabang/berita/_cabang.md",
+      "jumlah_kartu_tercatat": 0,
+      "jumlah_sumber_tercatat": 0,
+      "diperbarui": "2026-11-26",
+      "catatan_sudut_pandang": "belum ada sumber",
+      "ringkasan": "Cabang utama Berita (dibuat otomatis untuk topik baru).",
+      "poin_kunci": [],
+      "pertentangan": [],
+      "lanjutan_timeline": [
+        "Sebelumnya: -",
+        "Berikutnya: -"
+      ],
+      "sub_cabang": [],
+      "jumlah_kartu": 0,
+      "jumlah_sumber": 0,
+      "urutan": 11
+    },
+    {
+      "slug": "kliping-hiburan",
+      "nama": "Kliping Hiburan",
+      "induk": "-",
+      "file": "cabang/kliping-hiburan/_cabang.md",
+      "jumlah_kartu_tercatat": 0,
+      "jumlah_sumber_tercatat": 0,
+      "diperbarui": "2026-11-26",
+      "catatan_sudut_pandang": "belum ada sumber",
+      "ringkasan": "Cabang utama Kliping Hiburan (dibuat otomatis untuk topik baru).",
+      "poin_kunci": [],
+      "pertentangan": [],
+      "lanjutan_timeline": [
+        "Sebelumnya: -",
+        "Berikutnya: -"
+      ],
+      "sub_cabang": [],
+      "jumlah_kartu": 0,
+      "jumlah_sumber": 0,
+      "urutan": 12
     }
   ],
   "kartu": [

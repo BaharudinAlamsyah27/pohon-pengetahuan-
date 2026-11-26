@@ -1095,6 +1095,9 @@ def extract_structured_cards_gemini(
         "- kesuksesan (karier, CPNS, beasiswa, magang, kerja, wawancara)\n"
         "- motivasi-dan-mindset (disiplin, kebiasaan, fokus, overthinking, produktivitas)\n"
         "- relasi (hubungan, komunikasi, keluarga, pasangan, negosiasi)\n"
+        "- agama (ilmu agama, akhlak, ibadah, tafsir, hadis, nasihat ulama, spiritualitas)\n"
+        "- berita (berita terkini, kebijakan pemerintah, peristiwa dunia, geopolitik, tren sesaat)\n"
+        "- kliping-hiburan (guyonan, meme, lelucon, hiburan ringan, konten absurd tanpa pelajaran serius)\n"
         "- ai/coding-dan-proyek (coding AI, Cursor, Claude Code, Python, GitHub, API)\n"
         "- ai/prompt-dan-agen (prompt, agen AI, MCP, skill AI, workflow otomasi)\n"
         "- ai/video-dan-clipping (video AI, Kling, Veo, Runway, CapCut, ElevenLabs)\n"
@@ -1220,6 +1223,8 @@ def extract_structured_cards_gemini(
 
 def query_relevant_cards(query: str, cards: dict[str, dict], limit: int = 80) -> list[dict]:
     """Pencarian Hibrida (RRF): gabungkan FTS5 BM25 + TF-IDF Cosine + ekspansi sinonim ID<->EN."""
+    # Kecualikan cabang kliping-hiburan dari Tanya AI, Saran, dan Tanggapan Jurnal agar otak utama tetap bersih
+    cards = {cid: c for cid, c in cards.items() if c.get("cabang") != "kliping-hiburan" and c.get("bidang") != "kliping-hiburan"}
     toks = tokenize(query)
     if not toks:
         toks = [w for w in re.findall(r"[a-z0-9]+", (query or "").lower()) if w not in STOPWORDS]

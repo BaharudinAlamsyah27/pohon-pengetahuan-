@@ -686,6 +686,132 @@ a:hover { text-decoration: underline; }
   border-color: var(--border-strong);
 }
 
+/* Jurnal & Biografi (Khusus Lokal — Neo-Brutalisme) */
+.jurnal-layout {
+  display: grid; grid-template-columns: 320px 1fr; gap: 18px; align-items: start;
+}
+.jurnal-panel {
+  background: var(--surface); border: 1.5px solid var(--border-strong);
+  border-radius: 12px; padding: 18px; box-shadow: 3px 3px 0 var(--border-strong);
+}
+.jurnal-sidebar {
+  position: sticky; top: 76px; display: flex; flex-direction: column; gap: 10px;
+  max-height: calc(100vh - 96px); overflow: hidden;
+}
+.jurnal-list {
+  display: flex; flex-direction: column; gap: 8px; overflow-y: auto;
+  padding-right: 2px; max-height: 52vh;
+}
+.jurnal-item {
+  width: 100%; text-align: left; padding: 10px 12px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--bg);
+  display: flex; flex-direction: column; gap: 5px;
+  transition: border-color 120ms ease-out, transform 120ms ease-out;
+}
+.jurnal-item:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+.jurnal-item.active {
+  border-color: var(--border-strong); background: var(--node-main-bg);
+  color: var(--node-main-text); box-shadow: 2px 2px 0 var(--border-strong);
+}
+.jurnal-item-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  font-size: 12.5px; font-weight: 700;
+}
+.jurnal-item-snippet {
+  font-size: 12.5px; color: var(--text-2); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.jurnal-item.active .jurnal-item-snippet { color: var(--node-main-text); opacity: 0.88; }
+.jurnal-pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.jurnal-pill {
+  min-height: 34px; padding: 5px 11px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: var(--surface-alt);
+  color: var(--text-2); font-size: 12.5px; font-weight: 600;
+  transition: border-color 120ms ease-out, background-color 120ms ease-out;
+}
+.jurnal-pill:hover { border-color: var(--border-strong); color: var(--text); }
+.jurnal-pill.active {
+  background: var(--node-main-bg); color: var(--node-main-text);
+  border-color: var(--border-strong);
+}
+.jurnal-textarea {
+  width: 100%; min-height: 320px; padding: 14px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-strong); background: var(--bg); color: var(--text);
+  font-size: 15px; line-height: 1.7; resize: vertical;
+}
+.jurnal-textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.jurnal-meta-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px;
+}
+.jurnal-lvl-besar { background: #FEF3C7; color: #92400E; border-color: #D97706; }
+.jurnal-lvl-menengah { background: #DBEAFE; color: #1E40AF; border-color: #2563EB; }
+.jurnal-lvl-kecil { background: #DCFCE7; color: #166534; border-color: #16A34A; }
+.jurnal-lvl-catatan { background: var(--surface-alt); color: var(--text-2); border-color: var(--border); }
+[data-theme="dark"] .jurnal-lvl-besar { background: rgba(245,158,11,0.18); color: #FCD34D; border-color: #D97706; }
+[data-theme="dark"] .jurnal-lvl-menengah { background: rgba(59,130,246,0.18); color: #93C5FD; border-color: #3B82F6; }
+[data-theme="dark"] .jurnal-lvl-kecil { background: rgba(34,197,94,0.18); color: #86EFAC; border-color: #22C55E; }
+
+/* Fase 3: Timeline Biografi & Radar Pertumbuhan Karakter */
+.bio-year-block { margin-bottom: 22px; }
+.bio-year-head {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 6px 14px; border-radius: 9px;
+  background: var(--node-main-bg); color: var(--node-main-text);
+  border: 1.5px solid var(--border-strong); box-shadow: 2px 2px 0 var(--border-strong);
+  font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 16px;
+  margin-bottom: 12px;
+}
+.bio-month-label {
+  font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text-3); margin: 12px 0 8px 26px;
+}
+.bio-spine {
+  position: relative; margin-left: 14px; padding-left: 22px;
+  border-left: 3px solid var(--spine);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.bio-node {
+  position: relative; background: var(--bg);
+  border: 1.5px solid var(--border-strong); border-radius: 10px;
+  padding: 12px 14px; box-shadow: 2px 2px 0 var(--border-strong);
+}
+.bio-node.lvl-besar { border-width: 2px; background: var(--surface); }
+.bio-dot {
+  position: absolute; left: -31px; top: 16px;
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--border-strong); background: var(--node-sub-bg);
+}
+.bio-node.lvl-besar .bio-dot { background: #F59E0B; width: 16px; height: 16px; left: -32px; }
+.bio-node.lvl-menengah .bio-dot { background: #3B82F6; }
+.bio-node.lvl-kecil .bio-dot { background: #22C55E; }
+.radar-grid {
+  display: grid; grid-template-columns: 340px 1fr; gap: 18px; align-items: start;
+}
+.dim-bar-track {
+  height: 10px; border-radius: 99px; background: var(--surface-alt);
+  border: 1px solid var(--border-strong); overflow: hidden; margin: 6px 0 8px;
+}
+.dim-bar-fill {
+  height: 100%; background: var(--spine); border-radius: 99px;
+  transition: width 220ms ease-out;
+}
+.month-bars {
+  display: flex; align-items: flex-end; gap: 10px; overflow-x: auto;
+  padding: 14px 6px 4px; min-height: 170px;
+}
+.month-col {
+  min-width: 68px; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.month-bar-box {
+  width: 100%; max-width: 44px; height: 110px; display: flex; align-items: flex-end;
+  justify-content: center; background: var(--surface-alt);
+  border: 1px dashed var(--border); border-radius: 8px; padding: 3px;
+}
+.month-bar-fill {
+  width: 100%; border-radius: 5px; background: var(--node-main-bg);
+  border: 1.5px solid var(--border-strong); min-height: 6px;
+}
+
 @media (max-width: 1024px) {
   .topbar-inner { position: relative; }
   .nav-hamburger { display: inline-flex; }
@@ -698,7 +824,9 @@ a:hover { text-decoration: underline; }
   .nav-btn { justify-content: flex-start; width: 100%; }
 }
 @media (max-width: 900px) {
-  .tree-shell, .catalog-layout, .detail-grid, .hero-grid, .chat-shell { grid-template-columns: 1fr; }
+  .tree-shell, .catalog-layout, .detail-grid, .hero-grid, .chat-shell, .jurnal-layout, .radar-grid { grid-template-columns: 1fr; }
+  .jurnal-sidebar { position: static; max-height: none; }
+  .jurnal-meta-grid { grid-template-columns: 1fr; }
   .card-grid { grid-template-columns: 1fr; }
   .stat-strip, .feat-grid { grid-template-columns: repeat(2, 1fr); }
   .tangkap-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -726,6 +854,7 @@ a:hover { text-decoration: underline; }
     <button class="nav-btn" data-view="perpustakaan" title="Arsip teks asli postingan &amp; artikel">Sumber Asli</button>
     <button class="nav-btn" data-view="ulasan" id="nav-ulasan" title="Kartu yang sedang dicoba minggu ini">Praktek</button>
     <button class="nav-btn" data-view="analisis" id="nav-analisis" title="Bandingkan alat, susun langkah kerja, &amp; cek kelengkapan">Analisis</button>
+    <button class="nav-btn" data-view="jurnal" id="nav-jurnal" title="Jurnal harian pribadi &amp; timeline biografi (khusus lokal)">Jurnal</button>
     <button class="nav-btn" data-view="tangkap" id="nav-tangkap" title="Simpan postingan, link, atau gambar baru">+ Simpan Baru</button>
   </nav>
 
@@ -928,6 +1057,9 @@ a:hover { text-decoration: underline; }
 
   <!-- 9. ANALISIS BIG DATA: BANDINGKAN & PLAYBOOK (LOKAL SAJA) -->
   <section id="view-analisis" class="view" aria-label="Analisis Perbandingan dan Playbook"></section>
+
+  <!-- 10. JURNAL HARIAN & BIOGRAFI (LOKAL SAJA) -->
+  <section id="view-jurnal" class="view" aria-label="Jurnal Harian dan Timeline Biografi"></section>
 </main>
 
 <!-- SIDE A & SIDE B NEO-BRUTALIST STAMP RAILS (TERINSPIRASI PORTFOLIO ALAM) -->
@@ -1008,7 +1140,7 @@ a:hover { text-decoration: underline; }
 </footer>
 
 <script>
-window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-26", "ringkasan": {"total_kartu": 25, "total_sumber": 22, "total_cabang": 16, "penerapan": {"belum-dicoba": 25, "sedang-dicoba": 0, "diterapkan": 0, "ditolak": 0}}, "urutan_indeks": ["ai", "bisnis", "sosmed", "digital-marketing", "keuangan", "kesuksesan", "kesehatan", "motivasi-dan-mindset", "relasi", "lainnya"], "tahap_baku": ["sebelum-20", "20-25", "25-30", "30-40", "40-50", "50+"], "akar": ["K-0003", "K-0015", "K-0016", "K-0019", "K-0005", "K-0007", "K-0018"], "cabang": [{"slug": "ai", "nama": "AI", "induk": "", "file": "cabang/ai/_cabang.md", "jumlah_kartu_tercatat": 13, "jumlah_sumber_tercatat": 8, "diperbarui": "2026-11-26", "catatan_sudut_pandang": "2 sumber berbeda (draf awal)", "ringkasan": "Bab dominan untuk penguasaan AI secara praktis: mulai dari video & clipping AI, penulisan artikel/copywriting, coding & pembangunan proyek, perancangan prompt & agen, hingga perbandingan model dan alat terbaik untuk tiap kebutuhan.", "poin_kunci": ["Stack SEO & AI-search open-source untuk Claude Code dan Cursor → [[K-0003]]", "Kumpulan 5 skill anti-AI-slop untuk kualitas UI → [[K-0005]]"], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": ["Video & Clipping AI → `cabang/ai/video-dan-clipping/_cabang.md` (0 kartu)", "Tulisan & Artikel AI → `cabang/ai/tulisan-dan-artikel/_cabang.md` (0 kartu)", "Coding & Proyek AI → `cabang/ai/coding-dan-proyek/_cabang.md` (0 kartu)", "Prompt & Agen AI → `cabang/ai/prompt-dan-agen/_cabang.md` (0 kartu)", "Perbandingan Model & Alat AI → `cabang/ai/perbandingan-model/_cabang.md` (0 kartu)"], "jumlah_kartu": 13, "jumlah_sumber": 8, "urutan": 0}, {"slug": "ai/coding-dan-proyek", "nama": "Coding & Proyek AI", "induk": "ai", "file": "cabang/ai/coding-dan-proyek/_cabang.md", "jumlah_kartu_tercatat": 5, "jumlah_sumber_tercatat": 3, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Alur membangun aplikasi, skrip, otomasi, dan proyek perangkat lunak menggunakan agen coding (Claude Code, Cursor, Antigravity, Codex, dll.).", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 5, "jumlah_sumber": 3, "urutan": 0}, {"slug": "ai/perbandingan-model", "nama": "Perbandingan Model & Alat AI", "induk": "ai", "file": "cabang/ai/perbandingan-model/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Benchmark praktis, kelebihan/kekurangan, biaya/kuota, dan tonality antar model atau alat AI (mis. Gemini, Claude, Opus, Fable, GPT, Kling, Veo, dll.).", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 0}, {"slug": "ai/prompt-dan-agen", "nama": "Prompt & Agen AI", "induk": "ai", "file": "cabang/ai/prompt-dan-agen/_cabang.md", "jumlah_kartu_tercatat": 3, "jumlah_sumber_tercatat": 2, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Perancangan prompt, context engineering, SKILL.md, MCP, sistem multi-agen, dan strategi penghematan token.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 3, "jumlah_sumber": 2, "urutan": 0}, {"slug": "ai/tulisan-dan-artikel", "nama": "Tulisan & Artikel AI", "induk": "ai", "file": "cabang/ai/tulisan-dan-artikel/_cabang.md", "jumlah_kartu_tercatat": 1, "jumlah_sumber_tercatat": 1, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Teknik riset, tone-of-voice, copywriting, penulisan artikel, thread, dan dokumentasi dengan AI agar tidak terasa generik.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 1, "jumlah_sumber": 1, "urutan": 0}, {"slug": "ai/video-dan-clipping", "nama": "Video & Clipping AI", "induk": "ai", "file": "cabang/ai/video-dan-clipping/_cabang.md", "jumlah_kartu_tercatat": 3, "jumlah_sumber_tercatat": 1, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Alur kerja, trik, dan perbandingan alat AI untuk pembuatan video, animasi, avatar, dubbing, dan clipping otomatis dari awal (skrip/storyboard) sampai siap unggah.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 3, "jumlah_sumber": 1, "urutan": 0}, {"slug": "bisnis", "nama": "Bisnis", "induk": "", "file": "cabang/bisnis/_cabang.md", "jumlah_kartu_tercatat": 1, "jumlah_sumber_tercatat": 1, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Bab dominan untuk strategi bisnis, validasi ide, produk digital, operasional efisien, dan pembangunan sumber pendapatan di luar pekerjaan utama.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 1, "jumlah_sumber": 1, "urutan": 1}, {"slug": "sosmed", "nama": "Sosmed", "induk": "", "file": "cabang/sosmed/_cabang.md", "jumlah_kartu_tercatat": 1, "jumlah_sumber_tercatat": 1, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Bab dominan untuk strategi media sosial (X, YouTube, TikTok, Instagram, Threads, Facebook): algoritma, hook, clipping, distribusi konten, dan monetisasi program kreator (seperti OCR X).", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 1, "jumlah_sumber": 1, "urutan": 2}, {"slug": "digital-marketing", "nama": "Digital Marketing", "induk": "", "file": "cabang/digital-marketing/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Bab dominan untuk pemasaran digital: SEO & AI-search, copywriting, landing page, funnel, akuisisi audiens, dan konversi berbasis data.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 3}, {"slug": "keuangan", "nama": "Keuangan", "induk": "", "file": "cabang/keuangan/_cabang.md", "jumlah_kartu_tercatat": 3, "jumlah_sumber_tercatat": 2, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "hanya 1 sumber (postingan media sosial)", "ringkasan": "Cabang keuangan saat ini baru memuat catatan awal mengenai monetisasi konten media sosial (program OCR di X), mencakup risiko pelanggaran aturan reupload dan klaim celah algoritma dengan selingan konten original. Sumber masih sangat terbatas.", "poin_kunci": ["Monetisasi OCR di X memiliki risiko pencabutan akun jika terlalu sering reupload → [[K-0001]]", "Terdapat klaim celah algoritma OCR dengan menyelingi postingan original (kepercayaan rendah) → [[K-0002]]"], "pertentangan": ["K-0004 | Nyolong konten orang India aja Kak, banyak tuh di Thread dan medsos2 | semua-usia | belum-diverifikasi"], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": ["Monetisasi Konten → `cabang/keuangan/monetisasi-konten/_cabang.md` (2 kartu)"], "jumlah_kartu": 3, "jumlah_sumber": 2, "urutan": 4}, {"slug": "keuangan/monetisasi-konten", "nama": "Monetisasi Konten", "induk": "keuangan", "file": "cabang/keuangan/monetisasi-konten/_cabang.md", "jumlah_kartu_tercatat": 3, "jumlah_sumber_tercatat": 2, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "hanya 1 sumber (postingan media sosial)", "ringkasan": "Cabang ini baru berisi satu sumber mengenai program OCR (Hadiah Konten Asli) di platform X. Intinya menyoroti ketegangan antara larangan reupload konten dari aplikasi lain—yang berisiko membuat akun dikeluarkan dari program—dengan klaim adanya celah algoritma ketika konten reupload diselingi postingan original. Karena baru bersandar pada satu postingan media sosial, informasi di sini masih berkepercayaan rendah hingga belum diverifikasi.", "poin_kunci": ["X melarang reupload konten dari aplikasi lain di program OCR dan dapat mengeluarkan akun yang sering melanggar → [[K-0001]]", "Klaim celah algoritma: menyelingi konten reupload dengan postingan original disebut masih membuat impresi terhitung → [[K-0002]]"], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 3, "jumlah_sumber": 2, "urutan": 4}, {"slug": "kesuksesan", "nama": "Kesuksesan", "induk": "", "file": "cabang/kesuksesan/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Belum ada kartu pada cabang ini. Sub-cabang timeline tahap hidup (sebelum-20, 20-25, 25-30, 30-40, 40-50, 50+, semua-usia) akan dibuat otomatis saat sumber pertama masuk.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 5}, {"slug": "kesehatan", "nama": "Kesehatan", "induk": "", "file": "cabang/kesehatan/_cabang.md", "jumlah_kartu_tercatat": 3, "jumlah_sumber_tercatat": 3, "diperbarui": "2026-11-26", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Belum ada kartu pada cabang ini.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 3, "jumlah_sumber": 3, "urutan": 6}, {"slug": "motivasi-dan-mindset", "nama": "Motivasi & Mindset", "induk": "", "file": "cabang/motivasi-dan-mindset/_cabang.md", "jumlah_kartu_tercatat": 4, "jumlah_sumber_tercatat": 5, "diperbarui": "2026-11-26", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Belum ada kartu pada cabang ini.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 4, "jumlah_sumber": 5, "urutan": 7}, {"slug": "relasi", "nama": "Relasi", "induk": "", "file": "cabang/relasi/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Belum ada kartu pada cabang ini.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 8}, {"slug": "lainnya", "nama": "Lainnya", "induk": "", "file": "cabang/lainnya/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Belum ada kartu pada cabang ini.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 9}], "kartu": [{"id": "K-0001", "file": "kartu/K-0001.md", "ide": "Platform X melarang reupload konten dari aplikasi lain untuk program OCR, dan akun yang terlalu sering melakukan reupload berisiko dikeluarkan dari program tersebut.", "bidang": "keuangan", "cabang": "keuangan/monetisasi-konten", "tahap": "semua-usia", "jenis": "opini", "kepercayaan": "belum-diverifikasi", "dasar": "pengalaman-pribadi", "tag": ["ocr-x", "monetisasi", "reupload", "risiko-akun", "media-sosial"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0001"], "relasi": [{"tipe": "terkait", "ke": "K-0002"}, {"tipe": "bertentangan-dengan", "ke": "K-0004"}, {"tipe": "memperkuat", "ke": "K-0011"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 2, "catatan_khusus": "sdg", "alat": [], "tugas": "monetisasi", "tahap_kerja": "monetisasi", "penjelasan": "Menurut pengamatan penulis di X, platform tersebut melarang kreator mengunggah ulang (reupload) konten dari aplikasi lain dalam program OCR (Hadiah Konten Asli). Akun yang kedapatan terlalu sering melakukan reupload dapat dikenai sanksi berupa pencabutan atau pengeluaran dari program OCR.", "kutipan": "X memang melarang kita reupload konten dari app sebelah.", "catatan_agen": "[inferensi AI] Sumber tidak menyertakan tautan kebijakan resmi X sehingga berstatus `belum-diverifikasi`. Diperkuat oleh aturan bobot konten orisinal pada [[K-0011]].", "penulis": "Bambang (@sibambaang)"}, {"id": "K-0002", "file": "kartu/K-0002.md", "ide": "Menurut satu pengamat di X, impresi konten reupload masih bisa terhitung dalam payout OCR selama profil tidak penuh berisi video repost dan tetap diselingi postingan original.", "bidang": "keuangan", "cabang": "keuangan/monetisasi-konten", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "rendah", "dasar": "pengalaman-pribadi", "tag": ["ocr-x", "monetisasi", "algoritma-x", "konten-original", "reupload"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0001"], "relasi": [{"tipe": "terkait", "ke": "K-0001"}, {"tipe": "memperkuat", "ke": "K-0004"}, {"tipe": "bertentangan-dengan", "ke": "K-0011"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "monetisasi", "tahap_kerja": "monetisasi", "penjelasan": "Penulis mengklaim bahwa algoritma X masih memiliki celah terkait monetisasi OCR: apabila sebuah profil tidak seluruhnya diisi video repost dan tetap diselingi postingan original, impresi dari konten reupload masih terhitung. Sebagai contoh kasus tunggal, penulis menunjukkan satu akun Indonesia yang meraih 49 juta impresi dari satu video reupload dengan payout sekitar $2.406,96 (Rp43,9 juta).", "kutipan": "Tetap diselingi postingan original, impresi reupload tetap terhitung.", "catatan_agen": "[inferensi AI] Berkepercayaan `rendah` karena merupakan klaim celah algoritma dari satu kasus viral ekstrem dan bertentangan dengan aturan OCR yang hanya menghitung impresi postingan orisinal ([[K-0011]]).", "penulis": "Bambang (@sibambaang)"}, {"id": "K-0003", "file": "kartu/K-0003.md", "ide": "Paket 30 skill SEO open-source dan 4 server MCP aktif untuk Claude Code serta Cursor guna mengotomasi audit teknis, programmatic SEO, dan ekstraksi transkrip video.", "bidang": "ai", "cabang": "ai/prompt-dan-agen", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["seo", "claude-code", "cursor", "mcp", "skills", "otomasi"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0003"], "relasi": [{"tipe": "terkait", "ke": "K-0012"}, {"tipe": "terkait", "ke": "K-0005"}, {"tipe": "terkait", "ke": "K-0022"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": ["claude-code", "cursor", "mcp"], "tugas": "seo", "tahap_kerja": "produksi", "penjelasan": "Penulis membagikan repositori open-source berisi 30 skill SEO (audit teknis, programmatic SEO, halaman BOFU, pengiriman direktori, serta alur kerja Ahrefs/GSC) bersama 4 server MCP aktif untuk Claude Code dan Cursor, termasuk MCP penarik transkrip dan OCR frame video YouTube.", "kutipan": "Open-sourced my full SEO and AI-search stack (30 skills).", "catatan_agen": "[inferensi AI] Diterjemahkan dari postingan X @illyism dan ditempatkan pada sub-cabang `ai/prompt-dan-agen`.", "penulis": "ILIAS ISM (@illyism)"}, {"id": "K-0004", "file": "kartu/K-0004.md", "ide": "Klaim bahwa mengambil ulang konten viral luar negeri (India) dari Threads ke X secara cepat dapat meloloskan syarat OCR dalam hitungan hari.", "bidang": "keuangan", "cabang": "keuangan/monetisasi-konten", "tahap": "semua-usia", "jenis": "opini", "kepercayaan": "rendah", "dasar": "opini-umum", "tag": ["ocr-x", "reupload", "monetisasi", "klaim-ekstrem"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0004"], "relasi": [{"tipe": "bertentangan-dengan", "ke": "K-0001"}, {"tipe": "memperkuat", "ke": "K-0002"}, {"tipe": "bertentangan-dengan", "ke": "K-0011"}], "dibuat": "2026-11-22", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "monetisasi", "tahap_kerja": "distribusi", "penjelasan": "Sebuah komentar di X mengklaim bahwa mengunggah ulang konten viral dari kreator India di Threads atau media sosial lain ke X secara cepat terbukti bisa memenuhi syarat kelayakan OCR dalam beberapa hari tanpa perlu membuat konten orisinal.", "kutipan": "Posting cepet2an ke X, bisa elig OCR beberapa hari.", "catatan_agen": "[inferensi AI] Berkepercayaan `rendah` dan bertentangan langsung dengan larangan reupload pada [[K-0001]] serta ketentuan impresi konten asli pada [[K-0011]]. Disimpan sebagai `publik: tidak`.", "penulis": "x.com"}, {"id": "K-0005", "file": "kartu/K-0005.md", "ide": "Lima pustaka skill desain frontend (Anti UI Slop, ThinkUI, Taste Skill, Emil Design Engineering, dan Vercel Web Design Guidelines) untuk menghilangkan tampilan web kaku khas AI.", "bidang": "ai", "cabang": "ai/coding-dan-proyek", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["ui-design", "frontend", "anti-ai-slop", "skills", "web-design"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0005"], "relasi": [{"tipe": "terkait", "ke": "K-0003"}, {"tipe": "memperkuat", "ke": "K-0022"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": ["claude-code", "cursor", "vercel"], "tugas": "coding", "tahap_kerja": "produksi", "penjelasan": "Daftar 5 skill agen AI untuk meningkatkan kualitas antarmuka aplikasi agar tidak terlihat seperti hasil generik AI (AI slop): (1) Anti UI Slop, (2) ThinkUI, (3) Taste Skill, (4) Emil Design Engineering, dan (5) Vercel Web Design Guidelines.", "kutipan": "5 skills that kill AI slop: Anti UI Slop, ThinkUI.", "catatan_agen": "[inferensi AI] Sangat relevan dengan peningkatan kualitas produk web dan sejalan dengan prinsip konsistensi tone-of-voice pada [[K-0022]].", "penulis": "x.com"}, {"id": "K-0006", "file": "kartu/K-0006.md", "ide": "Jangan habiskan usia 25 hingga 29 tahun untuk mengkhawatirkan hal-hal yang sebenarnya tidak penting; hentikan overthinking dan mulailah bertindak.", "bidang": "motivasi-dan-mindset", "cabang": "motivasi-dan-mindset", "tahap": "25-30", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "opini-umum", "tag": ["anti-overthinking", "usia-20an", "mindset", "keberanian"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0006"], "relasi": [{"tipe": "terkait", "ke": "K-0007"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": [], "tugas": "", "tahap_kerja": "semua", "penjelasan": "Pengingat reflektif bagi usia 20-an: bayangkan berada di usia 29 tahun lalu menoleh ke usia 25 tahun dan menyadari empat tahun terbuang hanya karena terlalu banyak mencemaskan hal-hal yang tidak penting. Hentikan kebiasaan overthinking dan mulailah menjalani hidup secara nyata.", "kutipan": "Stop overthinking everything. Start living.", "catatan_agen": "[inferensi AI] Ditempatkan pada tahap `25-30` karena secara eksplisit menyebut rentang usia 25 hingga 29 tahun.", "penulis": "scar (@imfat)"}, {"id": "K-0007", "file": "kartu/K-0007.md", "ide": "Rawat penampilan, angkat beban, makan sehat, tidur seperti atlet, dan perbaiki postur tubuh karena penampilan adalah kartu nama pertama Anda.", "bidang": "kesehatan", "cabang": "kesehatan", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "opini-umum", "tag": ["kesehatan-fisik", "angkat-beban", "tidur", "postur", "disiplin"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0007"], "relasi": [{"tipe": "terkait", "ke": "K-0023"}, {"tipe": "terkait", "ke": "K-0006"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": [], "tugas": "", "tahap_kerja": "semua", "penjelasan": "Disiplin merawat diri secara menyeluruh—mulai dari latihan angkat beban, makan makanan bergizi, tidur berkualitas seperti atlet, menjaga kelembapan wajah, memperbaiki postur, hingga berpakaian rapi—merupakan bentuk kepedulian diri karena penampilan fisik bekerja sebagai kartu nama Anda.", "kutipan": "Take care of your appearance. Lift the weights.", "catatan_agen": "[inferensi AI] Dipindahkan dari `lainnya` ke cabang `kesehatan` dan diterjemahkan ke Bahasa Indonesia.", "penulis": "Dear Self. (@Dearme2_)"}, {"id": "K-0008", "file": "kartu/K-0008.md", "ide": "Trik 3 langkah mendapatkan promo resmi Black Friday Google AI Pro ($99/tahun, 5TB + model tingkat lanjut) dengan menghapus langganan pihak ketiga Jio lalu memakai batu loncatan paket bulanan.", "bidang": "ai", "cabang": "ai", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "belum-diverifikasi", "dasar": "pengalaman-pribadi", "tag": ["google-ai-pro", "google-one", "promo", "langganan-ai"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0009"], "relasi": [{"tipe": "terkait", "ke": "K-0012"}, {"tipe": "prasyarat-untuk", "ke": "K-0015"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 3, "catatan_khusus": "", "alat": ["gemini"], "tugas": "riset", "tahap_kerja": "riset", "penjelasan": "Pengguna paket Google One pihak ketiga (seperti Jio) tidak bisa langsung mengakses diskon 50% Black Friday Google AI Pro. Solusi 3 langkahnya: (1) hapus layanan Google One Jio di halaman pengelolaan akun Google (file Drive/Gmail tetap aman), (2) daftar paket resmi bulanan $4,99/bulan untuk memperoleh status pelanggan aktif, lalu (3) langsung ubah paket ke tahunan promo $99,99/tahun.", "kutipan": "谷歌黑五 $99/年 Google AI Pro 合法上车攻略！", "catatan_agen": "[inferensi AI] Menggabungkan kartu duplikat K-0009 dan K-0010 serta diterjemahkan dari bahasa Mandarin ke Bahasa Indonesia.", "penulis": "MarkBai｜鲸鱼娘的人类运营 (@MarkBaii)"}, {"id": "K-0011", "file": "kartu/K-0011.md", "ide": "Pendapatan OCR di X hanya menghitung impresi timeline utama dari pengguna Premium pada postingan orisinal, dengan bobot algoritma tertinggi pada mutual reply (20) dan copy-link share (20).", "bidang": "sosmed", "cabang": "sosmed", "tahap": "semua-usia", "jenis": "data", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["ocr-x", "algoritma-x", "monetisasi", "impresi", "strategi-konten"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0011"], "relasi": [{"tipe": "memperkuat", "ke": "K-0001"}, {"tipe": "bertentangan-dengan", "ke": "K-0002"}, {"tipe": "bertentangan-dengan", "ke": "K-0004"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": [], "tugas": "monetisasi", "tahap_kerja": "distribusi", "penjelasan": "Strategi meningkatkan pendapatan di X: fokus pada audiens negara tier atas, niche yang tepat, 3 postingan orisinal sehari, dan balasan yang menarik perhatian. Aturan pentingnya: (1) OCR hanya membayar impresi timeline beranda dari akun Premium pada postingan asli (balasan tidak dihitung ke syarat 500 ribu impresi), (2) bobot interaksi algoritma adalah Like = 0,708, Reply = 5, Mutual Reply = 20, dan Copy Link Share = 20.", "kutipan": "mutual reply is 20. copy link share is 20.", "catatan_agen": "[inferensi AI] Dipindahkan ke cabang `sosmed` dan dihubungkan dengan kartu monetisasi OCR di `keuangan/monetisasi-konten`.", "penulis": "Maran (@TheMaran)"}, {"id": "K-0012", "file": "kartu/K-0012.md", "ide": "Gunakan file instruksi sistem (seperti GEMINI.md di Gemini atau Codex) agar agen AI bertindak sebagai asisten teknis saat menyiapkan simulator Android MuMu dan skrip konfigurasi.", "bidang": "ai", "cabang": "ai/coding-dan-proyek", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "belum-diverifikasi", "dasar": "pengalaman-pribadi", "tag": ["gemini", "codex", "sistem-instruksi", "otomasi", "google-ai-ultra"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0012"], "relasi": [{"tipe": "terkait", "ke": "K-0008"}, {"tipe": "terkait", "ke": "K-0003"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 3, "catatan_khusus": "", "alat": ["gemini", "codex"], "tugas": "coding", "tahap_kerja": "produksi", "penjelasan": "Dalam panduan aktivasi promo Google AI Ultra 30TB ($19,99/bulan untuk 3 bulan pertama), penulis menyarankan pengguna non-developer untuk memasang prompt peran asisten teknis ke file instruksi global (misalnya GEMINI.md) agar AI membantu memeriksa lingkungan, menginstal dependensi, dan menganalisis error pada simulator Android MuMu—namun langkah yang menyangkut akun, pembayaran, dan izin sistem wajib dikonfirmasi manual oleh manusia.", "kutipan": "配置到 AI 工具的全局指令文件中，例如 GEMINI.md。", "catatan_agen": "[inferensi AI] Diterjemahkan dari bahasa Mandarin; mencatat peringatan keamanan penting agar tidak menjalankan kode pembayaran/akses sistem secara buta.", "penulis": "实践出真知 (@aigljrzj)"}, {"id": "K-0013", "file": "kartu/K-0013.md", "ide": "Studi kasus perusahaan SaaS yang mencapai $2 juta ARR dan terus bertumbuh tanpa merekrut satu pun staf sales manusia berkat otomasi agen AI.", "bidang": "ai", "cabang": "ai/prompt-dan-agen", "tahap": "semua-usia", "jenis": "kisah", "kepercayaan": "belum-diverifikasi", "dasar": "pengalaman-pribadi", "tag": ["ai-agent", "sales-automation", "saas", "arr", "gtm"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0013"], "relasi": [{"tipe": "prasyarat-untuk", "ke": "K-0014"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 3, "catatan_khusus": "", "alat": [], "tugas": "monetisasi", "tahap_kerja": "distribusi", "penjelasan": "Penulis membagikan pencapaian bisnisnya yang telah menembus pendapatan tahunan berulang ($2M ARR) dan menegaskan bahwa sejak saat itu ia belum merekrut satu pun tenaga penjual (sales rep) manusia karena seluruh proses akuisisi prospek dijalankan oleh agen AI.", "kutipan": "at $2M ARR. haven't hired a single sales rep.", "catatan_agen": "[inferensi AI] Merupakan klaim promosi produk di X sehingga diberi tingkat kepercayaan `belum-diverifikasi`.", "penulis": "Alex Kataev (@AlexKataev)"}, {"id": "K-0014", "file": "kartu/K-0014.md", "ide": "Agen AI Go-To-Market (GTM) 24/7 seperti Explee digunakan untuk mencari, menyaring, dan menghubungi calon klien secara otomatis saat pemilik bisnis tidur.", "bidang": "ai", "cabang": "ai/prompt-dan-agen", "tahap": "semua-usia", "jenis": "contoh", "kepercayaan": "belum-diverifikasi", "dasar": "pengalaman-pribadi", "tag": ["ai-agent", "lead-generation", "gtm", "otomasi-bisnis"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0013"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0013"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 3, "catatan_khusus": "", "alat": [], "tugas": "monetisasi", "tahap_kerja": "distribusi", "penjelasan": "Sebagai kelanjutan dari klaim tanpa tim sales pada [[K-0013]], tautan yang dilampirkan mengarah ke layanan agen AI GTM 24/7 (Explee) yang bertugas mencari dan menghubungi calon klien secara otomatis sepanjang hari.", "kutipan": "24/7 AI agent that finds clients while you sleep.", "catatan_agen": "[inferensi AI] Diekstrak dari tautan terlampir pada sumber S-0013 melalui fitur Recursive Link Chasing.", "penulis": "Alex Kataev (@AlexKataev)"}, {"id": "K-0015", "file": "kartu/K-0015.md", "ide": "Perkakas resmi google-colab-cli memungkinkan developer menyalakan runtime CPU, GPU, dan TPU Google Colab serta menjalankan kode lokal langsung dari terminal.", "bidang": "ai", "cabang": "ai/coding-dan-proyek", "tahap": "semua-usia", "jenis": "fakta", "kepercayaan": "tinggi", "dasar": "riset", "tag": ["google-colab", "cli", "gpu", "tpu", "cloud-computing"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0014"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0008"}, {"tipe": "prasyarat-untuk", "ke": "K-0016"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": ["gemini", "python"], "tugas": "coding", "tahap_kerja": "produksi", "penjelasan": "Bagi pemilik langganan Google AI/Colab, repositori resmi `googlecolab/google-colab-cli` menyediakan antarmuka baris perintah (CLI) untuk mengalokasikan runtime CPU, GPU, dan TPU berkinerja tinggi, mengeksekusi kode lokal, mengelola file jarak jauh, dan mengintegrasikan agen AI seperti Gemini langsung dari terminal tanpa perlu membuka browser.", "kutipan": "Provision high-performance CPU, GPU, and TPU runtimes from terminal.", "catatan_agen": "[inferensi AI] Berkepercayaan `tinggi` karena bersumber langsung dari repositori resmi GitHub Google Colab (`googlecolab/google-colab-cli`).", "penulis": "Samgor (@biggor888)"}, {"id": "K-0016", "file": "kartu/K-0016.md", "ide": "Fitur Ephemeral Job Runner (colab run) di google-colab-cli dapat membuat VM baru, menjalankan skrip lokal, mengambil file hasil, dan mematikan runtime otomatis dalam satu perintah.", "bidang": "ai", "cabang": "ai/coding-dan-proyek", "tahap": "semua-usia", "jenis": "fakta", "kepercayaan": "tinggi", "dasar": "riset", "tag": ["google-colab", "colab-run", "otomasi-cloud", "vm"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0014"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0015"}, {"tipe": "prasyarat-untuk", "ke": "K-0017"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": ["python"], "tugas": "coding", "tahap_kerja": "skrip", "penjelasan": "Mode `colab run` pada `google-colab-cli` bekerja sebagai penjalan tugas sementara (ephemeral job runner): sistem otomatis menyiapkan VM baru di cloud, menjalankan skrip lokal beserta argumennya, mengunduh file keluaran, lalu langsung mematikan runtime agar kuota komputasi tidak terbuang.", "kutipan": "Ephemeral Job Runner (colab run): Provision a fresh VM.", "catatan_agen": "[inferensi AI] Diekstrak dari dokumentasi README resmi `googlecolab/google-colab-cli`.", "penulis": "Samgor (@biggor888)"}, {"id": "K-0017", "file": "kartu/K-0017.md", "ide": "Instalasi google-colab-cli dapat dilakukan dalam satu baris perintah melalui manajer paket uv (uv tool install google-colab-cli) atau pip.", "bidang": "ai", "cabang": "ai/coding-dan-proyek", "tahap": "semua-usia", "jenis": "fakta", "kepercayaan": "tinggi", "dasar": "riset", "tag": ["google-colab", "uv", "pip", "instalasi-cli"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0014"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0016"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": ["python"], "tugas": "coding", "tahap_kerja": "produksi", "penjelasan": "Cara memasang `google-colab-cli` di komputer lokal sangat ringkas: gunakan `uv tool install google-colab-cli` (direkomendasikan agar terisolasi rapi) atau `pip install google-colab-cli`, lalu langsung jalankan perintah eksekusi VM dari terminal.", "kutipan": "uv tool install google-colab-cli", "catatan_agen": "[inferensi AI] Langkah instalasi praktis pelengkap [[K-0015]] dan [[K-0016]].", "penulis": "Samgor (@biggor888)"}, {"id": "K-0018", "file": "kartu/K-0018.md", "ide": "Audio mentah ElevenLabs mudah terdeteksi sebagai konten AI karena dibuat di ruang hampa digital sehingga gelombang suaranya jatuh ke titik nol mutlak (0.000 dB) setiap kali jeda antar-kata.", "bidang": "ai", "cabang": "ai/video-dan-clipping", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["elevenlabs", "voiceover-ai", "deteksi-ai", "audio-waveform", "youtube"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0015"], "relasi": [{"tipe": "prasyarat-untuk", "ke": "K-0019"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": ["elevenlabs"], "tugas": "video-ai", "tahap_kerja": "produksi", "penjelasan": "Mikrofon fisik di kamar nyata tidak pernah menyentuh angka nol matematis (0.000 dB) di antara kalimat karena selalu ada desis udara, pantulan dinding, atau kipas komputer. Sebaliknya, file audio mentah dari ElevenLabs dihasilkan di ruang hampa digital sehingga setiap jeda kata langsung jatuh ke 0.000 dB—ciri utama yang dipakai algoritma platform untuk mendeteksi suara buatan AI.", "kutipan": "every time voice pauses, audio wave drops to dead 0.000", "catatan_agen": "[inferensi AI] Dipindahkan ke sub-cabang `ai/video-dan-clipping` sebagai bagian 1 dari 3 rangkaian analisis audio ElevenLabs.", "penulis": "Vid (@MethodByVid)"}, {"id": "K-0019", "file": "kartu/K-0019.md", "ide": "Pengaturan bawaan ElevenLabs meninggalkan jeda seragam 0,25 detik setelah setiap titik tanpa suara napas serta memakai frekuensi suara stok (seperti Adam dan Marcus) yang memicu penolakan monetisasi.", "bidang": "ai", "cabang": "ai/video-dan-clipping", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["elevenlabs", "monetisasi-youtube", "inauthentic-content", "audio-ai"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0015"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0018"}, {"tipe": "prasyarat-untuk", "ke": "K-0020"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": ["elevenlabs"], "tugas": "video-ai", "tahap_kerja": "produksi", "penjelasan": "Selain masalah keheningan 0.000 dB ([[K-0018]]), pengaturan standar ElevenLabs selalu memberi jeda kaku 0,25 detik setelah tanda titik tanpa suara tarikan napas manusia, ditambah ratusan ribu kanal memakai suara stok 'Adam' dan 'Marcus' yang sama. Hal inilah yang membuat banyak kanal ditolak monetisasinya karena dianggap 'Inauthentic Automated Content'.", "kutipan": "default ElevenLabs leaves the exact same 0.25 second gap", "catatan_agen": "[inferensi AI] Bagian 2 dari 3 rangkaian analisis audio ElevenLabs pada sumber S-0015.", "penulis": "Vid (@MethodByVid)"}, {"id": "K-0020", "file": "kartu/K-0020.md", "ide": "Lapisi rekaman suara ruangan (room tone) di bawah voiceover ElevenLabs pada volume -50dB di CapCut agar gelombang audionya terbaca seperti mikrofon Shure asli.", "bidang": "ai", "cabang": "ai/video-dan-clipping", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["elevenlabs", "capcut", "room-tone", "audio-editing", "trik-monetisasi"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0015"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0019"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": ["elevenlabs", "capcut"], "tugas": "video-ai", "tahap_kerja": "edit", "penjelasan": "Solusi praktis untuk mengatasi keheningan digital ElevenLabs ([[K-0018]], [[K-0019]]): letakkan trek rekaman suasana ruangan hening (room tone) di bawah trek voiceover ElevenLabs sepanjang durasi video di CapCut, lalu turunkan volumenya ke -50dB. Telinga penonton tidak akan menyadari desis tersebut, namun celah 0.000 dB antar-kata akan terisi sehingga gelombang audionya terbaca alami seperti rekaman mikrofon asli.", "kutipan": "lay that track underneath in CapCut and drop to -50dB", "catatan_agen": "[inferensi AI] Bagian 3 (solusi teknis) dari rangkaian analisis audio ElevenLabs pada sumber S-0015.", "penulis": "Vid (@MethodByVid)"}, {"id": "K-0021", "file": "kartu/K-0021.md", "ide": "Adopsi mesin otomasi (seperti mesin penjahit pita benih pertanian) di Indonesia harus memperhitungkan perbandingan biaya investasi mesin terhadap upah tenaga kerja lokal yang relatif murah.", "bidang": "bisnis", "cabang": "bisnis", "tahap": "semua-usia", "jenis": "opini", "kepercayaan": "sedang", "dasar": "opini-umum", "tag": ["efisiensi-bisnis", "otomasi-mesin", "biaya-tenaga-kerja", "agribisnis"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0016"], "relasi": [], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 3, "catatan_khusus": "", "alat": [], "tugas": "riset", "tahap_kerja": "riset", "penjelasan": "Teknologi mesin yang menjahit benih seledri dan wortel menjadi pita benih membuat tanaman tumbuh sangat rapi berjajar. Namun, dalam konteks bisnis di Indonesia, kelayakan ekonomis otomasi mesin harus selalu dibandingkan dengan biaya tenaga kerja manusia yang relatif lebih terjangkau.", "kutipan": "Lebih efisien pakai mesin atau tenaga manusia?", "catatan_agen": "[inferensi AI] Dipindahkan dari `ai/coding-dan-proyek` ke cabang `bisnis` karena membahas analisis efisiensi modal mesin vs tenaga kerja.", "penulis": "Cozyman 🕵️ (@CozyGreenVibes)"}, {"id": "K-0022", "file": "kartu/K-0022.md", "ide": "Saat membangun aplikasi dengan agen AI, buatlah panduan gaya bahasa (tone-of-voice guideline) agar teks copywriting yang dihasilkan selalu konsisten dan tidak terasa kaku seperti robot.", "bidang": "ai", "cabang": "ai/tulisan-dan-artikel", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["tone-of-voice", "copywriting-ai", "ai-agent", "pengembangan-aplikasi"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0002"], "relasi": [{"tipe": "memperkuat", "ke": "K-0005"}, {"tipe": "terkait", "ke": "K-0003"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": [], "tugas": "copywriting", "tahap_kerja": "produksi", "penjelasan": "Ibrahim Arief menyarankan agar setiap kali membangun aplikasi yang memanfaatkan agen AI untuk menulis teks (copy), developer lebih dulu menyusun dokumen panduan tone-of-voice. Dengan panduan tersebut, keluaran teks dari agen AI menjadi konsisten dan tidak terasa generik seperti tulisan AI biasa.", "kutipan": "Sangat recommended bikin tone-of-voice guideline bagi AI agents.", "catatan_agen": "[inferensi AI] Diekstrak dari sumber S-0002 yang sebelumnya masih berstatus menunggu ekstraksi.", "penulis": "Ibrahim Arief (@ibamarief)"}, {"id": "K-0023", "file": "kartu/K-0023.md", "ide": "Kurang tidur dari 8 jam menjadi 6 jam mendorong sistem tubuh mendekati kapasitas 100%, melipatgandakan kesalahan, kabut otak, dan utang biologis hingga 12 kali lipat.", "bidang": "kesehatan", "cabang": "kesehatan", "tahap": "semua-usia", "jenis": "data", "kepercayaan": "belum-diverifikasi", "dasar": "opini-umum", "tag": ["tidur", "kesehatan", "otak", "x"], "konsep": ["manajemen-tidur", "utang-biologis", "kapasitas-tubuh", "kabut-otak"], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0017"], "relasi": [{"tipe": "terkait", "ke": "K-0031"}, {"tipe": "terkait", "ke": "K-0007"}], "dibuat": "2026-11-26", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-26", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "kesehatan", "tahap_kerja": "riset", "penjelasan": "Banyak orang keliru menganggap tidur sebagai waktu yang terbuang. Padahal secara matematis (seperti teori antrean pada kapasitas sistem), memotong jam tidur dari 8 jam menjadi 6 jam memaksa sistem tubuh bekerja mendekati kapasitas 100%, sehingga risiko kesalahan, kabut otak (*brain fog*), dan utang biologis melonjak hingga 12 kali lipat.", "kutipan": "6hr vs 8hr pushes your system near 100% capacity, multiplying errors.", "catatan_agen": "Diterjemahkan dan dirapikan dalam Bahasa Indonesia atas persetujuan pengguna. Klaim angka 12x tetap ditandai belum-diverifikasi sampai ada rujukan riset primer.", "penulis": "Bryan Johnson (@bryan_johnson)"}, {"id": "K-0027", "file": "kartu/K-0027.md", "ide": "Cara tercepat membangun kepercayaan diri adalah mengubah dialog batin (self-talk) lewat 3 langkah praktis.", "bidang": "motivasi-dan-mindset", "cabang": "motivasi-dan-mindset", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "opini-umum", "tag": ["self-talk", "kepercayaan-diri", "mindset", "x"], "konsep": ["self-talk", "kepercayaan-diri", "reframing-mental", "pikiran-bawah-sadar"], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0019", "S-0018"], "relasi": [{"tipe": "terkait", "ke": "K-0032"}, {"tipe": "terkait", "ke": "K-0030"}], "dibuat": "2026-11-26", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-26", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "motivasi-dan-mindset", "tahap_kerja": "riset", "penjelasan": "Atlet, penulis, dan pelaku berkinerja tinggi membangun rasa percaya diri dengan mengendalikan dialog batin (*self-talk*) melalui 3 langkah utama:\n1. **Hentikan self-talk negatif (termasuk candaan):** Pikiran bawah sadar tidak membedakan mana yang serius dan mana yang bercanda; otak akan memercayai dan mengidentifikasi diri dengan apa pun yang terus Anda ucapkan.\n2. **Ubah bingkai perjuangan (*reframing*):** Ganti kalimat *\"aku sedang kesulitan\"* menjadi *\"aku sedang belajar\"*, dan *\"ini sangat sulit\"* menjadi *\"ini semakin lama semakin mudah\"*.\n3. **Berbicaralah pada diri sendiri dengan penuh kasih:** Bayangkan diri Anda versi kecil (*inner child*) setiap kali hendak mengkritik diri sendiri secara keras — komunikasi penuh kasih kepada diri sendiri membentuk sebagian besar rasa percaya diri.", "kutipan": "the easiest way to become confident is to change your self-talk.", "catatan_agen": "Digabung dan dirapikan dalam Bahasa Indonesia dari K-0024..K-0029 (S-0018 & S-0019) atas persetujuan pengguna.", "penulis": "alexei (@alexeixbt), x.com"}, {"id": "K-0030", "file": "kartu/K-0030.md", "ide": "Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa yang Anda inginkan dalam hidup.", "bidang": "motivasi-dan-mindset", "cabang": "motivasi-dan-mindset", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "opini-umum", "tag": ["komunikasi-langsung", "assertiveness", "self-empowerment", "personal-growth", "x"], "konsep": ["komunikasi-efektif", "ketegasan", "kepercayaan-diri", "pencapaian-tujuan", "kejelasan"], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0020"], "relasi": [{"tipe": "terkait", "ke": "K-0027"}, {"tipe": "terkait", "ke": "K-0028"}], "dibuat": "2026-11-26", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-26", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "motivasi-dan-mindset", "tahap_kerja": "produksi", "penjelasan": "Hentikan basa-basi dan mulailah berbicara dengan percaya diri karena orang tidak menghargai isyarat, melainkan kejelasan. Katakan apa yang Anda maksud dan maksudkan apa yang Anda katakan.", "kutipan": "People don't respect hints. They respect clarity.", "catatan_agen": "[inferensi AI] Diekstrak lewat 1-panggilan terstruktur (gemini-2.5-flash), kutipan terverifikasi.", "penulis": "Mrs Angel (@mrsangelkelechi)"}, {"id": "K-0031", "file": "kartu/K-0031.md", "ide": "Brain rot memicu depresi secara tidak langsung melalui kelelahan mental, stres, dan kecemasan.", "bidang": "kesehatan", "cabang": "kesehatan", "tahap": "semua-usia", "jenis": "fakta", "kepercayaan": "sedang", "dasar": "riset", "tag": ["brain-rot", "burnout", "depresi", "stres", "x"], "konsep": ["beban-kognitif", "kelelahan-mental", "kesehatan-mental", "konsumsi-digital"], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0021"], "relasi": [{"tipe": "terkait", "ke": "K-0023"}], "dibuat": "2026-11-26", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-26", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "kesehatan", "tahap_kerja": "produksi", "penjelasan": "1. Brain rot ditandai oleh kelelahan kognitif dan kelelahan mental akibat keterlibatan digital.\n2. Kondisi ini memicu 'loss spiral' dengan menguras sumber daya psikologis yang berujung pada burnout.\n3. Burnout kemudian meningkatkan stres dan kecemasan, yang akhirnya memicu gejala depresi.", "kutipan": "The Cognitive Cost of Brain Rot", "catatan_agen": "[inferensi AI] Diekstrak lewat 1-panggilan terstruktur (gemini-3.5-flash-lite), kutipan terverifikasi.", "penulis": "dr. Adam Prabata (@AdamPrabata)"}, {"id": "K-0032", "file": "kartu/K-0032.md", "ide": "Mengeluh atau membicarakan masalah berulang kali tanpa mencari solusi justru memperburuk kecemasan dan memperpanjang emosi negatif di otak.", "bidang": "motivasi-dan-mindset", "cabang": "motivasi-dan-mindset", "tahap": "semua-usia", "jenis": "fakta", "kepercayaan": "sedang", "dasar": "riset", "tag": ["kecemasan", "mengeluh", "psikologi", "x"], "konsep": ["regulasi-emosi", "manajemen-stres", "neurosains-keluhan", "pemecahan-masalah"], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0022"], "relasi": [{"tipe": "terkait", "ke": "K-0027"}], "dibuat": "2026-11-26", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-26", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "motivasi-dan-mindset", "tahap_kerja": "riset", "penjelasan": "Banyak orang mengira membicarakan masalah berulang kali sekadar melegakan dada (*venting*). Namun riset psikologi klinis dan neurosains menunjukkan bahwa mengeluh atau mengulang cerita masalah secara keliru tanpa diarahkan pada solusi justru memperpanjang emosi negatif, meningkatkan stres, dan memperburuk kecemasan di otak.", "kutipan": "complaining or talking about your problems the wrong way can make anxiety worse.", "catatan_agen": "Diterjemahkan dan dirapikan dalam Bahasa Indonesia dari S-0022 atas persetujuan pengguna.", "penulis": "alexei (@alexeixbt)"}], "sumber": [{"id": "S-0001", "file": "sumber/S-0001.md", "judul": "Risiko dan celah reupload pada program OCR X", "jenis": "postingan", "penulis": "Bambang (@sibambaang)", "platform": "X", "url": "tidak ada", "tanggal_terbit": "2026-11-21", "tanggal_masuk": "2026-11-22", "bidang": ["keuangan", "kesuksesan"], "kartu": ["K-0001", "K-0002"], "saripati": "Postingan dari akun X `@sibambaang` (diambil dari tangkapan layar) membahas sebuah akun Indonesia (`@cyz_beng`) yang meraih 49 juta impresi dari satu video reupload atraksi debus India dan memperoleh payout sekitar \\$2.406,96 (sekitar Rp43,9 juta). Penulis menjelaskan bahwa X pada dasarnya melarang reupload konten dari aplikasi lain dan pernah mengeluarkan akun dari program OCR karena terlalu sering melakukannya. Namun, menurut penulis, celah algoritma masih ada: selama profil tidak berisi video repost sepenuhnya dan tetap diselingi postingan original, impresi dari konten reupload tetap terhitung."}, {"id": "S-0002", "file": "sumber/S-0002.md", "judul": "Pentingnya panduan tone-of-voice bagi agen AI saat membangun aplikasi", "jenis": "postingan", "penulis": "Ibrahim Arief (@ibamarief)", "platform": "X", "url": "https://x.com/ibamarief/status/2124000486424740338?a=G_3ui72UW2gVkv4KBw0&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0022"], "saripati": "Ibrahim Arief menyarankan penyusunan dokumen panduan gaya bahasa (tone-of-voice) untuk agen AI agar teks copywriting aplikasi selalu konsisten dan tidak terdengar kaku."}, {"id": "S-0003", "file": "sumber/S-0003.md", "judul": "Paket open-source 30 skill SEO dan 4 server MCP untuk Claude Code & Cursor", "jenis": "postingan", "penulis": "ILIAS ISM (@illyism)", "platform": "X", "url": "https://x.com/illyism/status/2123675279210242167?a=QpDQgfgz9_L4YNW4jsE&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0003"], "saripati": "Penulis membuka akses repositori 30 skill SEO (audit teknis, programmatic SEO, alur kerja Ahrefs/GSC) serta 4 server MCP aktif untuk Claude Code dan Cursor."}, {"id": "S-0004", "file": "sumber/S-0004.md", "judul": "Klaim komentar tentang reupload konten luar negeri untuk mengejar syarat OCR X", "jenis": "postingan", "penulis": "x.com", "platform": "X", "url": "https://x.com/home", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["keuangan"], "kartu": ["K-0004"], "saripati": "Komentar pengguna X yang mengklaim bahwa mengunggah ulang konten viral dari Threads ke X secara cepat dapat meloloskan kelayakan monetisasi OCR dalam beberapa hari."}, {"id": "S-0005", "file": "sumber/S-0005.md", "judul": "Lima pustaka skill desain frontend untuk menghilangkan tampilan kaku khas AI", "jenis": "postingan", "penulis": "x.com", "platform": "X", "url": "https://x.com/home", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0005"], "saripati": "Daftar lima pustaka skill desain web (Anti UI Slop, ThinkUI, Taste Skill, Emil Design Engineering, dan panduan desain Vercel) agar antarmuka buatan AI tampak rapi."}, {"id": "S-0006", "file": "sumber/S-0006.md", "judul": "Refleksi usia 25-29 tahun untuk menghentikan kebiasaan overthinking", "jenis": "postingan", "penulis": "scar (@imfat)", "platform": "X", "url": "https://x.com/imfat/status/2124155891385549201?a=whtkIb2lPUgIMGKaVJA&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["motivasi-dan-mindset"], "kartu": ["K-0006"], "saripati": "Pesan reflektif agar tidak menghabiskan empat tahun masa muda (usia 25 ke 29) hanya untuk mencemaskan hal-hal kecil yang tidak penting."}, {"id": "S-0007", "file": "sumber/S-0007.md", "judul": "Disiplin merawat fisik, latihan beban, nutrisi, dan tidur sebagai kartu nama diri", "jenis": "postingan", "penulis": "Dear Self. (@Dearme2_)", "platform": "X", "url": "https://x.com/Dearme2_/status/2124106079244079191?a=u8WeP5jeYdA9fqE-vVo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["kesehatan"], "kartu": ["K-0007"], "saripati": "Anjuran menjaga kesehatan dan penampilan fisik melalui angkat beban, makan bergizi, tidur berkualitas, serta postur tubuh yang baik."}, {"id": "S-0008", "file": "sumber/S-0008.md", "judul": "Panduan 3 langkah berlangganan promo Black Friday Google AI Pro $99/tahun", "jenis": "postingan", "penulis": "MarkBai｜鲸鱼娘的人类运营 (@MarkBaii)", "platform": "X", "url": "https://x.com/MarkBaii/status/2124154579801829464?a=MPpmlJlbNR2HNbanyQo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0008"], "saripati": "Langkah mengaktifkan diskon tahunan Google AI Pro (5TB dan model tingkat lanjut) dengan menghapus langganan pihak ketiga Jio lalu memakai paket bulanan resmi sebagai batu loncatan."}, {"id": "S-0009", "file": "sumber/S-0009.md", "judul": "Duplikat panduan promo Black Friday Google AI Pro $99/tahun (2)", "jenis": "postingan", "penulis": "MarkBai｜鲸鱼娘的人类运营 (@MarkBaii)", "platform": "X", "url": "https://x.com/MarkBaii/status/2124154579801829464?a=MPpmlJlbNR2HNbanyQo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0008", "K-0009"], "saripati": "Tangkapan kedua untuk panduan aktivasi promo tahunan Google AI Pro $99/tahun (kartu digabung ke K-0008)."}, {"id": "S-0010", "file": "sumber/S-0010.md", "judul": "Duplikat panduan promo Black Friday Google AI Pro $99/tahun (3)", "jenis": "postingan", "penulis": "MarkBai｜鲸鱼娘的人类运营 (@MarkBaii)", "platform": "X", "url": "https://x.com/MarkBaii/status/2124154579801829464?a=MPpmlJlbNR2HNbanyQo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0008", "K-0010"], "saripati": "Tangkapan ketiga untuk panduan aktivasi promo tahunan Google AI Pro $99/tahun (kartu digabung ke K-0008)."}, {"id": "S-0011", "file": "sumber/S-0011.md", "judul": "Strategi monetisasi OCR X dan rincian bobot interaksi algoritma", "jenis": "postingan", "penulis": "Maran (@TheMaran)", "platform": "X", "url": "https://x.com/TheMaran/status/2124146569415123125?a=dF-7YN3vSCkwGGLnwkI&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["sosmed"], "kartu": ["K-0011"], "saripati": "Penjelasan aturan monetisasi konten asli (OCR) di X beserta bobot interaksi algoritma (mutual reply dan copy-link bernilai 20, sedangkan like bernilai 0,708)."}, {"id": "S-0012", "file": "sumber/S-0012.md", "judul": "Konfigurasi asisten Gemini/Codex dan simulator MuMu untuk promo Google AI Ultra", "jenis": "postingan", "penulis": "实践出真知 (@aigljrzj)", "platform": "X", "url": "https://x.com/aigljrzj/status/2124184418424393932?a=ispg63KzhduCnBkJ4uE&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0012"], "saripati": "Cara memasang file instruksi peran teknis pada Gemini atau Codex untuk memandu penyiapan lingkungan simulator Android MuMu secara aman."}, {"id": "S-0013", "file": "sumber/S-0013.md", "judul": "Studi kasus pertumbuhan SaaS $2M ARR dengan agen AI pencari klien otomatis", "jenis": "postingan", "penulis": "Alex Kataev (@AlexKataev)", "platform": "X", "url": "https://x.com/AlexKataev/status/2119692070067531816?a=8b83Z9GwJcGRPIqDLvQ&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0013", "K-0014"], "saripati": "Pengalaman pendiri SaaS yang mengklaim mencapai $2 juta ARR tanpa merekrut staf sales manusia dengan mengandalkan agen AI Go-To-Market 24/7."}, {"id": "S-0014", "file": "sumber/S-0014.md", "judul": "Perkakas resmi google-colab-cli untuk menjalankan GPU dan TPU Colab dari terminal", "jenis": "postingan", "penulis": "Samgor (@biggor888)", "platform": "X", "url": "https://x.com/biggor888/status/2124146914384138543?a=I9Vb5hw-blTJ_3FpaOo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0015", "K-0016", "K-0017"], "saripati": "Dokumentasi perkakas baris perintah google-colab-cli untuk menyalakan runtime CPU/GPU/TPU, menjalankan skrip lokal lewat colab run, dan mengintegrasikannya dengan Gemini."}, {"id": "S-0015", "file": "sumber/S-0015.md", "judul": "Penyebab audio ElevenLabs terdeteksi AI dan trik room-tone -50dB di CapCut", "jenis": "postingan", "penulis": "Vid (@MethodByVid)", "platform": "X", "url": "https://x.com/MethodByVid/status/2124111584545161703?a=_Jn5Mc-S_NOU3YuBIUc&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0018", "K-0019", "K-0020"], "saripati": "Penjelasan teknis mengapa gelombang suara mentah ElevenLabs jatuh ke 0.000 dB saat jeda kata, serta solusi melapisi suara ruangan -50dB di CapCut."}, {"id": "S-0016", "file": "sumber/S-0016.md", "judul": "Perbandingan efisiensi mesin penjahit pita benih pertanian vs upah tenaga kerja lokal", "jenis": "postingan", "penulis": "Cozyman 🕵️ (@CozyGreenVibes)", "platform": "X", "url": "https://x.com/CozyGreenVibes/status/2124339096227299422?a=lkGtfD7SNducMPkFGjc&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["bisnis"], "kartu": ["K-0021"], "saripati": "Diskusi mengenai kelayakan ekonomis penggunaan mesin penjahit pita benih seledri dan wortel jika diterapkan di Indonesia yang memiliki biaya tenaga kerja terjangkau."}, {"id": "S-0017", "file": "sumber/S-0017.md", "judul": "Same math applies to sleep.", "jenis": "postingan", "penulis": "Bryan Johnson (@bryan_johnson)", "platform": "X", "url": "https://x.com/bryan_johnson/status/2125683008334446828?a=MPPbB5WFZ8LJoxO7Wwg&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["kesehatan"], "kartu": ["K-0023"], "saripati": "(1) 6hr vs 8hr pushes your system near 100% capacity, multiplying errors, brain fog, and biological debt by 12x."}, {"id": "S-0018", "file": "sumber/S-0018.md", "judul": "(83) alexei di X: 'neuroscience shows that the easiest way to become confident and actually believe in yourself is to ch", "jenis": "postingan", "penulis": "x.com", "platform": "X", "url": "https://x.com/alexeixbt/status/2125270489354346580", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["ai"], "kartu": ["K-0024", "K-0025", "K-0026"], "saripati": "(1) tidak ada bicara negatif pada diri sendiri: kamu akan berhenti mengatakan hal-hal negatif tentang dirimu sendiri, baik secara keras maupun di dalam kepala, dan tidak, aku tidak peduli apakah kamu bercanda atau tidak. | (2) reframing perjuanganmu: daripada mengatakan 'aku sedang berjuang,' katakan pada dirimu sendiri 'aku sedang belajar.' daripada mengatakan 'ini sangat sulit,' katakan pada dirimu sendiri 'ini sem"}, {"id": "S-0019", "file": "sumber/S-0019.md", "judul": "neuroscience shows that the easiest way to become confident and actually believe", "jenis": "postingan", "penulis": "alexei (@alexeixbt)", "platform": "X", "url": "https://x.com/alexeixbt/status/2125270489354346580?a=-rYYPR1FfSfF1xergvs&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["motivasi-dan-mindset"], "kartu": ["K-0027", "K-0028", "K-0029"], "saripati": "(1) neuroscience shows that the easiest way to become confident and actually believe in yourself is to change your self-talk. | (2) no negative self-talk: you're gonna stop saying negative things about yourself, out loud or in your head, and no, i don't care if you're joking or not. | (3) reframe your struggles: instead of saying 'i am struggling,' tell yourself 'i am learning.' instead of saying 'this is so hard,' t"}, {"id": "S-0020", "file": "sumber/S-0020.md", "judul": "Normalize being very direct. Very straight to the point. Very assertive. You'll get everyt", "jenis": "postingan", "penulis": "Mrs Angel (@mrsangelkelechi)", "platform": "X", "url": "https://x.com/mrsangelkelechi/status/2125523638019662139?a=LWDmSIVBVoo2a1hdurc&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["motivasi-dan-mindset"], "kartu": ["K-0030"], "saripati": "(1) Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa yang Anda inginkan dalam hidup."}, {"id": "S-0021", "file": "sumber/S-0021.md", "judul": "Terlalu sering scrolling media sosial --> Gangguan reseptor dopamin di otak --> Brain rot", "jenis": "postingan", "penulis": "dr. Adam Prabata (@AdamPrabata)", "platform": "X", "url": "https://x.com/AdamPrabata/status/2125545050637529230?a=yPMeKoxb0IlYYSi1cwo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["kesehatan"], "kartu": ["K-0031"], "saripati": "(1) Brain rot memicu depresi secara tidak langsung melalui kelelahan mental, stres, dan kecemasan."}, {"id": "S-0022", "file": "sumber/S-0022.md", "judul": "science shows that complaining or talking about your problems the wrong way can actually m", "jenis": "postingan", "penulis": "alexei (@alexeixbt)", "platform": "X", "url": "https://x.com/alexeixbt/status/2125227957534785672?a=Qo_PEwaqOj0nU5J5Wpo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["motivasi-dan-mindset"], "kartu": ["K-0032"], "saripati": "(1) science shows that complaining or talking about your problems the wrong way can actually make your brain and your anxiety worse, and i will tell you the neuroscience behind why and what to do instead."}]};
+window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-26", "ringkasan": {"total_kartu": 25, "total_sumber": 22, "total_cabang": 19, "penerapan": {"belum-dicoba": 25, "sedang-dicoba": 0, "diterapkan": 0, "ditolak": 0}}, "urutan_indeks": ["ai", "bisnis", "sosmed", "digital-marketing", "keuangan", "kesuksesan", "kesehatan", "motivasi-dan-mindset", "relasi", "lainnya", "agama", "berita", "kliping-hiburan"], "tahap_baku": ["sebelum-20", "20-25", "25-30", "30-40", "40-50", "50+"], "akar": ["K-0003", "K-0015", "K-0016", "K-0019", "K-0005", "K-0007", "K-0018"], "cabang": [{"slug": "ai", "nama": "AI", "induk": "", "file": "cabang/ai/_cabang.md", "jumlah_kartu_tercatat": 13, "jumlah_sumber_tercatat": 8, "diperbarui": "2026-11-26", "catatan_sudut_pandang": "2 sumber berbeda (draf awal)", "ringkasan": "Bab dominan untuk penguasaan AI secara praktis: mulai dari video & clipping AI, penulisan artikel/copywriting, coding & pembangunan proyek, perancangan prompt & agen, hingga perbandingan model dan alat terbaik untuk tiap kebutuhan.", "poin_kunci": ["Stack SEO & AI-search open-source untuk Claude Code dan Cursor → [[K-0003]]", "Kumpulan 5 skill anti-AI-slop untuk kualitas UI → [[K-0005]]"], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": ["Video & Clipping AI → `cabang/ai/video-dan-clipping/_cabang.md` (0 kartu)", "Tulisan & Artikel AI → `cabang/ai/tulisan-dan-artikel/_cabang.md` (0 kartu)", "Coding & Proyek AI → `cabang/ai/coding-dan-proyek/_cabang.md` (0 kartu)", "Prompt & Agen AI → `cabang/ai/prompt-dan-agen/_cabang.md` (0 kartu)", "Perbandingan Model & Alat AI → `cabang/ai/perbandingan-model/_cabang.md` (0 kartu)"], "jumlah_kartu": 13, "jumlah_sumber": 8, "urutan": 0}, {"slug": "ai/coding-dan-proyek", "nama": "Coding & Proyek AI", "induk": "ai", "file": "cabang/ai/coding-dan-proyek/_cabang.md", "jumlah_kartu_tercatat": 5, "jumlah_sumber_tercatat": 3, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Alur membangun aplikasi, skrip, otomasi, dan proyek perangkat lunak menggunakan agen coding (Claude Code, Cursor, Antigravity, Codex, dll.).", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 5, "jumlah_sumber": 3, "urutan": 0}, {"slug": "ai/perbandingan-model", "nama": "Perbandingan Model & Alat AI", "induk": "ai", "file": "cabang/ai/perbandingan-model/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Benchmark praktis, kelebihan/kekurangan, biaya/kuota, dan tonality antar model atau alat AI (mis. Gemini, Claude, Opus, Fable, GPT, Kling, Veo, dll.).", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 0}, {"slug": "ai/prompt-dan-agen", "nama": "Prompt & Agen AI", "induk": "ai", "file": "cabang/ai/prompt-dan-agen/_cabang.md", "jumlah_kartu_tercatat": 3, "jumlah_sumber_tercatat": 2, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Perancangan prompt, context engineering, SKILL.md, MCP, sistem multi-agen, dan strategi penghematan token.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 3, "jumlah_sumber": 2, "urutan": 0}, {"slug": "ai/tulisan-dan-artikel", "nama": "Tulisan & Artikel AI", "induk": "ai", "file": "cabang/ai/tulisan-dan-artikel/_cabang.md", "jumlah_kartu_tercatat": 1, "jumlah_sumber_tercatat": 1, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Teknik riset, tone-of-voice, copywriting, penulisan artikel, thread, dan dokumentasi dengan AI agar tidak terasa generik.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 1, "jumlah_sumber": 1, "urutan": 0}, {"slug": "ai/video-dan-clipping", "nama": "Video & Clipping AI", "induk": "ai", "file": "cabang/ai/video-dan-clipping/_cabang.md", "jumlah_kartu_tercatat": 3, "jumlah_sumber_tercatat": 1, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Alur kerja, trik, dan perbandingan alat AI untuk pembuatan video, animasi, avatar, dubbing, dan clipping otomatis dari awal (skrip/storyboard) sampai siap unggah.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 3, "jumlah_sumber": 1, "urutan": 0}, {"slug": "bisnis", "nama": "Bisnis", "induk": "", "file": "cabang/bisnis/_cabang.md", "jumlah_kartu_tercatat": 1, "jumlah_sumber_tercatat": 1, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Bab dominan untuk strategi bisnis, validasi ide, produk digital, operasional efisien, dan pembangunan sumber pendapatan di luar pekerjaan utama.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 1, "jumlah_sumber": 1, "urutan": 1}, {"slug": "sosmed", "nama": "Sosmed", "induk": "", "file": "cabang/sosmed/_cabang.md", "jumlah_kartu_tercatat": 1, "jumlah_sumber_tercatat": 1, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Bab dominan untuk strategi media sosial (X, YouTube, TikTok, Instagram, Threads, Facebook): algoritma, hook, clipping, distribusi konten, dan monetisasi program kreator (seperti OCR X).", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 1, "jumlah_sumber": 1, "urutan": 2}, {"slug": "digital-marketing", "nama": "Digital Marketing", "induk": "", "file": "cabang/digital-marketing/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Bab dominan untuk pemasaran digital: SEO & AI-search, copywriting, landing page, funnel, akuisisi audiens, dan konversi berbasis data.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 3}, {"slug": "keuangan", "nama": "Keuangan", "induk": "", "file": "cabang/keuangan/_cabang.md", "jumlah_kartu_tercatat": 3, "jumlah_sumber_tercatat": 2, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "hanya 1 sumber (postingan media sosial)", "ringkasan": "Cabang keuangan saat ini baru memuat catatan awal mengenai monetisasi konten media sosial (program OCR di X), mencakup risiko pelanggaran aturan reupload dan klaim celah algoritma dengan selingan konten original. Sumber masih sangat terbatas.", "poin_kunci": ["Monetisasi OCR di X memiliki risiko pencabutan akun jika terlalu sering reupload → [[K-0001]]", "Terdapat klaim celah algoritma OCR dengan menyelingi postingan original (kepercayaan rendah) → [[K-0002]]"], "pertentangan": ["K-0004 | Nyolong konten orang India aja Kak, banyak tuh di Thread dan medsos2 | semua-usia | belum-diverifikasi"], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": ["Monetisasi Konten → `cabang/keuangan/monetisasi-konten/_cabang.md` (2 kartu)"], "jumlah_kartu": 3, "jumlah_sumber": 2, "urutan": 4}, {"slug": "keuangan/monetisasi-konten", "nama": "Monetisasi Konten", "induk": "keuangan", "file": "cabang/keuangan/monetisasi-konten/_cabang.md", "jumlah_kartu_tercatat": 3, "jumlah_sumber_tercatat": 2, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "hanya 1 sumber (postingan media sosial)", "ringkasan": "Cabang ini baru berisi satu sumber mengenai program OCR (Hadiah Konten Asli) di platform X. Intinya menyoroti ketegangan antara larangan reupload konten dari aplikasi lain—yang berisiko membuat akun dikeluarkan dari program—dengan klaim adanya celah algoritma ketika konten reupload diselingi postingan original. Karena baru bersandar pada satu postingan media sosial, informasi di sini masih berkepercayaan rendah hingga belum diverifikasi.", "poin_kunci": ["X melarang reupload konten dari aplikasi lain di program OCR dan dapat mengeluarkan akun yang sering melanggar → [[K-0001]]", "Klaim celah algoritma: menyelingi konten reupload dengan postingan original disebut masih membuat impresi terhitung → [[K-0002]]"], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 3, "jumlah_sumber": 2, "urutan": 4}, {"slug": "kesuksesan", "nama": "Kesuksesan", "induk": "", "file": "cabang/kesuksesan/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Belum ada kartu pada cabang ini. Sub-cabang timeline tahap hidup (sebelum-20, 20-25, 25-30, 30-40, 40-50, 50+, semua-usia) akan dibuat otomatis saat sumber pertama masuk.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 5}, {"slug": "kesehatan", "nama": "Kesehatan", "induk": "", "file": "cabang/kesehatan/_cabang.md", "jumlah_kartu_tercatat": 3, "jumlah_sumber_tercatat": 3, "diperbarui": "2026-11-26", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Belum ada kartu pada cabang ini.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 3, "jumlah_sumber": 3, "urutan": 6}, {"slug": "motivasi-dan-mindset", "nama": "Motivasi & Mindset", "induk": "", "file": "cabang/motivasi-dan-mindset/_cabang.md", "jumlah_kartu_tercatat": 4, "jumlah_sumber_tercatat": 5, "diperbarui": "2026-11-26", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Belum ada kartu pada cabang ini.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 4, "jumlah_sumber": 5, "urutan": 7}, {"slug": "relasi", "nama": "Relasi", "induk": "", "file": "cabang/relasi/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Belum ada kartu pada cabang ini.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 8}, {"slug": "lainnya", "nama": "Lainnya", "induk": "", "file": "cabang/lainnya/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-22", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Belum ada kartu pada cabang ini.", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 9}, {"slug": "agama", "nama": "Agama", "induk": "-", "file": "cabang/agama/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-26", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Cabang utama Agama (dibuat otomatis untuk topik baru).", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 10}, {"slug": "berita", "nama": "Berita", "induk": "-", "file": "cabang/berita/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-26", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Cabang utama Berita (dibuat otomatis untuk topik baru).", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 11}, {"slug": "kliping-hiburan", "nama": "Kliping Hiburan", "induk": "-", "file": "cabang/kliping-hiburan/_cabang.md", "jumlah_kartu_tercatat": 0, "jumlah_sumber_tercatat": 0, "diperbarui": "2026-11-26", "catatan_sudut_pandang": "belum ada sumber", "ringkasan": "Cabang utama Kliping Hiburan (dibuat otomatis untuk topik baru).", "poin_kunci": [], "pertentangan": [], "lanjutan_timeline": ["Sebelumnya: -", "Berikutnya: -"], "sub_cabang": [], "jumlah_kartu": 0, "jumlah_sumber": 0, "urutan": 12}], "kartu": [{"id": "K-0001", "file": "kartu/K-0001.md", "ide": "Platform X melarang reupload konten dari aplikasi lain untuk program OCR, dan akun yang terlalu sering melakukan reupload berisiko dikeluarkan dari program tersebut.", "bidang": "keuangan", "cabang": "keuangan/monetisasi-konten", "tahap": "semua-usia", "jenis": "opini", "kepercayaan": "belum-diverifikasi", "dasar": "pengalaman-pribadi", "tag": ["ocr-x", "monetisasi", "reupload", "risiko-akun", "media-sosial"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0001"], "relasi": [{"tipe": "terkait", "ke": "K-0002"}, {"tipe": "bertentangan-dengan", "ke": "K-0004"}, {"tipe": "memperkuat", "ke": "K-0011"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 2, "catatan_khusus": "sdg", "alat": [], "tugas": "monetisasi", "tahap_kerja": "monetisasi", "penjelasan": "Menurut pengamatan penulis di X, platform tersebut melarang kreator mengunggah ulang (reupload) konten dari aplikasi lain dalam program OCR (Hadiah Konten Asli). Akun yang kedapatan terlalu sering melakukan reupload dapat dikenai sanksi berupa pencabutan atau pengeluaran dari program OCR.", "kutipan": "X memang melarang kita reupload konten dari app sebelah.", "catatan_agen": "[inferensi AI] Sumber tidak menyertakan tautan kebijakan resmi X sehingga berstatus `belum-diverifikasi`. Diperkuat oleh aturan bobot konten orisinal pada [[K-0011]].", "penulis": "Bambang (@sibambaang)"}, {"id": "K-0002", "file": "kartu/K-0002.md", "ide": "Menurut satu pengamat di X, impresi konten reupload masih bisa terhitung dalam payout OCR selama profil tidak penuh berisi video repost dan tetap diselingi postingan original.", "bidang": "keuangan", "cabang": "keuangan/monetisasi-konten", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "rendah", "dasar": "pengalaman-pribadi", "tag": ["ocr-x", "monetisasi", "algoritma-x", "konten-original", "reupload"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0001"], "relasi": [{"tipe": "terkait", "ke": "K-0001"}, {"tipe": "memperkuat", "ke": "K-0004"}, {"tipe": "bertentangan-dengan", "ke": "K-0011"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "monetisasi", "tahap_kerja": "monetisasi", "penjelasan": "Penulis mengklaim bahwa algoritma X masih memiliki celah terkait monetisasi OCR: apabila sebuah profil tidak seluruhnya diisi video repost dan tetap diselingi postingan original, impresi dari konten reupload masih terhitung. Sebagai contoh kasus tunggal, penulis menunjukkan satu akun Indonesia yang meraih 49 juta impresi dari satu video reupload dengan payout sekitar $2.406,96 (Rp43,9 juta).", "kutipan": "Tetap diselingi postingan original, impresi reupload tetap terhitung.", "catatan_agen": "[inferensi AI] Berkepercayaan `rendah` karena merupakan klaim celah algoritma dari satu kasus viral ekstrem dan bertentangan dengan aturan OCR yang hanya menghitung impresi postingan orisinal ([[K-0011]]).", "penulis": "Bambang (@sibambaang)"}, {"id": "K-0003", "file": "kartu/K-0003.md", "ide": "Paket 30 skill SEO open-source dan 4 server MCP aktif untuk Claude Code serta Cursor guna mengotomasi audit teknis, programmatic SEO, dan ekstraksi transkrip video.", "bidang": "ai", "cabang": "ai/prompt-dan-agen", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["seo", "claude-code", "cursor", "mcp", "skills", "otomasi"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0003"], "relasi": [{"tipe": "terkait", "ke": "K-0012"}, {"tipe": "terkait", "ke": "K-0005"}, {"tipe": "terkait", "ke": "K-0022"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": ["claude-code", "cursor", "mcp"], "tugas": "seo", "tahap_kerja": "produksi", "penjelasan": "Penulis membagikan repositori open-source berisi 30 skill SEO (audit teknis, programmatic SEO, halaman BOFU, pengiriman direktori, serta alur kerja Ahrefs/GSC) bersama 4 server MCP aktif untuk Claude Code dan Cursor, termasuk MCP penarik transkrip dan OCR frame video YouTube.", "kutipan": "Open-sourced my full SEO and AI-search stack (30 skills).", "catatan_agen": "[inferensi AI] Diterjemahkan dari postingan X @illyism dan ditempatkan pada sub-cabang `ai/prompt-dan-agen`.", "penulis": "ILIAS ISM (@illyism)"}, {"id": "K-0004", "file": "kartu/K-0004.md", "ide": "Klaim bahwa mengambil ulang konten viral luar negeri (India) dari Threads ke X secara cepat dapat meloloskan syarat OCR dalam hitungan hari.", "bidang": "keuangan", "cabang": "keuangan/monetisasi-konten", "tahap": "semua-usia", "jenis": "opini", "kepercayaan": "rendah", "dasar": "opini-umum", "tag": ["ocr-x", "reupload", "monetisasi", "klaim-ekstrem"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0004"], "relasi": [{"tipe": "bertentangan-dengan", "ke": "K-0001"}, {"tipe": "memperkuat", "ke": "K-0002"}, {"tipe": "bertentangan-dengan", "ke": "K-0011"}], "dibuat": "2026-11-22", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "monetisasi", "tahap_kerja": "distribusi", "penjelasan": "Sebuah komentar di X mengklaim bahwa mengunggah ulang konten viral dari kreator India di Threads atau media sosial lain ke X secara cepat terbukti bisa memenuhi syarat kelayakan OCR dalam beberapa hari tanpa perlu membuat konten orisinal.", "kutipan": "Posting cepet2an ke X, bisa elig OCR beberapa hari.", "catatan_agen": "[inferensi AI] Berkepercayaan `rendah` dan bertentangan langsung dengan larangan reupload pada [[K-0001]] serta ketentuan impresi konten asli pada [[K-0011]]. Disimpan sebagai `publik: tidak`.", "penulis": "x.com"}, {"id": "K-0005", "file": "kartu/K-0005.md", "ide": "Lima pustaka skill desain frontend (Anti UI Slop, ThinkUI, Taste Skill, Emil Design Engineering, dan Vercel Web Design Guidelines) untuk menghilangkan tampilan web kaku khas AI.", "bidang": "ai", "cabang": "ai/coding-dan-proyek", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["ui-design", "frontend", "anti-ai-slop", "skills", "web-design"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0005"], "relasi": [{"tipe": "terkait", "ke": "K-0003"}, {"tipe": "memperkuat", "ke": "K-0022"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": ["claude-code", "cursor", "vercel"], "tugas": "coding", "tahap_kerja": "produksi", "penjelasan": "Daftar 5 skill agen AI untuk meningkatkan kualitas antarmuka aplikasi agar tidak terlihat seperti hasil generik AI (AI slop): (1) Anti UI Slop, (2) ThinkUI, (3) Taste Skill, (4) Emil Design Engineering, dan (5) Vercel Web Design Guidelines.", "kutipan": "5 skills that kill AI slop: Anti UI Slop, ThinkUI.", "catatan_agen": "[inferensi AI] Sangat relevan dengan peningkatan kualitas produk web dan sejalan dengan prinsip konsistensi tone-of-voice pada [[K-0022]].", "penulis": "x.com"}, {"id": "K-0006", "file": "kartu/K-0006.md", "ide": "Jangan habiskan usia 25 hingga 29 tahun untuk mengkhawatirkan hal-hal yang sebenarnya tidak penting; hentikan overthinking dan mulailah bertindak.", "bidang": "motivasi-dan-mindset", "cabang": "motivasi-dan-mindset", "tahap": "25-30", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "opini-umum", "tag": ["anti-overthinking", "usia-20an", "mindset", "keberanian"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0006"], "relasi": [{"tipe": "terkait", "ke": "K-0007"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": [], "tugas": "", "tahap_kerja": "semua", "penjelasan": "Pengingat reflektif bagi usia 20-an: bayangkan berada di usia 29 tahun lalu menoleh ke usia 25 tahun dan menyadari empat tahun terbuang hanya karena terlalu banyak mencemaskan hal-hal yang tidak penting. Hentikan kebiasaan overthinking dan mulailah menjalani hidup secara nyata.", "kutipan": "Stop overthinking everything. Start living.", "catatan_agen": "[inferensi AI] Ditempatkan pada tahap `25-30` karena secara eksplisit menyebut rentang usia 25 hingga 29 tahun.", "penulis": "scar (@imfat)"}, {"id": "K-0007", "file": "kartu/K-0007.md", "ide": "Rawat penampilan, angkat beban, makan sehat, tidur seperti atlet, dan perbaiki postur tubuh karena penampilan adalah kartu nama pertama Anda.", "bidang": "kesehatan", "cabang": "kesehatan", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "opini-umum", "tag": ["kesehatan-fisik", "angkat-beban", "tidur", "postur", "disiplin"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0007"], "relasi": [{"tipe": "terkait", "ke": "K-0023"}, {"tipe": "terkait", "ke": "K-0006"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": [], "tugas": "", "tahap_kerja": "semua", "penjelasan": "Disiplin merawat diri secara menyeluruh—mulai dari latihan angkat beban, makan makanan bergizi, tidur berkualitas seperti atlet, menjaga kelembapan wajah, memperbaiki postur, hingga berpakaian rapi—merupakan bentuk kepedulian diri karena penampilan fisik bekerja sebagai kartu nama Anda.", "kutipan": "Take care of your appearance. Lift the weights.", "catatan_agen": "[inferensi AI] Dipindahkan dari `lainnya` ke cabang `kesehatan` dan diterjemahkan ke Bahasa Indonesia.", "penulis": "Dear Self. (@Dearme2_)"}, {"id": "K-0008", "file": "kartu/K-0008.md", "ide": "Trik 3 langkah mendapatkan promo resmi Black Friday Google AI Pro ($99/tahun, 5TB + model tingkat lanjut) dengan menghapus langganan pihak ketiga Jio lalu memakai batu loncatan paket bulanan.", "bidang": "ai", "cabang": "ai", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "belum-diverifikasi", "dasar": "pengalaman-pribadi", "tag": ["google-ai-pro", "google-one", "promo", "langganan-ai"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0009"], "relasi": [{"tipe": "terkait", "ke": "K-0012"}, {"tipe": "prasyarat-untuk", "ke": "K-0015"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 3, "catatan_khusus": "", "alat": ["gemini"], "tugas": "riset", "tahap_kerja": "riset", "penjelasan": "Pengguna paket Google One pihak ketiga (seperti Jio) tidak bisa langsung mengakses diskon 50% Black Friday Google AI Pro. Solusi 3 langkahnya: (1) hapus layanan Google One Jio di halaman pengelolaan akun Google (file Drive/Gmail tetap aman), (2) daftar paket resmi bulanan $4,99/bulan untuk memperoleh status pelanggan aktif, lalu (3) langsung ubah paket ke tahunan promo $99,99/tahun.", "kutipan": "谷歌黑五 $99/年 Google AI Pro 合法上车攻略！", "catatan_agen": "[inferensi AI] Menggabungkan kartu duplikat K-0009 dan K-0010 serta diterjemahkan dari bahasa Mandarin ke Bahasa Indonesia.", "penulis": "MarkBai｜鲸鱼娘的人类运营 (@MarkBaii)"}, {"id": "K-0011", "file": "kartu/K-0011.md", "ide": "Pendapatan OCR di X hanya menghitung impresi timeline utama dari pengguna Premium pada postingan orisinal, dengan bobot algoritma tertinggi pada mutual reply (20) dan copy-link share (20).", "bidang": "sosmed", "cabang": "sosmed", "tahap": "semua-usia", "jenis": "data", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["ocr-x", "algoritma-x", "monetisasi", "impresi", "strategi-konten"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0011"], "relasi": [{"tipe": "memperkuat", "ke": "K-0001"}, {"tipe": "bertentangan-dengan", "ke": "K-0002"}, {"tipe": "bertentangan-dengan", "ke": "K-0004"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": [], "tugas": "monetisasi", "tahap_kerja": "distribusi", "penjelasan": "Strategi meningkatkan pendapatan di X: fokus pada audiens negara tier atas, niche yang tepat, 3 postingan orisinal sehari, dan balasan yang menarik perhatian. Aturan pentingnya: (1) OCR hanya membayar impresi timeline beranda dari akun Premium pada postingan asli (balasan tidak dihitung ke syarat 500 ribu impresi), (2) bobot interaksi algoritma adalah Like = 0,708, Reply = 5, Mutual Reply = 20, dan Copy Link Share = 20.", "kutipan": "mutual reply is 20. copy link share is 20.", "catatan_agen": "[inferensi AI] Dipindahkan ke cabang `sosmed` dan dihubungkan dengan kartu monetisasi OCR di `keuangan/monetisasi-konten`.", "penulis": "Maran (@TheMaran)"}, {"id": "K-0012", "file": "kartu/K-0012.md", "ide": "Gunakan file instruksi sistem (seperti GEMINI.md di Gemini atau Codex) agar agen AI bertindak sebagai asisten teknis saat menyiapkan simulator Android MuMu dan skrip konfigurasi.", "bidang": "ai", "cabang": "ai/coding-dan-proyek", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "belum-diverifikasi", "dasar": "pengalaman-pribadi", "tag": ["gemini", "codex", "sistem-instruksi", "otomasi", "google-ai-ultra"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0012"], "relasi": [{"tipe": "terkait", "ke": "K-0008"}, {"tipe": "terkait", "ke": "K-0003"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 3, "catatan_khusus": "", "alat": ["gemini", "codex"], "tugas": "coding", "tahap_kerja": "produksi", "penjelasan": "Dalam panduan aktivasi promo Google AI Ultra 30TB ($19,99/bulan untuk 3 bulan pertama), penulis menyarankan pengguna non-developer untuk memasang prompt peran asisten teknis ke file instruksi global (misalnya GEMINI.md) agar AI membantu memeriksa lingkungan, menginstal dependensi, dan menganalisis error pada simulator Android MuMu—namun langkah yang menyangkut akun, pembayaran, dan izin sistem wajib dikonfirmasi manual oleh manusia.", "kutipan": "配置到 AI 工具的全局指令文件中，例如 GEMINI.md。", "catatan_agen": "[inferensi AI] Diterjemahkan dari bahasa Mandarin; mencatat peringatan keamanan penting agar tidak menjalankan kode pembayaran/akses sistem secara buta.", "penulis": "实践出真知 (@aigljrzj)"}, {"id": "K-0013", "file": "kartu/K-0013.md", "ide": "Studi kasus perusahaan SaaS yang mencapai $2 juta ARR dan terus bertumbuh tanpa merekrut satu pun staf sales manusia berkat otomasi agen AI.", "bidang": "ai", "cabang": "ai/prompt-dan-agen", "tahap": "semua-usia", "jenis": "kisah", "kepercayaan": "belum-diverifikasi", "dasar": "pengalaman-pribadi", "tag": ["ai-agent", "sales-automation", "saas", "arr", "gtm"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0013"], "relasi": [{"tipe": "prasyarat-untuk", "ke": "K-0014"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 3, "catatan_khusus": "", "alat": [], "tugas": "monetisasi", "tahap_kerja": "distribusi", "penjelasan": "Penulis membagikan pencapaian bisnisnya yang telah menembus pendapatan tahunan berulang ($2M ARR) dan menegaskan bahwa sejak saat itu ia belum merekrut satu pun tenaga penjual (sales rep) manusia karena seluruh proses akuisisi prospek dijalankan oleh agen AI.", "kutipan": "at $2M ARR. haven't hired a single sales rep.", "catatan_agen": "[inferensi AI] Merupakan klaim promosi produk di X sehingga diberi tingkat kepercayaan `belum-diverifikasi`.", "penulis": "Alex Kataev (@AlexKataev)"}, {"id": "K-0014", "file": "kartu/K-0014.md", "ide": "Agen AI Go-To-Market (GTM) 24/7 seperti Explee digunakan untuk mencari, menyaring, dan menghubungi calon klien secara otomatis saat pemilik bisnis tidur.", "bidang": "ai", "cabang": "ai/prompt-dan-agen", "tahap": "semua-usia", "jenis": "contoh", "kepercayaan": "belum-diverifikasi", "dasar": "pengalaman-pribadi", "tag": ["ai-agent", "lead-generation", "gtm", "otomasi-bisnis"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0013"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0013"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 3, "catatan_khusus": "", "alat": [], "tugas": "monetisasi", "tahap_kerja": "distribusi", "penjelasan": "Sebagai kelanjutan dari klaim tanpa tim sales pada [[K-0013]], tautan yang dilampirkan mengarah ke layanan agen AI GTM 24/7 (Explee) yang bertugas mencari dan menghubungi calon klien secara otomatis sepanjang hari.", "kutipan": "24/7 AI agent that finds clients while you sleep.", "catatan_agen": "[inferensi AI] Diekstrak dari tautan terlampir pada sumber S-0013 melalui fitur Recursive Link Chasing.", "penulis": "Alex Kataev (@AlexKataev)"}, {"id": "K-0015", "file": "kartu/K-0015.md", "ide": "Perkakas resmi google-colab-cli memungkinkan developer menyalakan runtime CPU, GPU, dan TPU Google Colab serta menjalankan kode lokal langsung dari terminal.", "bidang": "ai", "cabang": "ai/coding-dan-proyek", "tahap": "semua-usia", "jenis": "fakta", "kepercayaan": "tinggi", "dasar": "riset", "tag": ["google-colab", "cli", "gpu", "tpu", "cloud-computing"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0014"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0008"}, {"tipe": "prasyarat-untuk", "ke": "K-0016"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": ["gemini", "python"], "tugas": "coding", "tahap_kerja": "produksi", "penjelasan": "Bagi pemilik langganan Google AI/Colab, repositori resmi `googlecolab/google-colab-cli` menyediakan antarmuka baris perintah (CLI) untuk mengalokasikan runtime CPU, GPU, dan TPU berkinerja tinggi, mengeksekusi kode lokal, mengelola file jarak jauh, dan mengintegrasikan agen AI seperti Gemini langsung dari terminal tanpa perlu membuka browser.", "kutipan": "Provision high-performance CPU, GPU, and TPU runtimes from terminal.", "catatan_agen": "[inferensi AI] Berkepercayaan `tinggi` karena bersumber langsung dari repositori resmi GitHub Google Colab (`googlecolab/google-colab-cli`).", "penulis": "Samgor (@biggor888)"}, {"id": "K-0016", "file": "kartu/K-0016.md", "ide": "Fitur Ephemeral Job Runner (colab run) di google-colab-cli dapat membuat VM baru, menjalankan skrip lokal, mengambil file hasil, dan mematikan runtime otomatis dalam satu perintah.", "bidang": "ai", "cabang": "ai/coding-dan-proyek", "tahap": "semua-usia", "jenis": "fakta", "kepercayaan": "tinggi", "dasar": "riset", "tag": ["google-colab", "colab-run", "otomasi-cloud", "vm"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0014"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0015"}, {"tipe": "prasyarat-untuk", "ke": "K-0017"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": ["python"], "tugas": "coding", "tahap_kerja": "skrip", "penjelasan": "Mode `colab run` pada `google-colab-cli` bekerja sebagai penjalan tugas sementara (ephemeral job runner): sistem otomatis menyiapkan VM baru di cloud, menjalankan skrip lokal beserta argumennya, mengunduh file keluaran, lalu langsung mematikan runtime agar kuota komputasi tidak terbuang.", "kutipan": "Ephemeral Job Runner (colab run): Provision a fresh VM.", "catatan_agen": "[inferensi AI] Diekstrak dari dokumentasi README resmi `googlecolab/google-colab-cli`.", "penulis": "Samgor (@biggor888)"}, {"id": "K-0017", "file": "kartu/K-0017.md", "ide": "Instalasi google-colab-cli dapat dilakukan dalam satu baris perintah melalui manajer paket uv (uv tool install google-colab-cli) atau pip.", "bidang": "ai", "cabang": "ai/coding-dan-proyek", "tahap": "semua-usia", "jenis": "fakta", "kepercayaan": "tinggi", "dasar": "riset", "tag": ["google-colab", "uv", "pip", "instalasi-cli"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0014"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0016"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": ["python"], "tugas": "coding", "tahap_kerja": "produksi", "penjelasan": "Cara memasang `google-colab-cli` di komputer lokal sangat ringkas: gunakan `uv tool install google-colab-cli` (direkomendasikan agar terisolasi rapi) atau `pip install google-colab-cli`, lalu langsung jalankan perintah eksekusi VM dari terminal.", "kutipan": "uv tool install google-colab-cli", "catatan_agen": "[inferensi AI] Langkah instalasi praktis pelengkap [[K-0015]] dan [[K-0016]].", "penulis": "Samgor (@biggor888)"}, {"id": "K-0018", "file": "kartu/K-0018.md", "ide": "Audio mentah ElevenLabs mudah terdeteksi sebagai konten AI karena dibuat di ruang hampa digital sehingga gelombang suaranya jatuh ke titik nol mutlak (0.000 dB) setiap kali jeda antar-kata.", "bidang": "ai", "cabang": "ai/video-dan-clipping", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["elevenlabs", "voiceover-ai", "deteksi-ai", "audio-waveform", "youtube"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0015"], "relasi": [{"tipe": "prasyarat-untuk", "ke": "K-0019"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": ["elevenlabs"], "tugas": "video-ai", "tahap_kerja": "produksi", "penjelasan": "Mikrofon fisik di kamar nyata tidak pernah menyentuh angka nol matematis (0.000 dB) di antara kalimat karena selalu ada desis udara, pantulan dinding, atau kipas komputer. Sebaliknya, file audio mentah dari ElevenLabs dihasilkan di ruang hampa digital sehingga setiap jeda kata langsung jatuh ke 0.000 dB—ciri utama yang dipakai algoritma platform untuk mendeteksi suara buatan AI.", "kutipan": "every time voice pauses, audio wave drops to dead 0.000", "catatan_agen": "[inferensi AI] Dipindahkan ke sub-cabang `ai/video-dan-clipping` sebagai bagian 1 dari 3 rangkaian analisis audio ElevenLabs.", "penulis": "Vid (@MethodByVid)"}, {"id": "K-0019", "file": "kartu/K-0019.md", "ide": "Pengaturan bawaan ElevenLabs meninggalkan jeda seragam 0,25 detik setelah setiap titik tanpa suara napas serta memakai frekuensi suara stok (seperti Adam dan Marcus) yang memicu penolakan monetisasi.", "bidang": "ai", "cabang": "ai/video-dan-clipping", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["elevenlabs", "monetisasi-youtube", "inauthentic-content", "audio-ai"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0015"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0018"}, {"tipe": "prasyarat-untuk", "ke": "K-0020"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": ["elevenlabs"], "tugas": "video-ai", "tahap_kerja": "produksi", "penjelasan": "Selain masalah keheningan 0.000 dB ([[K-0018]]), pengaturan standar ElevenLabs selalu memberi jeda kaku 0,25 detik setelah tanda titik tanpa suara tarikan napas manusia, ditambah ratusan ribu kanal memakai suara stok 'Adam' dan 'Marcus' yang sama. Hal inilah yang membuat banyak kanal ditolak monetisasinya karena dianggap 'Inauthentic Automated Content'.", "kutipan": "default ElevenLabs leaves the exact same 0.25 second gap", "catatan_agen": "[inferensi AI] Bagian 2 dari 3 rangkaian analisis audio ElevenLabs pada sumber S-0015.", "penulis": "Vid (@MethodByVid)"}, {"id": "K-0020", "file": "kartu/K-0020.md", "ide": "Lapisi rekaman suara ruangan (room tone) di bawah voiceover ElevenLabs pada volume -50dB di CapCut agar gelombang audionya terbaca seperti mikrofon Shure asli.", "bidang": "ai", "cabang": "ai/video-dan-clipping", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["elevenlabs", "capcut", "room-tone", "audio-editing", "trik-monetisasi"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0015"], "relasi": [{"tipe": "lanjutan-dari", "ke": "K-0019"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 5, "catatan_khusus": "", "alat": ["elevenlabs", "capcut"], "tugas": "video-ai", "tahap_kerja": "edit", "penjelasan": "Solusi praktis untuk mengatasi keheningan digital ElevenLabs ([[K-0018]], [[K-0019]]): letakkan trek rekaman suasana ruangan hening (room tone) di bawah trek voiceover ElevenLabs sepanjang durasi video di CapCut, lalu turunkan volumenya ke -50dB. Telinga penonton tidak akan menyadari desis tersebut, namun celah 0.000 dB antar-kata akan terisi sehingga gelombang audionya terbaca alami seperti rekaman mikrofon asli.", "kutipan": "lay that track underneath in CapCut and drop to -50dB", "catatan_agen": "[inferensi AI] Bagian 3 (solusi teknis) dari rangkaian analisis audio ElevenLabs pada sumber S-0015.", "penulis": "Vid (@MethodByVid)"}, {"id": "K-0021", "file": "kartu/K-0021.md", "ide": "Adopsi mesin otomasi (seperti mesin penjahit pita benih pertanian) di Indonesia harus memperhitungkan perbandingan biaya investasi mesin terhadap upah tenaga kerja lokal yang relatif murah.", "bidang": "bisnis", "cabang": "bisnis", "tahap": "semua-usia", "jenis": "opini", "kepercayaan": "sedang", "dasar": "opini-umum", "tag": ["efisiensi-bisnis", "otomasi-mesin", "biaya-tenaga-kerja", "agribisnis"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0016"], "relasi": [], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 3, "catatan_khusus": "", "alat": [], "tugas": "riset", "tahap_kerja": "riset", "penjelasan": "Teknologi mesin yang menjahit benih seledri dan wortel menjadi pita benih membuat tanaman tumbuh sangat rapi berjajar. Namun, dalam konteks bisnis di Indonesia, kelayakan ekonomis otomasi mesin harus selalu dibandingkan dengan biaya tenaga kerja manusia yang relatif lebih terjangkau.", "kutipan": "Lebih efisien pakai mesin atau tenaga manusia?", "catatan_agen": "[inferensi AI] Dipindahkan dari `ai/coding-dan-proyek` ke cabang `bisnis` karena membahas analisis efisiensi modal mesin vs tenaga kerja.", "penulis": "Cozyman 🕵️ (@CozyGreenVibes)"}, {"id": "K-0022", "file": "kartu/K-0022.md", "ide": "Saat membangun aplikasi dengan agen AI, buatlah panduan gaya bahasa (tone-of-voice guideline) agar teks copywriting yang dihasilkan selalu konsisten dan tidak terasa kaku seperti robot.", "bidang": "ai", "cabang": "ai/tulisan-dan-artikel", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "pengalaman-pribadi", "tag": ["tone-of-voice", "copywriting-ai", "ai-agent", "pengembangan-aplikasi"], "konsep": [], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0002"], "relasi": [{"tipe": "memperkuat", "ke": "K-0005"}, {"tipe": "terkait", "ke": "K-0003"}], "dibuat": "2026-11-22", "status": "aktif", "publik": true, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-22", "bintang": 4, "catatan_khusus": "", "alat": [], "tugas": "copywriting", "tahap_kerja": "produksi", "penjelasan": "Ibrahim Arief menyarankan agar setiap kali membangun aplikasi yang memanfaatkan agen AI untuk menulis teks (copy), developer lebih dulu menyusun dokumen panduan tone-of-voice. Dengan panduan tersebut, keluaran teks dari agen AI menjadi konsisten dan tidak terasa generik seperti tulisan AI biasa.", "kutipan": "Sangat recommended bikin tone-of-voice guideline bagi AI agents.", "catatan_agen": "[inferensi AI] Diekstrak dari sumber S-0002 yang sebelumnya masih berstatus menunggu ekstraksi.", "penulis": "Ibrahim Arief (@ibamarief)"}, {"id": "K-0023", "file": "kartu/K-0023.md", "ide": "Kurang tidur dari 8 jam menjadi 6 jam mendorong sistem tubuh mendekati kapasitas 100%, melipatgandakan kesalahan, kabut otak, dan utang biologis hingga 12 kali lipat.", "bidang": "kesehatan", "cabang": "kesehatan", "tahap": "semua-usia", "jenis": "data", "kepercayaan": "belum-diverifikasi", "dasar": "opini-umum", "tag": ["tidur", "kesehatan", "otak", "x"], "konsep": ["manajemen-tidur", "utang-biologis", "kapasitas-tubuh", "kabut-otak"], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0017"], "relasi": [{"tipe": "terkait", "ke": "K-0031"}, {"tipe": "terkait", "ke": "K-0007"}], "dibuat": "2026-11-26", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-26", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "kesehatan", "tahap_kerja": "riset", "penjelasan": "Banyak orang keliru menganggap tidur sebagai waktu yang terbuang. Padahal secara matematis (seperti teori antrean pada kapasitas sistem), memotong jam tidur dari 8 jam menjadi 6 jam memaksa sistem tubuh bekerja mendekati kapasitas 100%, sehingga risiko kesalahan, kabut otak (*brain fog*), dan utang biologis melonjak hingga 12 kali lipat.", "kutipan": "6hr vs 8hr pushes your system near 100% capacity, multiplying errors.", "catatan_agen": "Diterjemahkan dan dirapikan dalam Bahasa Indonesia atas persetujuan pengguna. Klaim angka 12x tetap ditandai belum-diverifikasi sampai ada rujukan riset primer.", "penulis": "Bryan Johnson (@bryan_johnson)"}, {"id": "K-0027", "file": "kartu/K-0027.md", "ide": "Cara tercepat membangun kepercayaan diri adalah mengubah dialog batin (self-talk) lewat 3 langkah praktis.", "bidang": "motivasi-dan-mindset", "cabang": "motivasi-dan-mindset", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "opini-umum", "tag": ["self-talk", "kepercayaan-diri", "mindset", "x"], "konsep": ["self-talk", "kepercayaan-diri", "reframing-mental", "pikiran-bawah-sadar"], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0019", "S-0018"], "relasi": [{"tipe": "terkait", "ke": "K-0032"}, {"tipe": "terkait", "ke": "K-0030"}], "dibuat": "2026-11-26", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-26", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "motivasi-dan-mindset", "tahap_kerja": "riset", "penjelasan": "Atlet, penulis, dan pelaku berkinerja tinggi membangun rasa percaya diri dengan mengendalikan dialog batin (*self-talk*) melalui 3 langkah utama:\n1. **Hentikan self-talk negatif (termasuk candaan):** Pikiran bawah sadar tidak membedakan mana yang serius dan mana yang bercanda; otak akan memercayai dan mengidentifikasi diri dengan apa pun yang terus Anda ucapkan.\n2. **Ubah bingkai perjuangan (*reframing*):** Ganti kalimat *\"aku sedang kesulitan\"* menjadi *\"aku sedang belajar\"*, dan *\"ini sangat sulit\"* menjadi *\"ini semakin lama semakin mudah\"*.\n3. **Berbicaralah pada diri sendiri dengan penuh kasih:** Bayangkan diri Anda versi kecil (*inner child*) setiap kali hendak mengkritik diri sendiri secara keras — komunikasi penuh kasih kepada diri sendiri membentuk sebagian besar rasa percaya diri.", "kutipan": "the easiest way to become confident is to change your self-talk.", "catatan_agen": "Digabung dan dirapikan dalam Bahasa Indonesia dari K-0024..K-0029 (S-0018 & S-0019) atas persetujuan pengguna.", "penulis": "alexei (@alexeixbt), x.com"}, {"id": "K-0030", "file": "kartu/K-0030.md", "ide": "Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa yang Anda inginkan dalam hidup.", "bidang": "motivasi-dan-mindset", "cabang": "motivasi-dan-mindset", "tahap": "semua-usia", "jenis": "nasihat", "kepercayaan": "sedang", "dasar": "opini-umum", "tag": ["komunikasi-langsung", "assertiveness", "self-empowerment", "personal-growth", "x"], "konsep": ["komunikasi-efektif", "ketegasan", "kepercayaan-diri", "pencapaian-tujuan", "kejelasan"], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0020"], "relasi": [{"tipe": "terkait", "ke": "K-0027"}, {"tipe": "terkait", "ke": "K-0028"}], "dibuat": "2026-11-26", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-26", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "motivasi-dan-mindset", "tahap_kerja": "produksi", "penjelasan": "Hentikan basa-basi dan mulailah berbicara dengan percaya diri karena orang tidak menghargai isyarat, melainkan kejelasan. Katakan apa yang Anda maksud dan maksudkan apa yang Anda katakan.", "kutipan": "People don't respect hints. They respect clarity.", "catatan_agen": "[inferensi AI] Diekstrak lewat 1-panggilan terstruktur (gemini-2.5-flash), kutipan terverifikasi.", "penulis": "Mrs Angel (@mrsangelkelechi)"}, {"id": "K-0031", "file": "kartu/K-0031.md", "ide": "Brain rot memicu depresi secara tidak langsung melalui kelelahan mental, stres, dan kecemasan.", "bidang": "kesehatan", "cabang": "kesehatan", "tahap": "semua-usia", "jenis": "fakta", "kepercayaan": "sedang", "dasar": "riset", "tag": ["brain-rot", "burnout", "depresi", "stres", "x"], "konsep": ["beban-kognitif", "kelelahan-mental", "kesehatan-mental", "konsumsi-digital"], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0021"], "relasi": [{"tipe": "terkait", "ke": "K-0023"}], "dibuat": "2026-11-26", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-26", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "kesehatan", "tahap_kerja": "produksi", "penjelasan": "1. Brain rot ditandai oleh kelelahan kognitif dan kelelahan mental akibat keterlibatan digital.\n2. Kondisi ini memicu 'loss spiral' dengan menguras sumber daya psikologis yang berujung pada burnout.\n3. Burnout kemudian meningkatkan stres dan kecemasan, yang akhirnya memicu gejala depresi.", "kutipan": "The Cognitive Cost of Brain Rot", "catatan_agen": "[inferensi AI] Diekstrak lewat 1-panggilan terstruktur (gemini-3.5-flash-lite), kutipan terverifikasi.", "penulis": "dr. Adam Prabata (@AdamPrabata)"}, {"id": "K-0032", "file": "kartu/K-0032.md", "ide": "Mengeluh atau membicarakan masalah berulang kali tanpa mencari solusi justru memperburuk kecemasan dan memperpanjang emosi negatif di otak.", "bidang": "motivasi-dan-mindset", "cabang": "motivasi-dan-mindset", "tahap": "semua-usia", "jenis": "fakta", "kepercayaan": "sedang", "dasar": "riset", "tag": ["kecemasan", "mengeluh", "psikologi", "x"], "konsep": ["regulasi-emosi", "manajemen-stres", "neurosains-keluhan", "pemecahan-masalah"], "kondisi_berlaku": "", "model_ekstrak": "", "versi_prompt": "", "sumber": ["S-0022"], "relasi": [{"tipe": "terkait", "ke": "K-0027"}], "dibuat": "2026-11-26", "status": "aktif", "publik": false, "penerapan": "belum-dicoba", "penerapan_catatan": "", "terakhir_ditinjau": "2026-11-26", "bintang": 0, "catatan_khusus": "", "alat": [], "tugas": "motivasi-dan-mindset", "tahap_kerja": "riset", "penjelasan": "Banyak orang mengira membicarakan masalah berulang kali sekadar melegakan dada (*venting*). Namun riset psikologi klinis dan neurosains menunjukkan bahwa mengeluh atau mengulang cerita masalah secara keliru tanpa diarahkan pada solusi justru memperpanjang emosi negatif, meningkatkan stres, dan memperburuk kecemasan di otak.", "kutipan": "complaining or talking about your problems the wrong way can make anxiety worse.", "catatan_agen": "Diterjemahkan dan dirapikan dalam Bahasa Indonesia dari S-0022 atas persetujuan pengguna.", "penulis": "alexei (@alexeixbt)"}], "sumber": [{"id": "S-0001", "file": "sumber/S-0001.md", "judul": "Risiko dan celah reupload pada program OCR X", "jenis": "postingan", "penulis": "Bambang (@sibambaang)", "platform": "X", "url": "tidak ada", "tanggal_terbit": "2026-11-21", "tanggal_masuk": "2026-11-22", "bidang": ["keuangan", "kesuksesan"], "kartu": ["K-0001", "K-0002"], "saripati": "Postingan dari akun X `@sibambaang` (diambil dari tangkapan layar) membahas sebuah akun Indonesia (`@cyz_beng`) yang meraih 49 juta impresi dari satu video reupload atraksi debus India dan memperoleh payout sekitar \\$2.406,96 (sekitar Rp43,9 juta). Penulis menjelaskan bahwa X pada dasarnya melarang reupload konten dari aplikasi lain dan pernah mengeluarkan akun dari program OCR karena terlalu sering melakukannya. Namun, menurut penulis, celah algoritma masih ada: selama profil tidak berisi video repost sepenuhnya dan tetap diselingi postingan original, impresi dari konten reupload tetap terhitung."}, {"id": "S-0002", "file": "sumber/S-0002.md", "judul": "Pentingnya panduan tone-of-voice bagi agen AI saat membangun aplikasi", "jenis": "postingan", "penulis": "Ibrahim Arief (@ibamarief)", "platform": "X", "url": "https://x.com/ibamarief/status/2124000486424740338?a=G_3ui72UW2gVkv4KBw0&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0022"], "saripati": "Ibrahim Arief menyarankan penyusunan dokumen panduan gaya bahasa (tone-of-voice) untuk agen AI agar teks copywriting aplikasi selalu konsisten dan tidak terdengar kaku."}, {"id": "S-0003", "file": "sumber/S-0003.md", "judul": "Paket open-source 30 skill SEO dan 4 server MCP untuk Claude Code & Cursor", "jenis": "postingan", "penulis": "ILIAS ISM (@illyism)", "platform": "X", "url": "https://x.com/illyism/status/2123675279210242167?a=QpDQgfgz9_L4YNW4jsE&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0003"], "saripati": "Penulis membuka akses repositori 30 skill SEO (audit teknis, programmatic SEO, alur kerja Ahrefs/GSC) serta 4 server MCP aktif untuk Claude Code dan Cursor."}, {"id": "S-0004", "file": "sumber/S-0004.md", "judul": "Klaim komentar tentang reupload konten luar negeri untuk mengejar syarat OCR X", "jenis": "postingan", "penulis": "x.com", "platform": "X", "url": "https://x.com/home", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["keuangan"], "kartu": ["K-0004"], "saripati": "Komentar pengguna X yang mengklaim bahwa mengunggah ulang konten viral dari Threads ke X secara cepat dapat meloloskan kelayakan monetisasi OCR dalam beberapa hari."}, {"id": "S-0005", "file": "sumber/S-0005.md", "judul": "Lima pustaka skill desain frontend untuk menghilangkan tampilan kaku khas AI", "jenis": "postingan", "penulis": "x.com", "platform": "X", "url": "https://x.com/home", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0005"], "saripati": "Daftar lima pustaka skill desain web (Anti UI Slop, ThinkUI, Taste Skill, Emil Design Engineering, dan panduan desain Vercel) agar antarmuka buatan AI tampak rapi."}, {"id": "S-0006", "file": "sumber/S-0006.md", "judul": "Refleksi usia 25-29 tahun untuk menghentikan kebiasaan overthinking", "jenis": "postingan", "penulis": "scar (@imfat)", "platform": "X", "url": "https://x.com/imfat/status/2124155891385549201?a=whtkIb2lPUgIMGKaVJA&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["motivasi-dan-mindset"], "kartu": ["K-0006"], "saripati": "Pesan reflektif agar tidak menghabiskan empat tahun masa muda (usia 25 ke 29) hanya untuk mencemaskan hal-hal kecil yang tidak penting."}, {"id": "S-0007", "file": "sumber/S-0007.md", "judul": "Disiplin merawat fisik, latihan beban, nutrisi, dan tidur sebagai kartu nama diri", "jenis": "postingan", "penulis": "Dear Self. (@Dearme2_)", "platform": "X", "url": "https://x.com/Dearme2_/status/2124106079244079191?a=u8WeP5jeYdA9fqE-vVo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["kesehatan"], "kartu": ["K-0007"], "saripati": "Anjuran menjaga kesehatan dan penampilan fisik melalui angkat beban, makan bergizi, tidur berkualitas, serta postur tubuh yang baik."}, {"id": "S-0008", "file": "sumber/S-0008.md", "judul": "Panduan 3 langkah berlangganan promo Black Friday Google AI Pro $99/tahun", "jenis": "postingan", "penulis": "MarkBai｜鲸鱼娘的人类运营 (@MarkBaii)", "platform": "X", "url": "https://x.com/MarkBaii/status/2124154579801829464?a=MPpmlJlbNR2HNbanyQo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0008"], "saripati": "Langkah mengaktifkan diskon tahunan Google AI Pro (5TB dan model tingkat lanjut) dengan menghapus langganan pihak ketiga Jio lalu memakai paket bulanan resmi sebagai batu loncatan."}, {"id": "S-0009", "file": "sumber/S-0009.md", "judul": "Duplikat panduan promo Black Friday Google AI Pro $99/tahun (2)", "jenis": "postingan", "penulis": "MarkBai｜鲸鱼娘的人类运营 (@MarkBaii)", "platform": "X", "url": "https://x.com/MarkBaii/status/2124154579801829464?a=MPpmlJlbNR2HNbanyQo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0008", "K-0009"], "saripati": "Tangkapan kedua untuk panduan aktivasi promo tahunan Google AI Pro $99/tahun (kartu digabung ke K-0008)."}, {"id": "S-0010", "file": "sumber/S-0010.md", "judul": "Duplikat panduan promo Black Friday Google AI Pro $99/tahun (3)", "jenis": "postingan", "penulis": "MarkBai｜鲸鱼娘的人类运营 (@MarkBaii)", "platform": "X", "url": "https://x.com/MarkBaii/status/2124154579801829464?a=MPpmlJlbNR2HNbanyQo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0008", "K-0010"], "saripati": "Tangkapan ketiga untuk panduan aktivasi promo tahunan Google AI Pro $99/tahun (kartu digabung ke K-0008)."}, {"id": "S-0011", "file": "sumber/S-0011.md", "judul": "Strategi monetisasi OCR X dan rincian bobot interaksi algoritma", "jenis": "postingan", "penulis": "Maran (@TheMaran)", "platform": "X", "url": "https://x.com/TheMaran/status/2124146569415123125?a=dF-7YN3vSCkwGGLnwkI&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["sosmed"], "kartu": ["K-0011"], "saripati": "Penjelasan aturan monetisasi konten asli (OCR) di X beserta bobot interaksi algoritma (mutual reply dan copy-link bernilai 20, sedangkan like bernilai 0,708)."}, {"id": "S-0012", "file": "sumber/S-0012.md", "judul": "Konfigurasi asisten Gemini/Codex dan simulator MuMu untuk promo Google AI Ultra", "jenis": "postingan", "penulis": "实践出真知 (@aigljrzj)", "platform": "X", "url": "https://x.com/aigljrzj/status/2124184418424393932?a=ispg63KzhduCnBkJ4uE&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0012"], "saripati": "Cara memasang file instruksi peran teknis pada Gemini atau Codex untuk memandu penyiapan lingkungan simulator Android MuMu secara aman."}, {"id": "S-0013", "file": "sumber/S-0013.md", "judul": "Studi kasus pertumbuhan SaaS $2M ARR dengan agen AI pencari klien otomatis", "jenis": "postingan", "penulis": "Alex Kataev (@AlexKataev)", "platform": "X", "url": "https://x.com/AlexKataev/status/2119692070067531816?a=8b83Z9GwJcGRPIqDLvQ&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0013", "K-0014"], "saripati": "Pengalaman pendiri SaaS yang mengklaim mencapai $2 juta ARR tanpa merekrut staf sales manusia dengan mengandalkan agen AI Go-To-Market 24/7."}, {"id": "S-0014", "file": "sumber/S-0014.md", "judul": "Perkakas resmi google-colab-cli untuk menjalankan GPU dan TPU Colab dari terminal", "jenis": "postingan", "penulis": "Samgor (@biggor888)", "platform": "X", "url": "https://x.com/biggor888/status/2124146914384138543?a=I9Vb5hw-blTJ_3FpaOo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0015", "K-0016", "K-0017"], "saripati": "Dokumentasi perkakas baris perintah google-colab-cli untuk menyalakan runtime CPU/GPU/TPU, menjalankan skrip lokal lewat colab run, dan mengintegrasikannya dengan Gemini."}, {"id": "S-0015", "file": "sumber/S-0015.md", "judul": "Penyebab audio ElevenLabs terdeteksi AI dan trik room-tone -50dB di CapCut", "jenis": "postingan", "penulis": "Vid (@MethodByVid)", "platform": "X", "url": "https://x.com/MethodByVid/status/2124111584545161703?a=_Jn5Mc-S_NOU3YuBIUc&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["ai"], "kartu": ["K-0018", "K-0019", "K-0020"], "saripati": "Penjelasan teknis mengapa gelombang suara mentah ElevenLabs jatuh ke 0.000 dB saat jeda kata, serta solusi melapisi suara ruangan -50dB di CapCut."}, {"id": "S-0016", "file": "sumber/S-0016.md", "judul": "Perbandingan efisiensi mesin penjahit pita benih pertanian vs upah tenaga kerja lokal", "jenis": "postingan", "penulis": "Cozyman 🕵️ (@CozyGreenVibes)", "platform": "X", "url": "https://x.com/CozyGreenVibes/status/2124339096227299422?a=lkGtfD7SNducMPkFGjc&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-22", "bidang": ["bisnis"], "kartu": ["K-0021"], "saripati": "Diskusi mengenai kelayakan ekonomis penggunaan mesin penjahit pita benih seledri dan wortel jika diterapkan di Indonesia yang memiliki biaya tenaga kerja terjangkau."}, {"id": "S-0017", "file": "sumber/S-0017.md", "judul": "Same math applies to sleep.", "jenis": "postingan", "penulis": "Bryan Johnson (@bryan_johnson)", "platform": "X", "url": "https://x.com/bryan_johnson/status/2125683008334446828?a=MPPbB5WFZ8LJoxO7Wwg&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["kesehatan"], "kartu": ["K-0023"], "saripati": "(1) 6hr vs 8hr pushes your system near 100% capacity, multiplying errors, brain fog, and biological debt by 12x."}, {"id": "S-0018", "file": "sumber/S-0018.md", "judul": "(83) alexei di X: 'neuroscience shows that the easiest way to become confident and actually believe in yourself is to ch", "jenis": "postingan", "penulis": "x.com", "platform": "X", "url": "https://x.com/alexeixbt/status/2125270489354346580", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["ai"], "kartu": ["K-0024", "K-0025", "K-0026"], "saripati": "(1) tidak ada bicara negatif pada diri sendiri: kamu akan berhenti mengatakan hal-hal negatif tentang dirimu sendiri, baik secara keras maupun di dalam kepala, dan tidak, aku tidak peduli apakah kamu bercanda atau tidak. | (2) reframing perjuanganmu: daripada mengatakan 'aku sedang berjuang,' katakan pada dirimu sendiri 'aku sedang belajar.' daripada mengatakan 'ini sangat sulit,' katakan pada dirimu sendiri 'ini sem"}, {"id": "S-0019", "file": "sumber/S-0019.md", "judul": "neuroscience shows that the easiest way to become confident and actually believe", "jenis": "postingan", "penulis": "alexei (@alexeixbt)", "platform": "X", "url": "https://x.com/alexeixbt/status/2125270489354346580?a=-rYYPR1FfSfF1xergvs&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["motivasi-dan-mindset"], "kartu": ["K-0027", "K-0028", "K-0029"], "saripati": "(1) neuroscience shows that the easiest way to become confident and actually believe in yourself is to change your self-talk. | (2) no negative self-talk: you're gonna stop saying negative things about yourself, out loud or in your head, and no, i don't care if you're joking or not. | (3) reframe your struggles: instead of saying 'i am struggling,' tell yourself 'i am learning.' instead of saying 'this is so hard,' t"}, {"id": "S-0020", "file": "sumber/S-0020.md", "judul": "Normalize being very direct. Very straight to the point. Very assertive. You'll get everyt", "jenis": "postingan", "penulis": "Mrs Angel (@mrsangelkelechi)", "platform": "X", "url": "https://x.com/mrsangelkelechi/status/2125523638019662139?a=LWDmSIVBVoo2a1hdurc&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["motivasi-dan-mindset"], "kartu": ["K-0030"], "saripati": "(1) Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa yang Anda inginkan dalam hidup."}, {"id": "S-0021", "file": "sumber/S-0021.md", "judul": "Terlalu sering scrolling media sosial --> Gangguan reseptor dopamin di otak --> Brain rot", "jenis": "postingan", "penulis": "dr. Adam Prabata (@AdamPrabata)", "platform": "X", "url": "https://x.com/AdamPrabata/status/2125545050637529230?a=yPMeKoxb0IlYYSi1cwo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["kesehatan"], "kartu": ["K-0031"], "saripati": "(1) Brain rot memicu depresi secara tidak langsung melalui kelelahan mental, stres, dan kecemasan."}, {"id": "S-0022", "file": "sumber/S-0022.md", "judul": "science shows that complaining or talking about your problems the wrong way can actually m", "jenis": "postingan", "penulis": "alexei (@alexeixbt)", "platform": "X", "url": "https://x.com/alexeixbt/status/2125227957534785672?a=Qo_PEwaqOj0nU5J5Wpo&s=20", "tanggal_terbit": "tidak diketahui", "tanggal_masuk": "2026-11-26", "bidang": ["motivasi-dan-mindset"], "kartu": ["K-0032"], "saripati": "(1) science shows that complaining or talking about your problems the wrong way can actually make your brain and your anxiety worse, and i will tell you the neuroscience behind why and what to do instead."}]};
 
 (function () {
   const DATA = window.__POHON_DATA__ || { mode: "lokal", cabang: [], kartu: [], sumber: [], ringkasan: {} };
@@ -1120,6 +1252,8 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-26", "ringkasan":
   if (!IS_LOKAL) {
     document.getElementById("nav-ulasan").style.display = "none";
     document.getElementById("nav-analisis").style.display = "none";
+    const navJurnal = document.getElementById("nav-jurnal");
+    if (navJurnal) navJurnal.style.display = "none";
     document.getElementById("f-penerapan").style.display = "none";
     document.getElementById("mode-badge").textContent = "Publik";
   } else {
@@ -1130,6 +1264,7 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-26", "ringkasan":
 
   // Navigation + Hash Routing
   function showView(v, pushHash = true) {
+    if ((v === "ulasan" || v === "analisis" || v === "jurnal") && !IS_LOKAL) v = "beranda";
     state.view = v;
     document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
     const target = document.getElementById("view-" + v);
@@ -1140,7 +1275,7 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-26", "ringkasan":
       if (isAct) btn.setAttribute("aria-current", "page");
       else btn.removeAttribute("aria-current");
     });
-    if (pushHash && ["beranda", "tanya", "pohon", "timeline", "katalog", "perpustakaan", "ulasan", "analisis", "tangkap"].includes(v)) {
+    if (pushHash && ["beranda", "tanya", "pohon", "timeline", "katalog", "perpustakaan", "ulasan", "analisis", "jurnal", "tangkap"].includes(v)) {
       if (location.hash !== "#" + v) history.pushState(null, "", "#" + v);
     }
     if (v === "beranda") renderBeranda();
@@ -1151,6 +1286,7 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-26", "ringkasan":
     if (v === "perpustakaan") renderLibrary();
     if (v === "ulasan" && IS_LOKAL) renderUlasan();
     if (v === "analisis" && IS_LOKAL) renderAnalisis();
+    if (v === "jurnal" && IS_LOKAL) renderJurnal();
     if (v === "tangkap") renderTangkap();
     window.scrollTo({ top: 0, behavior: "instant" });
   }
@@ -1172,8 +1308,8 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-26", "ringkasan":
       const slug = h.slice(7);
       if (BRANCH_MAP[slug]) { openBranchPage(slug, false); return; }
     }
-    if (["beranda", "tanya", "pohon", "timeline", "katalog", "perpustakaan", "ulasan", "analisis", "tangkap"].includes(h)) {
-      if ((h === "ulasan" || h === "analisis") && !IS_LOKAL) { showView("beranda", false); return; }
+    if (["beranda", "tanya", "pohon", "timeline", "katalog", "perpustakaan", "ulasan", "analisis", "jurnal", "tangkap"].includes(h)) {
+      if ((h === "ulasan" || h === "analisis" || h === "jurnal") && !IS_LOKAL) { showView("beranda", false); return; }
       showView(h, false);
       return;
     }
@@ -1246,7 +1382,7 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-26", "ringkasan":
             <button type="button" class="btn-primary" data-go-view="pohon">Buka Peta Pohon →</button>
             <button type="button" class="btn-secondary" data-go-view="tanya">Tanya Isi Catatan</button>
             <button type="button" class="btn-secondary" data-go-view="katalog">Cari Kartu</button>
-            ${IS_LOKAL ? `<button type="button" class="btn-secondary" data-go-view="tangkap">+ Simpan Postingan Baru</button><button type="button" class="btn-secondary" data-go-view="analisis">Bandingkan &amp; Analisis</button>` : `<button type="button" class="btn-secondary" data-go-view="timeline">Jalur Usia</button>`}
+            ${IS_LOKAL ? `<button type="button" class="btn-secondary" data-go-view="tangkap">+ Simpan Postingan Baru</button><button type="button" class="btn-secondary" data-go-view="jurnal">Jurnal Harian</button><button type="button" class="btn-secondary" data-go-view="analisis">Bandingkan &amp; Analisis</button>` : `<button type="button" class="btn-secondary" data-go-view="timeline">Jalur Usia</button>`}
           </div>
         </div>
 
@@ -2673,6 +2809,9 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-26", "ringkasan":
                     <option value="kesehatan">Kesehatan &amp; Fisik</option>
                     <option value="motivasi-dan-mindset">Motivasi &amp; Mindset</option>
                     <option value="relasi">Relasi</option>
+                    <option value="agama">Agama &amp; Spiritualitas</option>
+                    <option value="berita">Berita &amp; Tren</option>
+                    <option value="kliping-hiburan">Kliping Hiburan (Non-AI)</option>
                     <option value="lainnya">Lainnya</option>
                   </optgroup>
                 </select>
@@ -3456,6 +3595,949 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-26", "ringkasan":
     });
   }
 
+  // ======================== 10. JURNAL HARIAN & BIOGRAFI (KHUSUS LOKAL) ========================
+  const jurnalState = {
+    loaded: false,
+    items: [],
+    tahunTersedia: [],
+    bulanTersedia: [],
+    totalSemua: 0,
+    totalKata: 0,
+    hitungLevel: { besar: 0, menengah: 0, kecil: 0, catatan: 0 },
+    filterTahun: "",
+    filterBulan: "",
+    filterLevel: "",
+    filterDimensi: "",
+    filterQ: "",
+    selectedDate: new Date().toISOString().slice(0, 10),
+    form: {
+      tanggal: new Date().toISOString().slice(0, 10),
+      suasana: "tenang",
+      energi: 3,
+      prestasi_level: "kecil",
+      ringkas: "",
+      dimensi: [],
+      isi: "",
+      refleksi_ai: "",
+      kartu_terkait: [],
+      exists: false,
+      path_relatif: "",
+    },
+    statusMsg: "",
+    statusOk: true,
+    saving: false,
+    reflecting: false,
+    autoReflect: true,
+    subTab: "harian", // "harian" | "biografi" | "pertumbuhan" | "kompas"
+    kompasItems: [],
+    kompasMsg: "",
+    biografiData: null,
+    bioFilterTahun: "",
+    bioFilterLevel: "",
+  };
+
+  const BULAN_ID = {
+    "01": "Januari", "02": "Februari", "03": "Maret", "04": "April",
+    "05": "Mei", "06": "Juni", "07": "Juli", "08": "Agustus",
+    "09": "September", "10": "Oktober", "11": "November", "12": "Desember",
+  };
+  const SUASANA_OPTS = [
+    ["tenang", "Tenang"],
+    ["semangat", "Semangat"],
+    ["syukur", "Syukur"],
+    ["biasa", "Biasa"],
+    ["lelah", "Lelah"],
+    ["cemas", "Cemas"],
+  ];
+  const PRESTASI_OPTS = [
+    ["besar", "🏆 Prestasi Besar"],
+    ["menengah", "⚡ Menengah"],
+    ["kecil", "🌱 Kecil"],
+    ["catatan", "📝 Catatan"],
+  ];
+  const DIMENSI_OPTS = [
+    ["disiplin", "Disiplin"],
+    ["kesehatan", "Kesehatan"],
+    ["skill-karier", "Skill & Karier"],
+    ["mental-sikap", "Mental & Sikap"],
+    ["relasi", "Relasi"],
+  ];
+
+  function countWordsId(txt) {
+    const s = String(txt || "").trim();
+    return s ? s.split(/\s+/).length : 0;
+  }
+
+  function levelBadgeHtml(lvl) {
+    const map = {
+      besar: ["jurnal-lvl-besar", "🏆 Besar"],
+      menengah: ["jurnal-lvl-menengah", "⚡ Menengah"],
+      kecil: ["jurnal-lvl-kecil", "🌱 Kecil"],
+      catatan: ["jurnal-lvl-catatan", "📝 Catatan"],
+    };
+    const [cls, lbl] = map[lvl] || map.catatan;
+    return `<span class="badge ${cls}">${lbl}</span>`;
+  }
+
+  async function fetchJurnalList() {
+    if (!HAS_SERVER) return;
+    const qs = new URLSearchParams();
+    if (jurnalState.filterTahun) qs.set("tahun", jurnalState.filterTahun);
+    if (jurnalState.filterBulan) qs.set("bulan", jurnalState.filterBulan);
+    if (jurnalState.filterLevel) qs.set("level", jurnalState.filterLevel);
+    if (jurnalState.filterDimensi) qs.set("dimensi", jurnalState.filterDimensi);
+    if (jurnalState.filterQ) qs.set("q", jurnalState.filterQ);
+    try {
+      const resp = await fetch("/api/jurnal?" + qs.toString());
+      if (!resp.ok) return;
+      const data = await resp.json();
+      jurnalState.items = data.items || [];
+      jurnalState.tahunTersedia = data.tahun_tersedia || [];
+      jurnalState.bulanTersedia = data.bulan_tersedia || [];
+      jurnalState.totalSemua = data.total_semua || 0;
+      jurnalState.totalKata = data.total_kata || 0;
+      jurnalState.hitungLevel = data.hitung_level || { besar: 0, menengah: 0, kecil: 0, catatan: 0 };
+      jurnalState.loaded = true;
+    } catch {}
+  }
+
+  async function loadJurnalByDate(tgl) {
+    jurnalState.selectedDate = tgl;
+    jurnalState.form.tanggal = tgl;
+    if (!HAS_SERVER) return;
+    try {
+      const resp = await fetch("/api/jurnal/" + encodeURIComponent(tgl));
+      if (resp.ok) {
+        const data = await resp.json();
+        const it = data.item || {};
+        jurnalState.form = {
+          tanggal: it.tanggal || tgl,
+          suasana: it.suasana || "tenang",
+          energi: Number(it.energi || 3),
+          prestasi_level: it.prestasi_level || "kecil",
+          ringkas: it["prestasi_ringkas"] || "",
+          dimensi: Array.isArray(it.dimensi) ? [...it.dimensi] : [],
+          isi: it.isi || "",
+          refleksi_ai: it.refleksi_ai || "",
+          kartu_terkait: Array.isArray(it.kartu_terkait) ? [...it.kartu_terkait] : [],
+          exists: true,
+          path_relatif: it.path_relatif || "",
+        };
+      } else {
+        jurnalState.form = {
+          tanggal: tgl,
+          suasana: "tenang",
+          energi: 3,
+          prestasi_level: "kecil",
+          ringkas: "",
+          dimensi: [],
+          isi: "",
+          refleksi_ai: "",
+          kartu_terkait: [],
+          exists: false,
+          path_relatif: `jurnal/${tgl.slice(0, 4)}/${tgl.slice(5, 7)}/${tgl}.md`,
+        };
+      }
+    } catch {}
+  }
+
+  async function fetchKompasList() {
+    if (!HAS_SERVER) return;
+    try {
+      const resp = await fetch("/api/jurnal/kompas");
+      if (!resp.ok) return;
+      const data = await resp.json();
+      jurnalState.kompasItems = data.items || [];
+    } catch {}
+  }
+
+  async function fetchBiografiData() {
+    if (!HAS_SERVER) return;
+    const qs = new URLSearchParams();
+    if (jurnalState.bioFilterTahun) qs.set("tahun", jurnalState.bioFilterTahun);
+    if (jurnalState.bioFilterLevel) qs.set("level", jurnalState.bioFilterLevel);
+    try {
+      const resp = await fetch("/api/jurnal/biografi?" + qs.toString());
+      if (!resp.ok) return;
+      jurnalState.biografiData = await resp.json();
+    } catch {}
+  }
+
+  function buildRadarSvg(dimStats) {
+    const stats = (dimStats && dimStats.length === 5) ? dimStats : DIMENSI_OPTS.map(([k, nama]) => ({ kode: k, nama, skor: 0, frekuensi: 0 }));
+    const cx = 160, cy = 152, maxR = 96;
+    const cs = getComputedStyle(document.documentElement);
+    const spine = cs.getPropertyValue("--spine").trim() || "#2B6CB0";
+    const borderCol = cs.getPropertyValue("--border").trim() || "#D6DDD9";
+    const strongCol = cs.getPropertyValue("--border-strong").trim() || "#1E2421";
+    const textCol = cs.getPropertyValue("--text").trim() || "#141A17";
+    const text2Col = cs.getPropertyValue("--text-2").trim() || "#44534C";
+
+    const angles = stats.map((_, i) => (-Math.PI / 2) + (i * 2 * Math.PI / stats.length));
+    const pt = (r, ang) => [cx + r * Math.cos(ang), cy + r * Math.sin(ang)];
+
+    const rings = [0.25, 0.5, 0.75, 1.0].map(f => {
+      const pts = angles.map(a => pt(maxR * f, a).map(v => v.toFixed(1)).join(",")).join(" ");
+      return `<polygon points="${pts}" fill="none" stroke="${borderCol}" stroke-width="${f === 1 ? 1.5 : 1}" />`;
+    }).join("");
+
+    const axes = angles.map(a => {
+      const [x, y] = pt(maxR, a);
+      return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${borderCol}" stroke-width="1" />`;
+    }).join("");
+
+    const dataPts = stats.map((s, i) => {
+      const ratio = Math.max(0.08, Math.min(1, (s.skor || 0) / 100));
+      return pt(maxR * ratio, angles[i]);
+    });
+    const polyStr = dataPts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
+    const dots = dataPts.map(([x, y], i) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5" fill="${spine}" stroke="${strongCol}" stroke-width="1.5"><title>${esc(stats[i].nama)}: ${stats[i].skor}% (${stats[i].frekuensi} hari)</title></circle>`).join("");
+
+    const labels = stats.map((s, i) => {
+      const [lx, ly] = pt(maxR + 24, angles[i]);
+      const anchor = Math.abs(lx - cx) < 12 ? "middle" : (lx > cx ? "start" : "end");
+      return `
+        <text x="${lx.toFixed(1)}" y="${(ly - 2).toFixed(1)}" text-anchor="${anchor}" font-size="11.5" font-weight="700" fill="${textCol}">${esc(s.nama)}</text>
+        <text x="${lx.toFixed(1)}" y="${(ly + 12).toFixed(1)}" text-anchor="${anchor}" font-size="10.5" fill="${text2Col}">${s.skor}% · ${s.frekuensi}h</text>
+      `;
+    }).join("");
+
+    return `
+      <svg viewBox="0 0 320 304" style="width:100%;max-width:320px;height:auto;display:block;margin:0 auto" role="img" aria-label="Radar Pertumbuhan 5 Dimensi Karakter">
+        ${rings}
+        ${axes}
+        <polygon points="${polyStr}" fill="${spine}" fill-opacity="0.22" stroke="${spine}" stroke-width="2.5" />
+        ${dots}
+        ${labels}
+      </svg>
+    `;
+  }
+
+  function linkifyCardIdsHtml(rawText) {
+    const escaped = esc(rawText || "");
+    return escaped
+      .replace(/\[\[(K-\d{4,6})\]\]|\[(K-\d{4,6})\]/g, (_m, g1, g2) => {
+        const cid = g1 || g2;
+        return `<button type="button" class="badge" data-open-j-card="${cid}" style="cursor:pointer;border-color:var(--border-strong);background:var(--node-main-bg);color:var(--node-main-text);font-weight:700">[${cid}]</button>`;
+      })
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/_([^_]+)_/g, "<em>$1</em>");
+  }
+
+  function extractSikapFromRefleksi(refMd) {
+    const m = String(refMd || "").match(/\*\*Pernyataan Sikap:\*\*\s*([^\n]+)/);
+    return m ? m[1].trim() : "";
+  }
+
+  async function renderJurnal(skipFetch = false) {
+    const sec = document.getElementById("view-jurnal");
+    if (!sec || !IS_LOKAL) return;
+
+    if (!HAS_SERVER) {
+      sec.innerHTML = `
+        <div class="jurnal-panel" style="max-width:680px;margin:24px auto">
+          <span class="badge">Khusus Mode Lokal (Privasi Ketat)</span>
+          <h2 style="margin:10px 0 8px">Jurnal Harian &amp; Timeline Biografi</h2>
+          <p style="color:var(--text-2);margin:0 0 12px">
+            Modul Jurnal Harian menyimpan seluruh tulisan pribadi Anda sebagai file Markdown murni di folder <code>jurnal/YYYY/MM/YYYY-MM-DD.md</code> pada laptop Anda dan <strong>tidak pernah diunggah ke web publik</strong>.
+          </p>
+          <p style="color:var(--text-2);margin:0">
+            Jalankan <code>tombol-cepat/1-Buka-Aplikasi-Lokal.bat</code> (atau <code>python scripts/server_lokal.py</code>) lalu buka <code>http://127.0.0.1:8765/#jurnal</code> untuk mulai menulis tanpa batas kata.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    if (!skipFetch && !jurnalState.loaded) {
+      await Promise.all([fetchJurnalList(), fetchKompasList(), fetchBiografiData()]);
+      await loadJurnalByDate(jurnalState.selectedDate);
+    }
+
+    const f = jurnalState.form;
+    const wordCnt = countWordsId(f.isi);
+    const charCnt = (f.isi || "").length;
+    const hl = jurnalState.hitungLevel || {};
+    const extractedSikap = extractSikapFromRefleksi(f.refleksi_ai);
+    const bio = jurnalState.biografiData || { tahun_tersedia: [], total_hari: 0, total_timeline: 0, rata_energi: 0, streak_saat_ini: 0, streak_terpanjang: 0, hitung_level: {}, suasana_stats: {}, timeline: [], dimensi_stats: [], tren_bulanan: [] };
+
+    sec.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <h1 style="font-size:22px">Jurnal Harian &amp; Biografi</h1>
+            <span class="badge">🔒 Khusus Lokal · Anti-Bocor</span>
+            <button type="button" class="help-q-btn" data-help-key="jurnal" title="Cara memakai Jurnal Harian">?</button>
+          </div>
+          <p style="margin:4px 0 0;font-size:13.5px;color:var(--text-2)">
+            Tulis refleksi penghujung hari tanpa batas kata, pantau garis waktu biografi lintas tahun, dan lacak pertumbuhan 5 dimensi karakter Anda.
+          </p>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button type="button" class="jurnal-pill ${jurnalState.subTab === "harian" ? "active" : ""}" id="btn-jtab-harian">📝 Jurnal Harian</button>
+          <button type="button" class="jurnal-pill ${jurnalState.subTab === "biografi" ? "active" : ""}" id="btn-jtab-biografi">🌳 Timeline Biografi</button>
+          <button type="button" class="jurnal-pill ${jurnalState.subTab === "pertumbuhan" ? "active" : ""}" id="btn-jtab-pertumbuhan">📈 Pertumbuhan Karakter</button>
+          <button type="button" class="jurnal-pill ${jurnalState.subTab === "kompas" ? "active" : ""}" id="btn-jtab-kompas">🧭 Kompas Sikap (${jurnalState.kompasItems.length})</button>
+          <button type="button" class="btn-secondary" id="btn-jurnal-today">+ Tulis Hari Ini</button>
+        </div>
+      </div>
+      <div class="help-drawer-box" id="help-box-jurnal"></div>
+
+      <div class="stat-strip" style="margin-bottom:16px">
+        <div class="stat-box"><div class="stat-num">${jurnalState.totalSemua}</div><div class="stat-lbl">Total Hari Tercatat</div></div>
+        <div class="stat-box"><div class="stat-num">${jurnalState.totalKata.toLocaleString("id-ID")}</div><div class="stat-lbl">Total Kata Tersimpan</div></div>
+        <div class="stat-box"><div class="stat-num">${hl.besar || 0} / ${hl.menengah || 0}</div><div class="stat-lbl">🏆 Besar · ⚡ Menengah</div></div>
+        <div class="stat-box"><div class="stat-num">${bio.streak_saat_ini || 0}h <span style="font-size:12px;font-weight:500;color:var(--text-3)">(rekor ${bio.streak_terpanjang || 0}h)</span></div><div class="stat-lbl">Konsistensi Menulis</div></div>
+      </div>
+
+      ${jurnalState.subTab === "biografi" ? `
+        <div class="jurnal-panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--border)">
+            <div>
+              <h2 style="font-size:18px">🌳 Timeline Biografi Interaktif</h2>
+              <p style="margin:4px 0 0;font-size:13px;color:var(--text-2)">Garis waktu perjalanan hidup &amp; pencapaian dari catatan harian Anda. Saring berdasarkan tahun dan bobot milestone.</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <select id="bio-filter-tahun" class="filter-select" style="width:auto;min-width:130px" aria-label="Filter Tahun Biografi">
+                <option value="">Semua Tahun</option>
+                ${(bio.tahun_tersedia || []).map(y => `<option value="${esc(y)}" ${jurnalState.bioFilterTahun === y ? "selected" : ""}>${esc(y)}</option>`).join("")}
+              </select>
+              <span class="badge">${bio.total_timeline || 0} milestone</span>
+            </div>
+          </div>
+
+          <div class="jurnal-pill-row" style="margin-bottom:18px">
+            <button type="button" class="jurnal-pill ${!jurnalState.bioFilterLevel ? "active" : ""}" data-bio-lvl="">Semua (${bio.total_hari || 0})</button>
+            <button type="button" class="jurnal-pill ${jurnalState.bioFilterLevel === "besar" ? "active" : ""}" data-bio-lvl="besar">🏆 Prestasi Besar (${(bio.hitung_level || {}).besar || 0})</button>
+            <button type="button" class="jurnal-pill ${jurnalState.bioFilterLevel === "menengah" ? "active" : ""}" data-bio-lvl="menengah">⚡ Menengah (${(bio.hitung_level || {}).menengah || 0})</button>
+            <button type="button" class="jurnal-pill ${jurnalState.bioFilterLevel === "kecil" ? "active" : ""}" data-bio-lvl="kecil">🌱 Kecil (${(bio.hitung_level || {}).kecil || 0})</button>
+            <button type="button" class="jurnal-pill ${jurnalState.bioFilterLevel === "catatan" ? "active" : ""}" data-bio-lvl="catatan">📝 Catatan (${(bio.hitung_level || {}).catatan || 0})</button>
+          </div>
+
+          ${(bio.timeline || []).length === 0
+            ? `<div class="tl-empty">Belum ada milestone pada filter ini. Tulis catatan harian di sub-tab <strong>📝 Jurnal Harian</strong> agar garis waktu biografi Anda mulai tumbuh.</div>`
+            : (bio.timeline || []).map(yg => `
+              <div class="bio-year-block">
+                <div class="bio-year-head"><span>📅 Tahun ${esc(yg.tahun)}</span><span class="badge">${yg.total} entri</span></div>
+                ${(yg.bulan_list || []).map(mg => `
+                  <div class="bio-month-label">${esc(BULAN_ID[mg.bulan] || mg.bulan)} ${esc(yg.tahun)} (${mg.items.length})</div>
+                  <div class="bio-spine">
+                    ${mg.items.map(it => {
+                      const judul = it["prestasi_ringkas"] || it.cuplikan || "(Tanpa judul)";
+                      return `
+                        <article class="bio-node lvl-${esc(it.prestasi_level)}">
+                          <span class="bio-dot" aria-hidden="true"></span>
+                          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+                            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                              <strong style="font-size:13.5px;font-family:ui-monospace,monospace">${esc(it.tanggal)}</strong>
+                              ${levelBadgeHtml(it.prestasi_level)}
+                              <span class="badge">${esc(it.suasana)} · E${it.energi}/5</span>
+                            </div>
+                            <button type="button" class="btn-secondary" data-bio-open-date="${esc(it.tanggal)}" style="min-height:30px;padding:3px 10px;font-size:12px">Buka Catatan →</button>
+                          </div>
+                          <div style="font-size:15px;font-weight:700;margin-bottom:5px;line-height:1.4">${esc(judul)}</div>
+                          ${it["prestasi_ringkas"] && it.cuplikan ? `<div style="font-size:13px;color:var(--text-2);margin-bottom:8px;line-height:1.5">${esc(it.cuplikan)}</div>` : ""}
+                          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+                            <div style="display:flex;gap:5px;flex-wrap:wrap">
+                              ${(it.dimensi || []).map(d => `<span class="badge">${esc(d)}</span>`).join("")}
+                              ${(it.kartu_terkait || []).map(cid => `<button type="button" class="badge" data-open-j-card="${esc(cid)}" style="cursor:pointer;border-color:var(--border-strong);background:var(--node-main-bg);color:var(--node-main-text);font-weight:700">[${esc(cid)}]</button>`).join("")}
+                            </div>
+                            <span style="font-size:11.5px;color:var(--text-3)">${it.jumlah_kata} kata</span>
+                          </div>
+                        </article>
+                      `;
+                    }).join("")}
+                  </div>
+                `).join("")}
+              </div>
+            `).join("")}
+        </div>
+      ` : jurnalState.subTab === "pertumbuhan" ? `
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="jurnal-panel">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+              <div>
+                <h2 style="font-size:18px">📈 Evaluasi Pertumbuhan 5 Dimensi Karakter &amp; Kemampuan</h2>
+                <p style="margin:4px 0 0;font-size:13px;color:var(--text-2)">Dihitung dari bukti nyata catatan harian Anda (bobot milestone: Besar 3×, Menengah 2×, Kecil 1×, Catatan 0.5×).</p>
+              </div>
+              <select id="grow-filter-tahun" class="filter-select" style="width:auto;min-width:130px" aria-label="Filter Tahun Pertumbuhan">
+                <option value="">Semua Tahun</option>
+                ${(bio.tahun_tersedia || []).map(y => `<option value="${esc(y)}" ${jurnalState.bioFilterTahun === y ? "selected" : ""}>${esc(y)}</option>`).join("")}
+              </select>
+            </div>
+
+            ${(bio.total_hari || 0) === 0
+              ? `<div class="tl-empty">Belum ada data catatan harian untuk dihitung. Mulai menulis di sub-tab <strong>📝 Jurnal Harian</strong> agar grafik pertumbuhan karakter muncul.</div>`
+              : `
+                <div class="radar-grid">
+                  <div style="background:var(--bg);border:1.5px solid var(--border-strong);border-radius:12px;padding:14px;text-align:center">
+                    <div style="font-size:13px;font-weight:700;margin-bottom:6px">Radar Keseimbangan 5 Dimensi</div>
+                    ${buildRadarSvg(bio.dimensi_stats)}
+                    <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);display:flex;justify-content:space-around;font-size:12.5px;color:var(--text-2)">
+                      <span>Rata-rata Energi: <strong>${bio.rata_energi}/5</strong></span>
+                      <span>Total Bukti: <strong>${bio.total_hari} hari</strong></span>
+                    </div>
+                  </div>
+
+                  <div style="display:grid;gap:10px">
+                    ${(bio.dimensi_stats || []).map(ds => `
+                      <div style="background:var(--bg);border:1.5px solid var(--border-strong);border-radius:10px;padding:12px 14px">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                          <strong style="font-size:14.5px">${esc(ds.nama)}</strong>
+                          <span class="badge">${ds.frekuensi} hari · skor relatif ${ds.skor}%</span>
+                        </div>
+                        <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${ds.skor}%"></div></div>
+                        ${(ds.bukti_terbaru && ds.bukti_terbaru.length)
+                          ? `<div style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-2)">
+                              ${ds.bukti_terbaru.map(b => `
+                                <button type="button" data-bio-open-date="${esc(b.tanggal)}" style="background:none;border:none;padding:2px 0;text-align:left;cursor:pointer;color:var(--text-2)">
+                                  <strong style="color:var(--text)">${esc(b.tanggal)}</strong> (${esc(b.level)}): ${esc(b.ringkas)}
+                                </button>
+                              `).join("")}
+                            </div>`
+                          : `<div style="font-size:12px;color:var(--text-3)">Belum ada bukti harian untuk dimensi ini.</div>`}
+                      </div>
+                    `).join("")}
+                  </div>
+                </div>
+              `}
+          </div>
+
+          ${(bio.tren_bulanan && bio.tren_bulanan.length) ? `
+            <div class="jurnal-panel">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+                <h3 style="font-size:16px">📊 Tren Konsistensi &amp; Energi Lintas Bulan</h3>
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                  ${Object.entries(bio.suasana_stats || {}).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([s, cnt]) => `<span class="badge">${esc(s)}: ${cnt}h</span>`).join("")}
+                </div>
+              </div>
+              <div class="month-bars">
+                ${(() => {
+                  const maxH = Math.max(1, ...bio.tren_bulanan.map(m => m.jumlah_hari));
+                  return bio.tren_bulanan.map(m => {
+                    const pct = Math.max(10, Math.round((m.jumlah_hari / maxH) * 100));
+                    return `
+                      <div class="month-col" title="${esc(m.bulan_key)}: ${m.jumlah_hari} hari, energi ${m.rata_energi}/5, 🏆${m.besar} ⚡${m.menengah} 🌱${m.kecil}">
+                        <span style="font-size:11.5px;font-weight:700">${m.jumlah_hari}h</span>
+                        <div class="month-bar-box"><div class="month-bar-fill" style="height:${pct}%"></div></div>
+                        <span style="font-size:11.5px;font-weight:700">${esc(m.bulan_key)}</span>
+                        <span style="font-size:11px;color:var(--text-3)">E${m.rata_energi} · 🏆${m.besar}</span>
+                      </div>
+                    `;
+                  }).join("");
+                })()}
+              </div>
+            </div>
+          ` : ""}
+        </div>
+      ` : jurnalState.subTab === "kompas" ? `
+        <div class="jurnal-panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+            <div>
+              <h2 style="font-size:18px">🧭 Kompas Sikap Pribadi</h2>
+              <p style="margin:4px 0 0;font-size:13px;color:var(--text-2)">Kumpulan pernyataan sikap &amp; prinsip hidup yang Anda pilih dari refleksi harian dan Pohon Pengetahuan (tersimpan di <code>jurnal/_kompas_sikap.md</code>).</p>
+            </div>
+            <span class="badge">${jurnalState.kompasItems.length} prinsip</span>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+            <input type="text" id="kompas-manual-inp" class="search-input" style="flex:1;min-width:240px" placeholder="Tambah pernyataan sikap manual (opsional)...">
+            <button type="button" class="btn-primary" id="btn-kompas-manual-add">+ Simpan Prinsip</button>
+          </div>
+          ${jurnalState.kompasMsg ? `<div style="margin-bottom:12px"><span class="badge" style="color:var(--trust-high);background:var(--trust-high-bg)">${esc(jurnalState.kompasMsg)}</span></div>` : ""}
+
+          ${jurnalState.kompasItems.length === 0
+            ? `<div class="tl-empty">Belum ada pernyataan sikap tersimpan. Tulis jurnal harian, klik <strong>✨ Minta Tanggapan &amp; Refleksi AI</strong>, lalu klik <strong>🧭 Simpan ke Kompas Sikap</strong>.</div>`
+            : `<div style="display:grid;gap:10px">
+                ${jurnalState.kompasItems.map(k => `
+                  <div style="padding:12px 14px;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--bg);box-shadow:2px 2px 0 var(--border-strong)">
+                    <div style="font-size:14.5px;line-height:1.55;margin-bottom:8px">${linkifyCardIdsHtml(k.sikap)}</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--text-3)">
+                      <span>Dari jurnal <strong>${esc(k.tanggal)}</strong></span>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap">
+                        ${(k.dimensi || []).map(d => `<span class="badge">${esc(d)}</span>`).join("")}
+                      </div>
+                    </div>
+                  </div>
+                `).join("")}
+              </div>`}
+        </div>
+      ` : `
+
+      <div class="jurnal-layout">
+        <aside class="jurnal-panel jurnal-sidebar" aria-label="Arsip Jurnal Tahunan Bulanan Harian">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <strong style="font-size:15px">Arsip Catatan</strong>
+            <span class="badge">${jurnalState.items.length} entri</span>
+          </div>
+
+          <input type="search" id="j-search" class="search-input" value="${esc(jurnalState.filterQ)}" placeholder="🔍 Cari kata di semua jurnal..." aria-label="Cari jurnal">
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <select id="j-filter-tahun" class="filter-select" aria-label="Filter Tahun">
+              <option value="">Semua Tahun</option>
+              ${jurnalState.tahunTersedia.map(y => `<option value="${esc(y)}" ${jurnalState.filterTahun === y ? "selected" : ""}>${esc(y)}</option>`).join("")}
+            </select>
+            <select id="j-filter-bulan" class="filter-select" aria-label="Filter Bulan">
+              <option value="">Semua Bulan</option>
+              ${Object.entries(BULAN_ID).map(([k, v]) => `<option value="${k}" ${jurnalState.filterBulan === k ? "selected" : ""}>${k} · ${v}</option>`).join("")}
+            </select>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <select id="j-filter-level" class="filter-select" aria-label="Filter Level Prestasi">
+              <option value="">Semua Level</option>
+              ${PRESTASI_OPTS.map(([k, v]) => `<option value="${k}" ${jurnalState.filterLevel === k ? "selected" : ""}>${v}</option>`).join("")}
+            </select>
+            <select id="j-filter-dimensi" class="filter-select" aria-label="Filter Dimensi">
+              <option value="">Semua Dimensi</option>
+              ${DIMENSI_OPTS.map(([k, v]) => `<option value="${k}" ${jurnalState.filterDimensi === k ? "selected" : ""}>${v}</option>`).join("")}
+            </select>
+          </div>
+
+          ${(jurnalState.filterTahun || jurnalState.filterBulan || jurnalState.filterLevel || jurnalState.filterDimensi || jurnalState.filterQ)
+            ? `<button type="button" class="btn-secondary" id="btn-j-reset" style="min-height:32px;font-size:12px;justify-content:center">↺ Reset Filter Arsip</button>`
+            : ""}
+
+          <div class="jurnal-list" id="jurnal-list">
+            ${jurnalState.items.length === 0
+              ? `<div class="tl-empty">Belum ada catatan yang cocok. Mulai tulis jurnal pertama Anda di sebelah kanan.</div>`
+              : jurnalState.items.map(it => {
+                  const isAct = it.tanggal === jurnalState.selectedDate;
+                  const ringkas = it["prestasi_ringkas"] || "";
+                  return `
+                    <button type="button" class="jurnal-item ${isAct ? "active" : ""}" data-j-date="${esc(it.tanggal)}">
+                      <div class="jurnal-item-top">
+                        <span>${esc(it.tanggal)}</span>
+                        ${levelBadgeHtml(it.prestasi_level)}
+                      </div>
+                      ${ringkas ? `<div style="font-size:12.5px;font-weight:700">${esc(ringkas)}</div>` : ""}
+                      <div class="jurnal-item-snippet">${esc(it.cuplikan || "")}</div>
+                      <div style="font-size:11.5px;opacity:0.75;display:flex;justify-content:space-between;gap:6px">
+                        <span>${esc(it.suasana)} · E${it.energi}/5</span>
+                        <span>${it.jumlah_kata} kata</span>
+                      </div>
+                    </button>
+                  `;
+                }).join("")}
+          </div>
+        </aside>
+
+        <div class="jurnal-panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--border)">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <label for="j-date-input" style="font-size:13px;font-weight:700">Tanggal:</label>
+              <input type="date" id="j-date-input" class="filter-select" style="width:auto;min-width:155px" value="${esc(f.tanggal)}">
+              <span class="badge">${f.exists ? "Tersimpan di Markdown" : "Catatan Baru"}</span>
+            </div>
+            <span style="font-size:12px;color:var(--text-3);font-family:ui-monospace,monospace">${esc(f.path_relatif)}</span>
+          </div>
+
+          <div class="jurnal-meta-grid">
+            <div>
+              <div style="font-size:12.5px;font-weight:700;margin-bottom:6px;color:var(--text-2)">Suasana Hati</div>
+              <div class="jurnal-pill-row">
+                ${SUASANA_OPTS.map(([k, lbl]) => `
+                  <button type="button" class="jurnal-pill ${f.suasana === k ? "active" : ""}" data-j-suasana="${k}">${lbl}</button>
+                `).join("")}
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:12.5px;font-weight:700;margin-bottom:6px;color:var(--text-2)">Tingkat Energi (1–5)</div>
+              <div class="jurnal-pill-row">
+                ${[1, 2, 3, 4, 5].map(n => `
+                  <button type="button" class="jurnal-pill ${f.energi === n ? "active" : ""}" data-j-energi="${n}">${n}</button>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+
+          <div class="jurnal-meta-grid">
+            <div>
+              <div style="font-size:12.5px;font-weight:700;margin-bottom:6px;color:var(--text-2)">Level Prestasi / Milestone</div>
+              <div class="jurnal-pill-row">
+                ${PRESTASI_OPTS.map(([k, lbl]) => `
+                  <button type="button" class="jurnal-pill ${f.prestasi_level === k ? "active" : ""}" data-j-level="${k}">${lbl}</button>
+                `).join("")}
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:12.5px;font-weight:700;margin-bottom:6px;color:var(--text-2)">Dimensi Karakter yang Terlatih</div>
+              <div class="jurnal-pill-row">
+                ${DIMENSI_OPTS.map(([k, lbl]) => `
+                  <button type="button" class="jurnal-pill ${f.dimensi.includes(k) ? "active" : ""}" data-j-dim="${k}">${lbl}</button>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:14px">
+            <label for="j-ringkas" style="display:block;font-size:12.5px;font-weight:700;margin-bottom:6px;color:var(--text-2)">Ringkasan Milestone / Judul Singkat Hari Ini (Opsional)</label>
+            <input type="text" id="j-ringkas" class="search-input" value="${esc(f.ringkas)}" placeholder="Contoh: Selesai bangun Fase 1 Jurnal Harian, olahraga 30 menit, tidur sebelum jam 11...">
+          </div>
+
+          <div style="margin-bottom:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px">
+              <label for="j-isi" style="font-size:12.5px;font-weight:700;color:var(--text-2)">Catatan Penghujung Hari (Tanpa Batas Kata)</label>
+              <span id="j-word-counter" style="font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums">${wordCnt.toLocaleString("id-ID")} kata · ${charCnt.toLocaleString("id-ID")} karakter</span>
+            </div>
+            <textarea id="j-isi" class="jurnal-textarea" placeholder="Ceritakan perjalanan hari ini secara jujur dan bebas — pencapaian, hal yang mengganjal, pelajaran penting, ide baru, atau rencana besok...">${esc(f.isi)}</textarea>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <button type="button" class="btn-primary" id="btn-j-save" ${jurnalState.saving || jurnalState.reflecting ? "disabled" : ""}>
+                ${jurnalState.saving ? "Menyimpan..." : "Simpan Jurnal ke Markdown"}
+              </button>
+              <button type="button" class="btn-secondary" id="btn-j-reflect" ${jurnalState.saving || jurnalState.reflecting ? "disabled" : ""}>
+                ${jurnalState.reflecting ? "⏳ Menganalisis..." : "✨ Minta Tanggapan & Refleksi AI"}
+              </button>
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-2);cursor:pointer">
+                <input type="checkbox" id="chk-j-auto-reflect" ${jurnalState.autoReflect ? "checked" : ""}>
+                <span>Otomatis refleksi AI saat simpan</span>
+              </label>
+            </div>
+            ${jurnalState.statusMsg ? `<span class="badge" style="${jurnalState.statusOk ? "color:var(--trust-high);background:var(--trust-high-bg)" : "color:var(--conflict-text);background:var(--conflict-bg)"}">${esc(jurnalState.statusMsg)}</span>` : ""}
+          </div>
+
+          ${f.refleksi_ai ? `
+            <div style="margin-top:18px;padding-top:16px;border-top:1.5px solid var(--border-strong)">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+                <h3 style="font-size:15.5px">✨ Tanggapan &amp; Pernyataan Sikap Berbasis Pohon Pengetahuan</h3>
+                ${extractedSikap ? `<button type="button" class="btn-primary" id="btn-j-save-kompas" style="min-height:34px;padding:4px 12px;font-size:12.5px">🧭 Simpan ke Kompas Sikap</button>` : ""}
+              </div>
+              <div style="white-space:pre-wrap;font-size:14px;line-height:1.65;color:var(--text);background:var(--surface-alt);padding:14px 16px;border-radius:10px;border:1.5px solid var(--border-strong)">${linkifyCardIdsHtml(f.refleksi_ai)}</div>
+              ${(f.kartu_terkait && f.kartu_terkait.length) ? `
+                <div style="margin-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px;color:var(--text-2)">
+                  <strong>Kartu Pohon Pengetahuan yang dirujuk:</strong>
+                  ${f.kartu_terkait.map(cid => {
+                    const cObj = CARD_MAP[cid];
+                    const tip = cObj ? cObj.ide : cid;
+                    return `<button type="button" class="jurnal-pill" data-open-j-card="${esc(cid)}" title="${esc(tip)}">${esc(cid)}${cObj ? ` · ${esc(cObj.cabang)}` : ""}</button>`;
+                  }).join("")}
+                </div>
+              ` : ""}
+              ${jurnalState.kompasMsg ? `<div style="margin-top:8px"><span class="badge" style="color:var(--trust-high);background:var(--trust-high-bg)">${esc(jurnalState.kompasMsg)}</span></div>` : ""}
+            </div>
+          ` : ""}
+        </div>
+      </div>`}
+    `;
+
+    // Sub-tab switcher & card citation click handler
+    document.getElementById("btn-jtab-harian")?.addEventListener("click", () => {
+      jurnalState.subTab = "harian";
+      jurnalState.kompasMsg = "";
+      renderJurnal(true);
+    });
+    document.getElementById("btn-jtab-biografi")?.addEventListener("click", async () => {
+      jurnalState.subTab = "biografi";
+      await fetchBiografiData();
+      renderJurnal(true);
+    });
+    document.getElementById("btn-jtab-pertumbuhan")?.addEventListener("click", async () => {
+      jurnalState.subTab = "pertumbuhan";
+      await fetchBiografiData();
+      renderJurnal(true);
+    });
+    document.getElementById("btn-jtab-kompas")?.addEventListener("click", async () => {
+      jurnalState.subTab = "kompas";
+      jurnalState.kompasMsg = "";
+      await fetchKompasList();
+      renderJurnal(true);
+    });
+    document.getElementById("bio-filter-tahun")?.addEventListener("change", async e => {
+      jurnalState.bioFilterTahun = e.target.value || "";
+      await fetchBiografiData();
+      renderJurnal(true);
+    });
+    document.getElementById("grow-filter-tahun")?.addEventListener("change", async e => {
+      jurnalState.bioFilterTahun = e.target.value || "";
+      await fetchBiografiData();
+      renderJurnal(true);
+    });
+    sec.querySelectorAll("[data-bio-lvl]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        jurnalState.bioFilterLevel = btn.dataset.bioLvl || "";
+        await fetchBiografiData();
+        renderJurnal(true);
+      });
+    });
+    sec.querySelectorAll("[data-bio-open-date]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const dt = btn.dataset.bioOpenDate;
+        if (!dt) return;
+        jurnalState.subTab = "harian";
+        jurnalState.statusMsg = "";
+        await loadJurnalByDate(dt);
+        renderJurnal(true);
+      });
+    });
+    sec.querySelectorAll("[data-open-j-card]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const cid = btn.dataset.openJCard;
+        if (cid && CARD_MAP[cid]) openCardPage(cid);
+      });
+    });
+    document.getElementById("btn-kompas-manual-add")?.addEventListener("click", async () => {
+      const inp = document.getElementById("kompas-manual-inp");
+      const val = (inp?.value || "").trim();
+      if (val.length < 6) {
+        jurnalState.kompasMsg = "Minimal 6 karakter untuk pernyataan sikap.";
+        renderJurnal(true);
+        return;
+      }
+      try {
+        const resp = await fetch("/api/jurnal/kompas", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sikap: val, tanggal: new Date().toISOString().slice(0, 10), kartu: [], dimensi: [] }),
+        });
+        const out = await resp.json();
+        if (resp.ok && out.ok) {
+          jurnalState.kompasItems = out.items || [];
+          jurnalState.kompasMsg = out.pesan || "Tersimpan ke Kompas Sikap.";
+        } else {
+          jurnalState.kompasMsg = out.error || "Gagal menyimpan.";
+        }
+      } catch {
+        jurnalState.kompasMsg = "Gagal menghubungi server lokal.";
+      }
+      renderJurnal(true);
+    });
+
+    // Bind filter & arsip
+    document.getElementById("btn-jurnal-today")?.addEventListener("click", async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      jurnalState.subTab = "harian";
+      jurnalState.statusMsg = "";
+      jurnalState.kompasMsg = "";
+      await loadJurnalByDate(today);
+      renderJurnal(true);
+    });
+
+    const onFilterChange = async () => {
+      jurnalState.filterTahun = document.getElementById("j-filter-tahun")?.value || "";
+      jurnalState.filterBulan = document.getElementById("j-filter-bulan")?.value || "";
+      jurnalState.filterLevel = document.getElementById("j-filter-level")?.value || "";
+      jurnalState.filterDimensi = document.getElementById("j-filter-dimensi")?.value || "";
+      jurnalState.filterQ = document.getElementById("j-search")?.value || "";
+      await fetchJurnalList();
+      renderJurnal(true);
+    };
+    ["j-filter-tahun", "j-filter-bulan", "j-filter-level", "j-filter-dimensi"].forEach(id => {
+      document.getElementById(id)?.addEventListener("change", onFilterChange);
+    });
+    let searchTimer = null;
+    document.getElementById("j-search")?.addEventListener("input", () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(onFilterChange, 250);
+    });
+    document.getElementById("btn-j-reset")?.addEventListener("click", async () => {
+      jurnalState.filterTahun = "";
+      jurnalState.filterBulan = "";
+      jurnalState.filterLevel = "";
+      jurnalState.filterDimensi = "";
+      jurnalState.filterQ = "";
+      await fetchJurnalList();
+      renderJurnal(true);
+    });
+
+    sec.querySelectorAll("[data-j-date]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        jurnalState.statusMsg = "";
+        await loadJurnalByDate(btn.dataset.jDate);
+        renderJurnal(true);
+      });
+    });
+
+    document.getElementById("j-date-input")?.addEventListener("change", async e => {
+      const val = e.target.value;
+      if (!val) return;
+      jurnalState.statusMsg = "";
+      await loadJurnalByDate(val);
+      renderJurnal(true);
+    });
+
+    // Bind metadata pills
+    sec.querySelectorAll("[data-j-suasana]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        jurnalState.form.suasana = btn.dataset.jSuasana;
+        renderJurnal(true);
+      });
+    });
+    sec.querySelectorAll("[data-j-energi]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        jurnalState.form.energi = Number(btn.dataset.jEnergi);
+        renderJurnal(true);
+      });
+    });
+    sec.querySelectorAll("[data-j-level]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        jurnalState.form.prestasi_level = btn.dataset.jLevel;
+        renderJurnal(true);
+      });
+    });
+    sec.querySelectorAll("[data-j-dim]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const d = btn.dataset.jDim;
+        const idx = jurnalState.form.dimensi.indexOf(d);
+        if (idx >= 0) jurnalState.form.dimensi.splice(idx, 1);
+        else jurnalState.form.dimensi.push(d);
+        renderJurnal(true);
+      });
+    });
+
+    // Sync input teks tanpa kehilangan kursor
+    document.getElementById("j-ringkas")?.addEventListener("input", e => {
+      jurnalState.form.ringkas = e.target.value;
+    });
+    const isiEl = document.getElementById("j-isi");
+    isiEl?.addEventListener("input", e => {
+      jurnalState.form.isi = e.target.value;
+      const cntEl = document.getElementById("j-word-counter");
+      if (cntEl) {
+        cntEl.textContent = `${countWordsId(jurnalState.form.isi).toLocaleString("id-ID")} kata · ${jurnalState.form.isi.length.toLocaleString("id-ID")} karakter`;
+      }
+    });
+
+    async function doReflectJurnal(autoMeta = true) {
+      jurnalState.reflecting = true;
+      jurnalState.kompasMsg = "";
+      jurnalState.statusOk = true;
+      jurnalState.statusMsg = "Mencari kartu relevan & menyusun refleksi AI...";
+      renderJurnal(true);
+      try {
+        const resp = await fetch("/api/jurnal/refleksi", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tanggal: jurnalState.form.tanggal, auto_meta: autoMeta }),
+        });
+        const out = await resp.json();
+        if (resp.ok && out.ok && out.item) {
+          const it = out.item;
+          jurnalState.form.prestasi_level = it.prestasi_level || jurnalState.form.prestasi_level;
+          jurnalState.form.ringkas = it["prestasi_ringkas"] || jurnalState.form.ringkas;
+          jurnalState.form.dimensi = Array.isArray(it.dimensi) ? [...it.dimensi] : jurnalState.form.dimensi;
+          jurnalState.form.kartu_terkait = Array.isArray(it.kartu_terkait) ? [...it.kartu_terkait] : [];
+          jurnalState.form.refleksi_ai = it.refleksi_ai || "";
+          jurnalState.statusOk = true;
+          jurnalState.statusMsg = `Refleksi selesai (${out.model || out.mode}) · ${jurnalState.form.kartu_terkait.length} kartu dirujuk`;
+          await fetchJurnalList();
+        } else {
+          jurnalState.statusOk = false;
+          jurnalState.statusMsg = out.error || "Gagal menyusun refleksi AI.";
+        }
+      } catch {
+        jurnalState.statusOk = false;
+        jurnalState.statusMsg = "Gagal menghubungi server lokal untuk refleksi AI.";
+      } finally {
+        jurnalState.reflecting = false;
+        renderJurnal(true);
+      }
+    }
+
+    async function doSaveJurnal(triggerReflect = null) {
+      const isiVal = (jurnalState.form.isi || "").trim();
+      if (!isiVal) {
+        jurnalState.statusOk = false;
+        jurnalState.statusMsg = "Isi catatan masih kosong.";
+        renderJurnal(true);
+        return;
+      }
+      jurnalState.saving = true;
+      jurnalState.statusMsg = "";
+      jurnalState.kompasMsg = "";
+      renderJurnal(true);
+      let savedOk = false;
+      try {
+        const bodyPayload = {
+          tanggal: jurnalState.form.tanggal,
+          suasana: jurnalState.form.suasana,
+          energi: jurnalState.form.energi,
+          prestasi_level: jurnalState.form.prestasi_level,
+          dimensi: jurnalState.form.dimensi,
+          isi: isiVal,
+        };
+        bodyPayload["prestasi_ringkas"] = jurnalState.form.ringkas;
+        const resp = await fetch("/api/jurnal", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(bodyPayload),
+        });
+        const out = await resp.json();
+        if (resp.ok && out.ok) {
+          savedOk = true;
+          jurnalState.form.exists = true;
+          jurnalState.form.path_relatif = out.item?.path_relatif || jurnalState.form.path_relatif;
+          jurnalState.statusOk = true;
+          jurnalState.statusMsg = `Tersimpan ke ${jurnalState.form.path_relatif}`;
+          await fetchJurnalList();
+        } else {
+          jurnalState.statusOk = false;
+          jurnalState.statusMsg = out.error || "Gagal menyimpan jurnal.";
+        }
+      } catch {
+        jurnalState.statusOk = false;
+        jurnalState.statusMsg = "Gagal menghubungi server lokal.";
+      } finally {
+        jurnalState.saving = false;
+        renderJurnal(true);
+      }
+
+      const shouldReflect = triggerReflect !== null ? triggerReflect : jurnalState.autoReflect;
+      if (savedOk && shouldReflect) {
+        await doReflectJurnal(true);
+      }
+    }
+
+    document.getElementById("chk-j-auto-reflect")?.addEventListener("change", e => {
+      jurnalState.autoReflect = Boolean(e.target.checked);
+    });
+    document.getElementById("btn-j-save")?.addEventListener("click", () => doSaveJurnal());
+    document.getElementById("btn-j-reflect")?.addEventListener("click", async () => {
+      if (!jurnalState.form.exists || (jurnalState.form.isi || "").trim()) {
+        await doSaveJurnal(true);
+      } else {
+        await doReflectJurnal(true);
+      }
+    });
+    document.getElementById("btn-j-save-kompas")?.addEventListener("click", async () => {
+      const sikapTxt = extractSikapFromRefleksi(jurnalState.form.refleksi_ai);
+      if (!sikapTxt) return;
+      try {
+        const resp = await fetch("/api/jurnal/kompas", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sikap: sikapTxt,
+            tanggal: jurnalState.form.tanggal,
+            kartu: jurnalState.form.kartu_terkait || [],
+            dimensi: jurnalState.form.dimensi || [],
+          }),
+        });
+        const out = await resp.json();
+        if (resp.ok && out.ok) {
+          jurnalState.kompasItems = out.items || [];
+          jurnalState.kompasMsg = out.pesan || "Disimpan ke Kompas Sikap.";
+        } else {
+          jurnalState.kompasMsg = out.error || "Gagal menyimpan ke Kompas Sikap.";
+        }
+      } catch {
+        jurnalState.kompasMsg = "Gagal menghubungi server lokal.";
+      }
+      renderJurnal(true);
+    });
+    isiEl?.addEventListener("keydown", e => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        doSaveJurnal();
+      }
+    });
+  }
+
   // ======================== PANDUAN KONTEKSTUAL (? TOMBOL BANTUAN PER FITUR) ========================
   const FEATURE_TUTORIALS = {
     beranda: {
@@ -3530,6 +4612,17 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-26", "ringkasan":
         "<strong>📱 Sedang di HP / Web Online (Mode Antrean):</strong> Karena web online tidak terhubung ke harddisk laptop, cukup salin teks postingan → tempel langsung di kotak teks besar → klik <strong>Simpan</strong>. Catatan masuk ke <strong>🎒 Kantong Antrean Browser</strong> dan bisa disinkronkan 1-klik saat laptop menyala.",
         "<strong>📷 Dari Gambar / Screenshot (Khusus Laptop):</strong> Klik <strong>📷 Baca Teks dari Gambar / Screenshot</strong> untuk menyalin teks dari tangkapan layar secara otomatis.",
         "<strong>✂️ Atur Jumlah Kartu &amp; Topik:</strong> Pilih <em>Simpan Jadi 1 Kartu Utuh Saja</em> atau <em>Pecah Otomatis Jadi 1–3 Kartu Poin Inti</em>. Buka laci <em>Pengaturan Detail — Opsional</em> bila ingin memilih atau membuat topik baru sendiri."
+      ]
+    },
+    jurnal: {
+      title: "Cara Memakai Jurnal Harian & Biografi (Khusus Lokal)",
+      steps: [
+        "<strong>Tulis Tanpa Batas Kata:</strong> Pilih tanggal (default hari ini), isi suasana hati, energi, level prestasi, dimensi yang terlatih, lalu tulis cerita penghujung hari secara bebas di kotak besar.",
+        "<strong>Simpan Otomatis ke Markdown:</strong> Tekan <strong>Simpan Jurnal ke Markdown</strong> (atau <code>Ctrl+S</code>). File otomatis tersimpan rapi di <code>jurnal/YYYY/MM/YYYY-MM-DD.md</code>.",
+        "<strong>Tanggapan Berbasis Otak Ilmu Sendiri:</strong> Centang <em>Otomatis refleksi AI saat simpan</em> (atau klik <strong>✨ Minta Tanggapan &amp; Refleksi AI</strong>) untuk mengekstrak level prestasi, dimensi karakter, dan mendapat cermin refleksi bersitasi <code>[K-XXXX]</code> dari kartu Pohon Pengetahuan Anda.",
+        "<strong>Kompas Sikap:</strong> Klik <strong>🧭 Simpan ke Kompas Sikap</strong> pada pernyataan sikap yang resonan agar terkumpul rapi di sub-tab <em>Kompas Sikap</em> (<code>jurnal/_kompas_sikap.md</code>).",
+        "<strong>Timeline Biografi &amp; Radar Pertumbuhan:</strong> Buka sub-tab <em>🌳 Timeline Biografi</em> untuk melihat garis waktu pencapaian lintas tahun (filter Besar/Menengah/Kecil), dan <em>📈 Pertumbuhan Karakter</em> untuk melihat radar 5 dimensi &amp; tren bulanan berbasis bukti nyata.",
+        "<strong>100% Pribadi:</strong> Folder <code>jurnal/</code> dan tab ini hanya muncul di laptop lokal dan diblokir ketat dari situs publik."
       ]
     }
   };

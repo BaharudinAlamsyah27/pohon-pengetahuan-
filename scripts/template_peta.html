@@ -686,6 +686,132 @@ a:hover { text-decoration: underline; }
   border-color: var(--border-strong);
 }
 
+/* Jurnal & Biografi (Khusus Lokal — Neo-Brutalisme) */
+.jurnal-layout {
+  display: grid; grid-template-columns: 320px 1fr; gap: 18px; align-items: start;
+}
+.jurnal-panel {
+  background: var(--surface); border: 1.5px solid var(--border-strong);
+  border-radius: 12px; padding: 18px; box-shadow: 3px 3px 0 var(--border-strong);
+}
+.jurnal-sidebar {
+  position: sticky; top: 76px; display: flex; flex-direction: column; gap: 10px;
+  max-height: calc(100vh - 96px); overflow: hidden;
+}
+.jurnal-list {
+  display: flex; flex-direction: column; gap: 8px; overflow-y: auto;
+  padding-right: 2px; max-height: 52vh;
+}
+.jurnal-item {
+  width: 100%; text-align: left; padding: 10px 12px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--bg);
+  display: flex; flex-direction: column; gap: 5px;
+  transition: border-color 120ms ease-out, transform 120ms ease-out;
+}
+.jurnal-item:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+.jurnal-item.active {
+  border-color: var(--border-strong); background: var(--node-main-bg);
+  color: var(--node-main-text); box-shadow: 2px 2px 0 var(--border-strong);
+}
+.jurnal-item-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  font-size: 12.5px; font-weight: 700;
+}
+.jurnal-item-snippet {
+  font-size: 12.5px; color: var(--text-2); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.jurnal-item.active .jurnal-item-snippet { color: var(--node-main-text); opacity: 0.88; }
+.jurnal-pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.jurnal-pill {
+  min-height: 34px; padding: 5px 11px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: var(--surface-alt);
+  color: var(--text-2); font-size: 12.5px; font-weight: 600;
+  transition: border-color 120ms ease-out, background-color 120ms ease-out;
+}
+.jurnal-pill:hover { border-color: var(--border-strong); color: var(--text); }
+.jurnal-pill.active {
+  background: var(--node-main-bg); color: var(--node-main-text);
+  border-color: var(--border-strong);
+}
+.jurnal-textarea {
+  width: 100%; min-height: 320px; padding: 14px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border-strong); background: var(--bg); color: var(--text);
+  font-size: 15px; line-height: 1.7; resize: vertical;
+}
+.jurnal-textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.jurnal-meta-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px;
+}
+.jurnal-lvl-besar { background: #FEF3C7; color: #92400E; border-color: #D97706; }
+.jurnal-lvl-menengah { background: #DBEAFE; color: #1E40AF; border-color: #2563EB; }
+.jurnal-lvl-kecil { background: #DCFCE7; color: #166534; border-color: #16A34A; }
+.jurnal-lvl-catatan { background: var(--surface-alt); color: var(--text-2); border-color: var(--border); }
+[data-theme="dark"] .jurnal-lvl-besar { background: rgba(245,158,11,0.18); color: #FCD34D; border-color: #D97706; }
+[data-theme="dark"] .jurnal-lvl-menengah { background: rgba(59,130,246,0.18); color: #93C5FD; border-color: #3B82F6; }
+[data-theme="dark"] .jurnal-lvl-kecil { background: rgba(34,197,94,0.18); color: #86EFAC; border-color: #22C55E; }
+
+/* Fase 3: Timeline Biografi & Radar Pertumbuhan Karakter */
+.bio-year-block { margin-bottom: 22px; }
+.bio-year-head {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 6px 14px; border-radius: 9px;
+  background: var(--node-main-bg); color: var(--node-main-text);
+  border: 1.5px solid var(--border-strong); box-shadow: 2px 2px 0 var(--border-strong);
+  font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 16px;
+  margin-bottom: 12px;
+}
+.bio-month-label {
+  font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text-3); margin: 12px 0 8px 26px;
+}
+.bio-spine {
+  position: relative; margin-left: 14px; padding-left: 22px;
+  border-left: 3px solid var(--spine);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.bio-node {
+  position: relative; background: var(--bg);
+  border: 1.5px solid var(--border-strong); border-radius: 10px;
+  padding: 12px 14px; box-shadow: 2px 2px 0 var(--border-strong);
+}
+.bio-node.lvl-besar { border-width: 2px; background: var(--surface); }
+.bio-dot {
+  position: absolute; left: -31px; top: 16px;
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--border-strong); background: var(--node-sub-bg);
+}
+.bio-node.lvl-besar .bio-dot { background: #F59E0B; width: 16px; height: 16px; left: -32px; }
+.bio-node.lvl-menengah .bio-dot { background: #3B82F6; }
+.bio-node.lvl-kecil .bio-dot { background: #22C55E; }
+.radar-grid {
+  display: grid; grid-template-columns: 340px 1fr; gap: 18px; align-items: start;
+}
+.dim-bar-track {
+  height: 10px; border-radius: 99px; background: var(--surface-alt);
+  border: 1px solid var(--border-strong); overflow: hidden; margin: 6px 0 8px;
+}
+.dim-bar-fill {
+  height: 100%; background: var(--spine); border-radius: 99px;
+  transition: width 220ms ease-out;
+}
+.month-bars {
+  display: flex; align-items: flex-end; gap: 10px; overflow-x: auto;
+  padding: 14px 6px 4px; min-height: 170px;
+}
+.month-col {
+  min-width: 68px; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.month-bar-box {
+  width: 100%; max-width: 44px; height: 110px; display: flex; align-items: flex-end;
+  justify-content: center; background: var(--surface-alt);
+  border: 1px dashed var(--border); border-radius: 8px; padding: 3px;
+}
+.month-bar-fill {
+  width: 100%; border-radius: 5px; background: var(--node-main-bg);
+  border: 1.5px solid var(--border-strong); min-height: 6px;
+}
+
 @media (max-width: 1024px) {
   .topbar-inner { position: relative; }
   .nav-hamburger { display: inline-flex; }
@@ -698,7 +824,9 @@ a:hover { text-decoration: underline; }
   .nav-btn { justify-content: flex-start; width: 100%; }
 }
 @media (max-width: 900px) {
-  .tree-shell, .catalog-layout, .detail-grid, .hero-grid, .chat-shell { grid-template-columns: 1fr; }
+  .tree-shell, .catalog-layout, .detail-grid, .hero-grid, .chat-shell, .jurnal-layout, .radar-grid { grid-template-columns: 1fr; }
+  .jurnal-sidebar { position: static; max-height: none; }
+  .jurnal-meta-grid { grid-template-columns: 1fr; }
   .card-grid { grid-template-columns: 1fr; }
   .stat-strip, .feat-grid { grid-template-columns: repeat(2, 1fr); }
   .tangkap-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -726,6 +854,7 @@ a:hover { text-decoration: underline; }
     <button class="nav-btn" data-view="perpustakaan" title="Arsip teks asli postingan &amp; artikel">Sumber Asli</button>
     <button class="nav-btn" data-view="ulasan" id="nav-ulasan" title="Kartu yang sedang dicoba minggu ini">Praktek</button>
     <button class="nav-btn" data-view="analisis" id="nav-analisis" title="Bandingkan alat, susun langkah kerja, &amp; cek kelengkapan">Analisis</button>
+    <button class="nav-btn" data-view="jurnal" id="nav-jurnal" title="Jurnal harian pribadi &amp; timeline biografi (khusus lokal)">Jurnal</button>
     <button class="nav-btn" data-view="tangkap" id="nav-tangkap" title="Simpan postingan, link, atau gambar baru">+ Simpan Baru</button>
   </nav>
 
@@ -928,6 +1057,9 @@ a:hover { text-decoration: underline; }
 
   <!-- 9. ANALISIS BIG DATA: BANDINGKAN & PLAYBOOK (LOKAL SAJA) -->
   <section id="view-analisis" class="view" aria-label="Analisis Perbandingan dan Playbook"></section>
+
+  <!-- 10. JURNAL HARIAN & BIOGRAFI (LOKAL SAJA) -->
+  <section id="view-jurnal" class="view" aria-label="Jurnal Harian dan Timeline Biografi"></section>
 </main>
 
 <!-- SIDE A & SIDE B NEO-BRUTALIST STAMP RAILS (TERINSPIRASI PORTFOLIO ALAM) -->
@@ -1120,6 +1252,8 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
   if (!IS_LOKAL) {
     document.getElementById("nav-ulasan").style.display = "none";
     document.getElementById("nav-analisis").style.display = "none";
+    const navJurnal = document.getElementById("nav-jurnal");
+    if (navJurnal) navJurnal.style.display = "none";
     document.getElementById("f-penerapan").style.display = "none";
     document.getElementById("mode-badge").textContent = "Publik";
   } else {
@@ -1130,6 +1264,7 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
 
   // Navigation + Hash Routing
   function showView(v, pushHash = true) {
+    if ((v === "ulasan" || v === "analisis" || v === "jurnal") && !IS_LOKAL) v = "beranda";
     state.view = v;
     document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
     const target = document.getElementById("view-" + v);
@@ -1140,7 +1275,7 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       if (isAct) btn.setAttribute("aria-current", "page");
       else btn.removeAttribute("aria-current");
     });
-    if (pushHash && ["beranda", "tanya", "pohon", "timeline", "katalog", "perpustakaan", "ulasan", "analisis", "tangkap"].includes(v)) {
+    if (pushHash && ["beranda", "tanya", "pohon", "timeline", "katalog", "perpustakaan", "ulasan", "analisis", "jurnal", "tangkap"].includes(v)) {
       if (location.hash !== "#" + v) history.pushState(null, "", "#" + v);
     }
     if (v === "beranda") renderBeranda();
@@ -1151,6 +1286,7 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
     if (v === "perpustakaan") renderLibrary();
     if (v === "ulasan" && IS_LOKAL) renderUlasan();
     if (v === "analisis" && IS_LOKAL) renderAnalisis();
+    if (v === "jurnal" && IS_LOKAL) renderJurnal();
     if (v === "tangkap") renderTangkap();
     window.scrollTo({ top: 0, behavior: "instant" });
   }
@@ -1172,8 +1308,8 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       const slug = h.slice(7);
       if (BRANCH_MAP[slug]) { openBranchPage(slug, false); return; }
     }
-    if (["beranda", "tanya", "pohon", "timeline", "katalog", "perpustakaan", "ulasan", "analisis", "tangkap"].includes(h)) {
-      if ((h === "ulasan" || h === "analisis") && !IS_LOKAL) { showView("beranda", false); return; }
+    if (["beranda", "tanya", "pohon", "timeline", "katalog", "perpustakaan", "ulasan", "analisis", "jurnal", "tangkap"].includes(h)) {
+      if ((h === "ulasan" || h === "analisis" || h === "jurnal") && !IS_LOKAL) { showView("beranda", false); return; }
       showView(h, false);
       return;
     }
@@ -1246,7 +1382,7 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
             <button type="button" class="btn-primary" data-go-view="pohon">Buka Peta Pohon →</button>
             <button type="button" class="btn-secondary" data-go-view="tanya">Tanya Isi Catatan</button>
             <button type="button" class="btn-secondary" data-go-view="katalog">Cari Kartu</button>
-            ${IS_LOKAL ? `<button type="button" class="btn-secondary" data-go-view="tangkap">+ Simpan Postingan Baru</button><button type="button" class="btn-secondary" data-go-view="analisis">Bandingkan &amp; Analisis</button>` : `<button type="button" class="btn-secondary" data-go-view="timeline">Jalur Usia</button>`}
+            ${IS_LOKAL ? `<button type="button" class="btn-secondary" data-go-view="tangkap">+ Simpan Postingan Baru</button><button type="button" class="btn-secondary" data-go-view="jurnal">Jurnal Harian</button><button type="button" class="btn-secondary" data-go-view="analisis">Bandingkan &amp; Analisis</button>` : `<button type="button" class="btn-secondary" data-go-view="timeline">Jalur Usia</button>`}
           </div>
         </div>
 
@@ -2673,6 +2809,9 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
                     <option value="kesehatan">Kesehatan &amp; Fisik</option>
                     <option value="motivasi-dan-mindset">Motivasi &amp; Mindset</option>
                     <option value="relasi">Relasi</option>
+                    <option value="agama">Agama &amp; Spiritualitas</option>
+                    <option value="berita">Berita &amp; Tren</option>
+                    <option value="kliping-hiburan">Kliping Hiburan (Non-AI)</option>
                     <option value="lainnya">Lainnya</option>
                   </optgroup>
                 </select>
@@ -3456,6 +3595,949 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
     });
   }
 
+  // ======================== 10. JURNAL HARIAN & BIOGRAFI (KHUSUS LOKAL) ========================
+  const jurnalState = {
+    loaded: false,
+    items: [],
+    tahunTersedia: [],
+    bulanTersedia: [],
+    totalSemua: 0,
+    totalKata: 0,
+    hitungLevel: { besar: 0, menengah: 0, kecil: 0, catatan: 0 },
+    filterTahun: "",
+    filterBulan: "",
+    filterLevel: "",
+    filterDimensi: "",
+    filterQ: "",
+    selectedDate: new Date().toISOString().slice(0, 10),
+    form: {
+      tanggal: new Date().toISOString().slice(0, 10),
+      suasana: "tenang",
+      energi: 3,
+      prestasi_level: "kecil",
+      ringkas: "",
+      dimensi: [],
+      isi: "",
+      refleksi_ai: "",
+      kartu_terkait: [],
+      exists: false,
+      path_relatif: "",
+    },
+    statusMsg: "",
+    statusOk: true,
+    saving: false,
+    reflecting: false,
+    autoReflect: true,
+    subTab: "harian", // "harian" | "biografi" | "pertumbuhan" | "kompas"
+    kompasItems: [],
+    kompasMsg: "",
+    biografiData: null,
+    bioFilterTahun: "",
+    bioFilterLevel: "",
+  };
+
+  const BULAN_ID = {
+    "01": "Januari", "02": "Februari", "03": "Maret", "04": "April",
+    "05": "Mei", "06": "Juni", "07": "Juli", "08": "Agustus",
+    "09": "September", "10": "Oktober", "11": "November", "12": "Desember",
+  };
+  const SUASANA_OPTS = [
+    ["tenang", "Tenang"],
+    ["semangat", "Semangat"],
+    ["syukur", "Syukur"],
+    ["biasa", "Biasa"],
+    ["lelah", "Lelah"],
+    ["cemas", "Cemas"],
+  ];
+  const PRESTASI_OPTS = [
+    ["besar", "🏆 Prestasi Besar"],
+    ["menengah", "⚡ Menengah"],
+    ["kecil", "🌱 Kecil"],
+    ["catatan", "📝 Catatan"],
+  ];
+  const DIMENSI_OPTS = [
+    ["disiplin", "Disiplin"],
+    ["kesehatan", "Kesehatan"],
+    ["skill-karier", "Skill & Karier"],
+    ["mental-sikap", "Mental & Sikap"],
+    ["relasi", "Relasi"],
+  ];
+
+  function countWordsId(txt) {
+    const s = String(txt || "").trim();
+    return s ? s.split(/\s+/).length : 0;
+  }
+
+  function levelBadgeHtml(lvl) {
+    const map = {
+      besar: ["jurnal-lvl-besar", "🏆 Besar"],
+      menengah: ["jurnal-lvl-menengah", "⚡ Menengah"],
+      kecil: ["jurnal-lvl-kecil", "🌱 Kecil"],
+      catatan: ["jurnal-lvl-catatan", "📝 Catatan"],
+    };
+    const [cls, lbl] = map[lvl] || map.catatan;
+    return `<span class="badge ${cls}">${lbl}</span>`;
+  }
+
+  async function fetchJurnalList() {
+    if (!HAS_SERVER) return;
+    const qs = new URLSearchParams();
+    if (jurnalState.filterTahun) qs.set("tahun", jurnalState.filterTahun);
+    if (jurnalState.filterBulan) qs.set("bulan", jurnalState.filterBulan);
+    if (jurnalState.filterLevel) qs.set("level", jurnalState.filterLevel);
+    if (jurnalState.filterDimensi) qs.set("dimensi", jurnalState.filterDimensi);
+    if (jurnalState.filterQ) qs.set("q", jurnalState.filterQ);
+    try {
+      const resp = await fetch("/api/jurnal?" + qs.toString());
+      if (!resp.ok) return;
+      const data = await resp.json();
+      jurnalState.items = data.items || [];
+      jurnalState.tahunTersedia = data.tahun_tersedia || [];
+      jurnalState.bulanTersedia = data.bulan_tersedia || [];
+      jurnalState.totalSemua = data.total_semua || 0;
+      jurnalState.totalKata = data.total_kata || 0;
+      jurnalState.hitungLevel = data.hitung_level || { besar: 0, menengah: 0, kecil: 0, catatan: 0 };
+      jurnalState.loaded = true;
+    } catch {}
+  }
+
+  async function loadJurnalByDate(tgl) {
+    jurnalState.selectedDate = tgl;
+    jurnalState.form.tanggal = tgl;
+    if (!HAS_SERVER) return;
+    try {
+      const resp = await fetch("/api/jurnal/" + encodeURIComponent(tgl));
+      if (resp.ok) {
+        const data = await resp.json();
+        const it = data.item || {};
+        jurnalState.form = {
+          tanggal: it.tanggal || tgl,
+          suasana: it.suasana || "tenang",
+          energi: Number(it.energi || 3),
+          prestasi_level: it.prestasi_level || "kecil",
+          ringkas: it["prestasi_ringkas"] || "",
+          dimensi: Array.isArray(it.dimensi) ? [...it.dimensi] : [],
+          isi: it.isi || "",
+          refleksi_ai: it.refleksi_ai || "",
+          kartu_terkait: Array.isArray(it.kartu_terkait) ? [...it.kartu_terkait] : [],
+          exists: true,
+          path_relatif: it.path_relatif || "",
+        };
+      } else {
+        jurnalState.form = {
+          tanggal: tgl,
+          suasana: "tenang",
+          energi: 3,
+          prestasi_level: "kecil",
+          ringkas: "",
+          dimensi: [],
+          isi: "",
+          refleksi_ai: "",
+          kartu_terkait: [],
+          exists: false,
+          path_relatif: `jurnal/${tgl.slice(0, 4)}/${tgl.slice(5, 7)}/${tgl}.md`,
+        };
+      }
+    } catch {}
+  }
+
+  async function fetchKompasList() {
+    if (!HAS_SERVER) return;
+    try {
+      const resp = await fetch("/api/jurnal/kompas");
+      if (!resp.ok) return;
+      const data = await resp.json();
+      jurnalState.kompasItems = data.items || [];
+    } catch {}
+  }
+
+  async function fetchBiografiData() {
+    if (!HAS_SERVER) return;
+    const qs = new URLSearchParams();
+    if (jurnalState.bioFilterTahun) qs.set("tahun", jurnalState.bioFilterTahun);
+    if (jurnalState.bioFilterLevel) qs.set("level", jurnalState.bioFilterLevel);
+    try {
+      const resp = await fetch("/api/jurnal/biografi?" + qs.toString());
+      if (!resp.ok) return;
+      jurnalState.biografiData = await resp.json();
+    } catch {}
+  }
+
+  function buildRadarSvg(dimStats) {
+    const stats = (dimStats && dimStats.length === 5) ? dimStats : DIMENSI_OPTS.map(([k, nama]) => ({ kode: k, nama, skor: 0, frekuensi: 0 }));
+    const cx = 160, cy = 152, maxR = 96;
+    const cs = getComputedStyle(document.documentElement);
+    const spine = cs.getPropertyValue("--spine").trim() || "#2B6CB0";
+    const borderCol = cs.getPropertyValue("--border").trim() || "#D6DDD9";
+    const strongCol = cs.getPropertyValue("--border-strong").trim() || "#1E2421";
+    const textCol = cs.getPropertyValue("--text").trim() || "#141A17";
+    const text2Col = cs.getPropertyValue("--text-2").trim() || "#44534C";
+
+    const angles = stats.map((_, i) => (-Math.PI / 2) + (i * 2 * Math.PI / stats.length));
+    const pt = (r, ang) => [cx + r * Math.cos(ang), cy + r * Math.sin(ang)];
+
+    const rings = [0.25, 0.5, 0.75, 1.0].map(f => {
+      const pts = angles.map(a => pt(maxR * f, a).map(v => v.toFixed(1)).join(",")).join(" ");
+      return `<polygon points="${pts}" fill="none" stroke="${borderCol}" stroke-width="${f === 1 ? 1.5 : 1}" />`;
+    }).join("");
+
+    const axes = angles.map(a => {
+      const [x, y] = pt(maxR, a);
+      return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${borderCol}" stroke-width="1" />`;
+    }).join("");
+
+    const dataPts = stats.map((s, i) => {
+      const ratio = Math.max(0.08, Math.min(1, (s.skor || 0) / 100));
+      return pt(maxR * ratio, angles[i]);
+    });
+    const polyStr = dataPts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
+    const dots = dataPts.map(([x, y], i) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5" fill="${spine}" stroke="${strongCol}" stroke-width="1.5"><title>${esc(stats[i].nama)}: ${stats[i].skor}% (${stats[i].frekuensi} hari)</title></circle>`).join("");
+
+    const labels = stats.map((s, i) => {
+      const [lx, ly] = pt(maxR + 24, angles[i]);
+      const anchor = Math.abs(lx - cx) < 12 ? "middle" : (lx > cx ? "start" : "end");
+      return `
+        <text x="${lx.toFixed(1)}" y="${(ly - 2).toFixed(1)}" text-anchor="${anchor}" font-size="11.5" font-weight="700" fill="${textCol}">${esc(s.nama)}</text>
+        <text x="${lx.toFixed(1)}" y="${(ly + 12).toFixed(1)}" text-anchor="${anchor}" font-size="10.5" fill="${text2Col}">${s.skor}% · ${s.frekuensi}h</text>
+      `;
+    }).join("");
+
+    return `
+      <svg viewBox="0 0 320 304" style="width:100%;max-width:320px;height:auto;display:block;margin:0 auto" role="img" aria-label="Radar Pertumbuhan 5 Dimensi Karakter">
+        ${rings}
+        ${axes}
+        <polygon points="${polyStr}" fill="${spine}" fill-opacity="0.22" stroke="${spine}" stroke-width="2.5" />
+        ${dots}
+        ${labels}
+      </svg>
+    `;
+  }
+
+  function linkifyCardIdsHtml(rawText) {
+    const escaped = esc(rawText || "");
+    return escaped
+      .replace(/\[\[(K-\d{4,6})\]\]|\[(K-\d{4,6})\]/g, (_m, g1, g2) => {
+        const cid = g1 || g2;
+        return `<button type="button" class="badge" data-open-j-card="${cid}" style="cursor:pointer;border-color:var(--border-strong);background:var(--node-main-bg);color:var(--node-main-text);font-weight:700">[${cid}]</button>`;
+      })
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/_([^_]+)_/g, "<em>$1</em>");
+  }
+
+  function extractSikapFromRefleksi(refMd) {
+    const m = String(refMd || "").match(/\*\*Pernyataan Sikap:\*\*\s*([^\n]+)/);
+    return m ? m[1].trim() : "";
+  }
+
+  async function renderJurnal(skipFetch = false) {
+    const sec = document.getElementById("view-jurnal");
+    if (!sec || !IS_LOKAL) return;
+
+    if (!HAS_SERVER) {
+      sec.innerHTML = `
+        <div class="jurnal-panel" style="max-width:680px;margin:24px auto">
+          <span class="badge">Khusus Mode Lokal (Privasi Ketat)</span>
+          <h2 style="margin:10px 0 8px">Jurnal Harian &amp; Timeline Biografi</h2>
+          <p style="color:var(--text-2);margin:0 0 12px">
+            Modul Jurnal Harian menyimpan seluruh tulisan pribadi Anda sebagai file Markdown murni di folder <code>jurnal/YYYY/MM/YYYY-MM-DD.md</code> pada laptop Anda dan <strong>tidak pernah diunggah ke web publik</strong>.
+          </p>
+          <p style="color:var(--text-2);margin:0">
+            Jalankan <code>tombol-cepat/1-Buka-Aplikasi-Lokal.bat</code> (atau <code>python scripts/server_lokal.py</code>) lalu buka <code>http://127.0.0.1:8765/#jurnal</code> untuk mulai menulis tanpa batas kata.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    if (!skipFetch && !jurnalState.loaded) {
+      await Promise.all([fetchJurnalList(), fetchKompasList(), fetchBiografiData()]);
+      await loadJurnalByDate(jurnalState.selectedDate);
+    }
+
+    const f = jurnalState.form;
+    const wordCnt = countWordsId(f.isi);
+    const charCnt = (f.isi || "").length;
+    const hl = jurnalState.hitungLevel || {};
+    const extractedSikap = extractSikapFromRefleksi(f.refleksi_ai);
+    const bio = jurnalState.biografiData || { tahun_tersedia: [], total_hari: 0, total_timeline: 0, rata_energi: 0, streak_saat_ini: 0, streak_terpanjang: 0, hitung_level: {}, suasana_stats: {}, timeline: [], dimensi_stats: [], tren_bulanan: [] };
+
+    sec.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <h1 style="font-size:22px">Jurnal Harian &amp; Biografi</h1>
+            <span class="badge">🔒 Khusus Lokal · Anti-Bocor</span>
+            <button type="button" class="help-q-btn" data-help-key="jurnal" title="Cara memakai Jurnal Harian">?</button>
+          </div>
+          <p style="margin:4px 0 0;font-size:13.5px;color:var(--text-2)">
+            Tulis refleksi penghujung hari tanpa batas kata, pantau garis waktu biografi lintas tahun, dan lacak pertumbuhan 5 dimensi karakter Anda.
+          </p>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button type="button" class="jurnal-pill ${jurnalState.subTab === "harian" ? "active" : ""}" id="btn-jtab-harian">📝 Jurnal Harian</button>
+          <button type="button" class="jurnal-pill ${jurnalState.subTab === "biografi" ? "active" : ""}" id="btn-jtab-biografi">🌳 Timeline Biografi</button>
+          <button type="button" class="jurnal-pill ${jurnalState.subTab === "pertumbuhan" ? "active" : ""}" id="btn-jtab-pertumbuhan">📈 Pertumbuhan Karakter</button>
+          <button type="button" class="jurnal-pill ${jurnalState.subTab === "kompas" ? "active" : ""}" id="btn-jtab-kompas">🧭 Kompas Sikap (${jurnalState.kompasItems.length})</button>
+          <button type="button" class="btn-secondary" id="btn-jurnal-today">+ Tulis Hari Ini</button>
+        </div>
+      </div>
+      <div class="help-drawer-box" id="help-box-jurnal"></div>
+
+      <div class="stat-strip" style="margin-bottom:16px">
+        <div class="stat-box"><div class="stat-num">${jurnalState.totalSemua}</div><div class="stat-lbl">Total Hari Tercatat</div></div>
+        <div class="stat-box"><div class="stat-num">${jurnalState.totalKata.toLocaleString("id-ID")}</div><div class="stat-lbl">Total Kata Tersimpan</div></div>
+        <div class="stat-box"><div class="stat-num">${hl.besar || 0} / ${hl.menengah || 0}</div><div class="stat-lbl">🏆 Besar · ⚡ Menengah</div></div>
+        <div class="stat-box"><div class="stat-num">${bio.streak_saat_ini || 0}h <span style="font-size:12px;font-weight:500;color:var(--text-3)">(rekor ${bio.streak_terpanjang || 0}h)</span></div><div class="stat-lbl">Konsistensi Menulis</div></div>
+      </div>
+
+      ${jurnalState.subTab === "biografi" ? `
+        <div class="jurnal-panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--border)">
+            <div>
+              <h2 style="font-size:18px">🌳 Timeline Biografi Interaktif</h2>
+              <p style="margin:4px 0 0;font-size:13px;color:var(--text-2)">Garis waktu perjalanan hidup &amp; pencapaian dari catatan harian Anda. Saring berdasarkan tahun dan bobot milestone.</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <select id="bio-filter-tahun" class="filter-select" style="width:auto;min-width:130px" aria-label="Filter Tahun Biografi">
+                <option value="">Semua Tahun</option>
+                ${(bio.tahun_tersedia || []).map(y => `<option value="${esc(y)}" ${jurnalState.bioFilterTahun === y ? "selected" : ""}>${esc(y)}</option>`).join("")}
+              </select>
+              <span class="badge">${bio.total_timeline || 0} milestone</span>
+            </div>
+          </div>
+
+          <div class="jurnal-pill-row" style="margin-bottom:18px">
+            <button type="button" class="jurnal-pill ${!jurnalState.bioFilterLevel ? "active" : ""}" data-bio-lvl="">Semua (${bio.total_hari || 0})</button>
+            <button type="button" class="jurnal-pill ${jurnalState.bioFilterLevel === "besar" ? "active" : ""}" data-bio-lvl="besar">🏆 Prestasi Besar (${(bio.hitung_level || {}).besar || 0})</button>
+            <button type="button" class="jurnal-pill ${jurnalState.bioFilterLevel === "menengah" ? "active" : ""}" data-bio-lvl="menengah">⚡ Menengah (${(bio.hitung_level || {}).menengah || 0})</button>
+            <button type="button" class="jurnal-pill ${jurnalState.bioFilterLevel === "kecil" ? "active" : ""}" data-bio-lvl="kecil">🌱 Kecil (${(bio.hitung_level || {}).kecil || 0})</button>
+            <button type="button" class="jurnal-pill ${jurnalState.bioFilterLevel === "catatan" ? "active" : ""}" data-bio-lvl="catatan">📝 Catatan (${(bio.hitung_level || {}).catatan || 0})</button>
+          </div>
+
+          ${(bio.timeline || []).length === 0
+            ? `<div class="tl-empty">Belum ada milestone pada filter ini. Tulis catatan harian di sub-tab <strong>📝 Jurnal Harian</strong> agar garis waktu biografi Anda mulai tumbuh.</div>`
+            : (bio.timeline || []).map(yg => `
+              <div class="bio-year-block">
+                <div class="bio-year-head"><span>📅 Tahun ${esc(yg.tahun)}</span><span class="badge">${yg.total} entri</span></div>
+                ${(yg.bulan_list || []).map(mg => `
+                  <div class="bio-month-label">${esc(BULAN_ID[mg.bulan] || mg.bulan)} ${esc(yg.tahun)} (${mg.items.length})</div>
+                  <div class="bio-spine">
+                    ${mg.items.map(it => {
+                      const judul = it["prestasi_ringkas"] || it.cuplikan || "(Tanpa judul)";
+                      return `
+                        <article class="bio-node lvl-${esc(it.prestasi_level)}">
+                          <span class="bio-dot" aria-hidden="true"></span>
+                          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+                            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                              <strong style="font-size:13.5px;font-family:ui-monospace,monospace">${esc(it.tanggal)}</strong>
+                              ${levelBadgeHtml(it.prestasi_level)}
+                              <span class="badge">${esc(it.suasana)} · E${it.energi}/5</span>
+                            </div>
+                            <button type="button" class="btn-secondary" data-bio-open-date="${esc(it.tanggal)}" style="min-height:30px;padding:3px 10px;font-size:12px">Buka Catatan →</button>
+                          </div>
+                          <div style="font-size:15px;font-weight:700;margin-bottom:5px;line-height:1.4">${esc(judul)}</div>
+                          ${it["prestasi_ringkas"] && it.cuplikan ? `<div style="font-size:13px;color:var(--text-2);margin-bottom:8px;line-height:1.5">${esc(it.cuplikan)}</div>` : ""}
+                          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+                            <div style="display:flex;gap:5px;flex-wrap:wrap">
+                              ${(it.dimensi || []).map(d => `<span class="badge">${esc(d)}</span>`).join("")}
+                              ${(it.kartu_terkait || []).map(cid => `<button type="button" class="badge" data-open-j-card="${esc(cid)}" style="cursor:pointer;border-color:var(--border-strong);background:var(--node-main-bg);color:var(--node-main-text);font-weight:700">[${esc(cid)}]</button>`).join("")}
+                            </div>
+                            <span style="font-size:11.5px;color:var(--text-3)">${it.jumlah_kata} kata</span>
+                          </div>
+                        </article>
+                      `;
+                    }).join("")}
+                  </div>
+                `).join("")}
+              </div>
+            `).join("")}
+        </div>
+      ` : jurnalState.subTab === "pertumbuhan" ? `
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="jurnal-panel">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+              <div>
+                <h2 style="font-size:18px">📈 Evaluasi Pertumbuhan 5 Dimensi Karakter &amp; Kemampuan</h2>
+                <p style="margin:4px 0 0;font-size:13px;color:var(--text-2)">Dihitung dari bukti nyata catatan harian Anda (bobot milestone: Besar 3×, Menengah 2×, Kecil 1×, Catatan 0.5×).</p>
+              </div>
+              <select id="grow-filter-tahun" class="filter-select" style="width:auto;min-width:130px" aria-label="Filter Tahun Pertumbuhan">
+                <option value="">Semua Tahun</option>
+                ${(bio.tahun_tersedia || []).map(y => `<option value="${esc(y)}" ${jurnalState.bioFilterTahun === y ? "selected" : ""}>${esc(y)}</option>`).join("")}
+              </select>
+            </div>
+
+            ${(bio.total_hari || 0) === 0
+              ? `<div class="tl-empty">Belum ada data catatan harian untuk dihitung. Mulai menulis di sub-tab <strong>📝 Jurnal Harian</strong> agar grafik pertumbuhan karakter muncul.</div>`
+              : `
+                <div class="radar-grid">
+                  <div style="background:var(--bg);border:1.5px solid var(--border-strong);border-radius:12px;padding:14px;text-align:center">
+                    <div style="font-size:13px;font-weight:700;margin-bottom:6px">Radar Keseimbangan 5 Dimensi</div>
+                    ${buildRadarSvg(bio.dimensi_stats)}
+                    <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);display:flex;justify-content:space-around;font-size:12.5px;color:var(--text-2)">
+                      <span>Rata-rata Energi: <strong>${bio.rata_energi}/5</strong></span>
+                      <span>Total Bukti: <strong>${bio.total_hari} hari</strong></span>
+                    </div>
+                  </div>
+
+                  <div style="display:grid;gap:10px">
+                    ${(bio.dimensi_stats || []).map(ds => `
+                      <div style="background:var(--bg);border:1.5px solid var(--border-strong);border-radius:10px;padding:12px 14px">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                          <strong style="font-size:14.5px">${esc(ds.nama)}</strong>
+                          <span class="badge">${ds.frekuensi} hari · skor relatif ${ds.skor}%</span>
+                        </div>
+                        <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${ds.skor}%"></div></div>
+                        ${(ds.bukti_terbaru && ds.bukti_terbaru.length)
+                          ? `<div style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-2)">
+                              ${ds.bukti_terbaru.map(b => `
+                                <button type="button" data-bio-open-date="${esc(b.tanggal)}" style="background:none;border:none;padding:2px 0;text-align:left;cursor:pointer;color:var(--text-2)">
+                                  <strong style="color:var(--text)">${esc(b.tanggal)}</strong> (${esc(b.level)}): ${esc(b.ringkas)}
+                                </button>
+                              `).join("")}
+                            </div>`
+                          : `<div style="font-size:12px;color:var(--text-3)">Belum ada bukti harian untuk dimensi ini.</div>`}
+                      </div>
+                    `).join("")}
+                  </div>
+                </div>
+              `}
+          </div>
+
+          ${(bio.tren_bulanan && bio.tren_bulanan.length) ? `
+            <div class="jurnal-panel">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+                <h3 style="font-size:16px">📊 Tren Konsistensi &amp; Energi Lintas Bulan</h3>
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                  ${Object.entries(bio.suasana_stats || {}).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([s, cnt]) => `<span class="badge">${esc(s)}: ${cnt}h</span>`).join("")}
+                </div>
+              </div>
+              <div class="month-bars">
+                ${(() => {
+                  const maxH = Math.max(1, ...bio.tren_bulanan.map(m => m.jumlah_hari));
+                  return bio.tren_bulanan.map(m => {
+                    const pct = Math.max(10, Math.round((m.jumlah_hari / maxH) * 100));
+                    return `
+                      <div class="month-col" title="${esc(m.bulan_key)}: ${m.jumlah_hari} hari, energi ${m.rata_energi}/5, 🏆${m.besar} ⚡${m.menengah} 🌱${m.kecil}">
+                        <span style="font-size:11.5px;font-weight:700">${m.jumlah_hari}h</span>
+                        <div class="month-bar-box"><div class="month-bar-fill" style="height:${pct}%"></div></div>
+                        <span style="font-size:11.5px;font-weight:700">${esc(m.bulan_key)}</span>
+                        <span style="font-size:11px;color:var(--text-3)">E${m.rata_energi} · 🏆${m.besar}</span>
+                      </div>
+                    `;
+                  }).join("");
+                })()}
+              </div>
+            </div>
+          ` : ""}
+        </div>
+      ` : jurnalState.subTab === "kompas" ? `
+        <div class="jurnal-panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+            <div>
+              <h2 style="font-size:18px">🧭 Kompas Sikap Pribadi</h2>
+              <p style="margin:4px 0 0;font-size:13px;color:var(--text-2)">Kumpulan pernyataan sikap &amp; prinsip hidup yang Anda pilih dari refleksi harian dan Pohon Pengetahuan (tersimpan di <code>jurnal/_kompas_sikap.md</code>).</p>
+            </div>
+            <span class="badge">${jurnalState.kompasItems.length} prinsip</span>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+            <input type="text" id="kompas-manual-inp" class="search-input" style="flex:1;min-width:240px" placeholder="Tambah pernyataan sikap manual (opsional)...">
+            <button type="button" class="btn-primary" id="btn-kompas-manual-add">+ Simpan Prinsip</button>
+          </div>
+          ${jurnalState.kompasMsg ? `<div style="margin-bottom:12px"><span class="badge" style="color:var(--trust-high);background:var(--trust-high-bg)">${esc(jurnalState.kompasMsg)}</span></div>` : ""}
+
+          ${jurnalState.kompasItems.length === 0
+            ? `<div class="tl-empty">Belum ada pernyataan sikap tersimpan. Tulis jurnal harian, klik <strong>✨ Minta Tanggapan &amp; Refleksi AI</strong>, lalu klik <strong>🧭 Simpan ke Kompas Sikap</strong>.</div>`
+            : `<div style="display:grid;gap:10px">
+                ${jurnalState.kompasItems.map(k => `
+                  <div style="padding:12px 14px;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--bg);box-shadow:2px 2px 0 var(--border-strong)">
+                    <div style="font-size:14.5px;line-height:1.55;margin-bottom:8px">${linkifyCardIdsHtml(k.sikap)}</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--text-3)">
+                      <span>Dari jurnal <strong>${esc(k.tanggal)}</strong></span>
+                      <div style="display:flex;gap:5px;flex-wrap:wrap">
+                        ${(k.dimensi || []).map(d => `<span class="badge">${esc(d)}</span>`).join("")}
+                      </div>
+                    </div>
+                  </div>
+                `).join("")}
+              </div>`}
+        </div>
+      ` : `
+
+      <div class="jurnal-layout">
+        <aside class="jurnal-panel jurnal-sidebar" aria-label="Arsip Jurnal Tahunan Bulanan Harian">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <strong style="font-size:15px">Arsip Catatan</strong>
+            <span class="badge">${jurnalState.items.length} entri</span>
+          </div>
+
+          <input type="search" id="j-search" class="search-input" value="${esc(jurnalState.filterQ)}" placeholder="🔍 Cari kata di semua jurnal..." aria-label="Cari jurnal">
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <select id="j-filter-tahun" class="filter-select" aria-label="Filter Tahun">
+              <option value="">Semua Tahun</option>
+              ${jurnalState.tahunTersedia.map(y => `<option value="${esc(y)}" ${jurnalState.filterTahun === y ? "selected" : ""}>${esc(y)}</option>`).join("")}
+            </select>
+            <select id="j-filter-bulan" class="filter-select" aria-label="Filter Bulan">
+              <option value="">Semua Bulan</option>
+              ${Object.entries(BULAN_ID).map(([k, v]) => `<option value="${k}" ${jurnalState.filterBulan === k ? "selected" : ""}>${k} · ${v}</option>`).join("")}
+            </select>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <select id="j-filter-level" class="filter-select" aria-label="Filter Level Prestasi">
+              <option value="">Semua Level</option>
+              ${PRESTASI_OPTS.map(([k, v]) => `<option value="${k}" ${jurnalState.filterLevel === k ? "selected" : ""}>${v}</option>`).join("")}
+            </select>
+            <select id="j-filter-dimensi" class="filter-select" aria-label="Filter Dimensi">
+              <option value="">Semua Dimensi</option>
+              ${DIMENSI_OPTS.map(([k, v]) => `<option value="${k}" ${jurnalState.filterDimensi === k ? "selected" : ""}>${v}</option>`).join("")}
+            </select>
+          </div>
+
+          ${(jurnalState.filterTahun || jurnalState.filterBulan || jurnalState.filterLevel || jurnalState.filterDimensi || jurnalState.filterQ)
+            ? `<button type="button" class="btn-secondary" id="btn-j-reset" style="min-height:32px;font-size:12px;justify-content:center">↺ Reset Filter Arsip</button>`
+            : ""}
+
+          <div class="jurnal-list" id="jurnal-list">
+            ${jurnalState.items.length === 0
+              ? `<div class="tl-empty">Belum ada catatan yang cocok. Mulai tulis jurnal pertama Anda di sebelah kanan.</div>`
+              : jurnalState.items.map(it => {
+                  const isAct = it.tanggal === jurnalState.selectedDate;
+                  const ringkas = it["prestasi_ringkas"] || "";
+                  return `
+                    <button type="button" class="jurnal-item ${isAct ? "active" : ""}" data-j-date="${esc(it.tanggal)}">
+                      <div class="jurnal-item-top">
+                        <span>${esc(it.tanggal)}</span>
+                        ${levelBadgeHtml(it.prestasi_level)}
+                      </div>
+                      ${ringkas ? `<div style="font-size:12.5px;font-weight:700">${esc(ringkas)}</div>` : ""}
+                      <div class="jurnal-item-snippet">${esc(it.cuplikan || "")}</div>
+                      <div style="font-size:11.5px;opacity:0.75;display:flex;justify-content:space-between;gap:6px">
+                        <span>${esc(it.suasana)} · E${it.energi}/5</span>
+                        <span>${it.jumlah_kata} kata</span>
+                      </div>
+                    </button>
+                  `;
+                }).join("")}
+          </div>
+        </aside>
+
+        <div class="jurnal-panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--border)">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <label for="j-date-input" style="font-size:13px;font-weight:700">Tanggal:</label>
+              <input type="date" id="j-date-input" class="filter-select" style="width:auto;min-width:155px" value="${esc(f.tanggal)}">
+              <span class="badge">${f.exists ? "Tersimpan di Markdown" : "Catatan Baru"}</span>
+            </div>
+            <span style="font-size:12px;color:var(--text-3);font-family:ui-monospace,monospace">${esc(f.path_relatif)}</span>
+          </div>
+
+          <div class="jurnal-meta-grid">
+            <div>
+              <div style="font-size:12.5px;font-weight:700;margin-bottom:6px;color:var(--text-2)">Suasana Hati</div>
+              <div class="jurnal-pill-row">
+                ${SUASANA_OPTS.map(([k, lbl]) => `
+                  <button type="button" class="jurnal-pill ${f.suasana === k ? "active" : ""}" data-j-suasana="${k}">${lbl}</button>
+                `).join("")}
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:12.5px;font-weight:700;margin-bottom:6px;color:var(--text-2)">Tingkat Energi (1–5)</div>
+              <div class="jurnal-pill-row">
+                ${[1, 2, 3, 4, 5].map(n => `
+                  <button type="button" class="jurnal-pill ${f.energi === n ? "active" : ""}" data-j-energi="${n}">${n}</button>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+
+          <div class="jurnal-meta-grid">
+            <div>
+              <div style="font-size:12.5px;font-weight:700;margin-bottom:6px;color:var(--text-2)">Level Prestasi / Milestone</div>
+              <div class="jurnal-pill-row">
+                ${PRESTASI_OPTS.map(([k, lbl]) => `
+                  <button type="button" class="jurnal-pill ${f.prestasi_level === k ? "active" : ""}" data-j-level="${k}">${lbl}</button>
+                `).join("")}
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:12.5px;font-weight:700;margin-bottom:6px;color:var(--text-2)">Dimensi Karakter yang Terlatih</div>
+              <div class="jurnal-pill-row">
+                ${DIMENSI_OPTS.map(([k, lbl]) => `
+                  <button type="button" class="jurnal-pill ${f.dimensi.includes(k) ? "active" : ""}" data-j-dim="${k}">${lbl}</button>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:14px">
+            <label for="j-ringkas" style="display:block;font-size:12.5px;font-weight:700;margin-bottom:6px;color:var(--text-2)">Ringkasan Milestone / Judul Singkat Hari Ini (Opsional)</label>
+            <input type="text" id="j-ringkas" class="search-input" value="${esc(f.ringkas)}" placeholder="Contoh: Selesai bangun Fase 1 Jurnal Harian, olahraga 30 menit, tidur sebelum jam 11...">
+          </div>
+
+          <div style="margin-bottom:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px">
+              <label for="j-isi" style="font-size:12.5px;font-weight:700;color:var(--text-2)">Catatan Penghujung Hari (Tanpa Batas Kata)</label>
+              <span id="j-word-counter" style="font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums">${wordCnt.toLocaleString("id-ID")} kata · ${charCnt.toLocaleString("id-ID")} karakter</span>
+            </div>
+            <textarea id="j-isi" class="jurnal-textarea" placeholder="Ceritakan perjalanan hari ini secara jujur dan bebas — pencapaian, hal yang mengganjal, pelajaran penting, ide baru, atau rencana besok...">${esc(f.isi)}</textarea>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <button type="button" class="btn-primary" id="btn-j-save" ${jurnalState.saving || jurnalState.reflecting ? "disabled" : ""}>
+                ${jurnalState.saving ? "Menyimpan..." : "Simpan Jurnal ke Markdown"}
+              </button>
+              <button type="button" class="btn-secondary" id="btn-j-reflect" ${jurnalState.saving || jurnalState.reflecting ? "disabled" : ""}>
+                ${jurnalState.reflecting ? "⏳ Menganalisis..." : "✨ Minta Tanggapan & Refleksi AI"}
+              </button>
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-2);cursor:pointer">
+                <input type="checkbox" id="chk-j-auto-reflect" ${jurnalState.autoReflect ? "checked" : ""}>
+                <span>Otomatis refleksi AI saat simpan</span>
+              </label>
+            </div>
+            ${jurnalState.statusMsg ? `<span class="badge" style="${jurnalState.statusOk ? "color:var(--trust-high);background:var(--trust-high-bg)" : "color:var(--conflict-text);background:var(--conflict-bg)"}">${esc(jurnalState.statusMsg)}</span>` : ""}
+          </div>
+
+          ${f.refleksi_ai ? `
+            <div style="margin-top:18px;padding-top:16px;border-top:1.5px solid var(--border-strong)">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+                <h3 style="font-size:15.5px">✨ Tanggapan &amp; Pernyataan Sikap Berbasis Pohon Pengetahuan</h3>
+                ${extractedSikap ? `<button type="button" class="btn-primary" id="btn-j-save-kompas" style="min-height:34px;padding:4px 12px;font-size:12.5px">🧭 Simpan ke Kompas Sikap</button>` : ""}
+              </div>
+              <div style="white-space:pre-wrap;font-size:14px;line-height:1.65;color:var(--text);background:var(--surface-alt);padding:14px 16px;border-radius:10px;border:1.5px solid var(--border-strong)">${linkifyCardIdsHtml(f.refleksi_ai)}</div>
+              ${(f.kartu_terkait && f.kartu_terkait.length) ? `
+                <div style="margin-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px;color:var(--text-2)">
+                  <strong>Kartu Pohon Pengetahuan yang dirujuk:</strong>
+                  ${f.kartu_terkait.map(cid => {
+                    const cObj = CARD_MAP[cid];
+                    const tip = cObj ? cObj.ide : cid;
+                    return `<button type="button" class="jurnal-pill" data-open-j-card="${esc(cid)}" title="${esc(tip)}">${esc(cid)}${cObj ? ` · ${esc(cObj.cabang)}` : ""}</button>`;
+                  }).join("")}
+                </div>
+              ` : ""}
+              ${jurnalState.kompasMsg ? `<div style="margin-top:8px"><span class="badge" style="color:var(--trust-high);background:var(--trust-high-bg)">${esc(jurnalState.kompasMsg)}</span></div>` : ""}
+            </div>
+          ` : ""}
+        </div>
+      </div>`}
+    `;
+
+    // Sub-tab switcher & card citation click handler
+    document.getElementById("btn-jtab-harian")?.addEventListener("click", () => {
+      jurnalState.subTab = "harian";
+      jurnalState.kompasMsg = "";
+      renderJurnal(true);
+    });
+    document.getElementById("btn-jtab-biografi")?.addEventListener("click", async () => {
+      jurnalState.subTab = "biografi";
+      await fetchBiografiData();
+      renderJurnal(true);
+    });
+    document.getElementById("btn-jtab-pertumbuhan")?.addEventListener("click", async () => {
+      jurnalState.subTab = "pertumbuhan";
+      await fetchBiografiData();
+      renderJurnal(true);
+    });
+    document.getElementById("btn-jtab-kompas")?.addEventListener("click", async () => {
+      jurnalState.subTab = "kompas";
+      jurnalState.kompasMsg = "";
+      await fetchKompasList();
+      renderJurnal(true);
+    });
+    document.getElementById("bio-filter-tahun")?.addEventListener("change", async e => {
+      jurnalState.bioFilterTahun = e.target.value || "";
+      await fetchBiografiData();
+      renderJurnal(true);
+    });
+    document.getElementById("grow-filter-tahun")?.addEventListener("change", async e => {
+      jurnalState.bioFilterTahun = e.target.value || "";
+      await fetchBiografiData();
+      renderJurnal(true);
+    });
+    sec.querySelectorAll("[data-bio-lvl]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        jurnalState.bioFilterLevel = btn.dataset.bioLvl || "";
+        await fetchBiografiData();
+        renderJurnal(true);
+      });
+    });
+    sec.querySelectorAll("[data-bio-open-date]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const dt = btn.dataset.bioOpenDate;
+        if (!dt) return;
+        jurnalState.subTab = "harian";
+        jurnalState.statusMsg = "";
+        await loadJurnalByDate(dt);
+        renderJurnal(true);
+      });
+    });
+    sec.querySelectorAll("[data-open-j-card]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const cid = btn.dataset.openJCard;
+        if (cid && CARD_MAP[cid]) openCardPage(cid);
+      });
+    });
+    document.getElementById("btn-kompas-manual-add")?.addEventListener("click", async () => {
+      const inp = document.getElementById("kompas-manual-inp");
+      const val = (inp?.value || "").trim();
+      if (val.length < 6) {
+        jurnalState.kompasMsg = "Minimal 6 karakter untuk pernyataan sikap.";
+        renderJurnal(true);
+        return;
+      }
+      try {
+        const resp = await fetch("/api/jurnal/kompas", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sikap: val, tanggal: new Date().toISOString().slice(0, 10), kartu: [], dimensi: [] }),
+        });
+        const out = await resp.json();
+        if (resp.ok && out.ok) {
+          jurnalState.kompasItems = out.items || [];
+          jurnalState.kompasMsg = out.pesan || "Tersimpan ke Kompas Sikap.";
+        } else {
+          jurnalState.kompasMsg = out.error || "Gagal menyimpan.";
+        }
+      } catch {
+        jurnalState.kompasMsg = "Gagal menghubungi server lokal.";
+      }
+      renderJurnal(true);
+    });
+
+    // Bind filter & arsip
+    document.getElementById("btn-jurnal-today")?.addEventListener("click", async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      jurnalState.subTab = "harian";
+      jurnalState.statusMsg = "";
+      jurnalState.kompasMsg = "";
+      await loadJurnalByDate(today);
+      renderJurnal(true);
+    });
+
+    const onFilterChange = async () => {
+      jurnalState.filterTahun = document.getElementById("j-filter-tahun")?.value || "";
+      jurnalState.filterBulan = document.getElementById("j-filter-bulan")?.value || "";
+      jurnalState.filterLevel = document.getElementById("j-filter-level")?.value || "";
+      jurnalState.filterDimensi = document.getElementById("j-filter-dimensi")?.value || "";
+      jurnalState.filterQ = document.getElementById("j-search")?.value || "";
+      await fetchJurnalList();
+      renderJurnal(true);
+    };
+    ["j-filter-tahun", "j-filter-bulan", "j-filter-level", "j-filter-dimensi"].forEach(id => {
+      document.getElementById(id)?.addEventListener("change", onFilterChange);
+    });
+    let searchTimer = null;
+    document.getElementById("j-search")?.addEventListener("input", () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(onFilterChange, 250);
+    });
+    document.getElementById("btn-j-reset")?.addEventListener("click", async () => {
+      jurnalState.filterTahun = "";
+      jurnalState.filterBulan = "";
+      jurnalState.filterLevel = "";
+      jurnalState.filterDimensi = "";
+      jurnalState.filterQ = "";
+      await fetchJurnalList();
+      renderJurnal(true);
+    });
+
+    sec.querySelectorAll("[data-j-date]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        jurnalState.statusMsg = "";
+        await loadJurnalByDate(btn.dataset.jDate);
+        renderJurnal(true);
+      });
+    });
+
+    document.getElementById("j-date-input")?.addEventListener("change", async e => {
+      const val = e.target.value;
+      if (!val) return;
+      jurnalState.statusMsg = "";
+      await loadJurnalByDate(val);
+      renderJurnal(true);
+    });
+
+    // Bind metadata pills
+    sec.querySelectorAll("[data-j-suasana]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        jurnalState.form.suasana = btn.dataset.jSuasana;
+        renderJurnal(true);
+      });
+    });
+    sec.querySelectorAll("[data-j-energi]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        jurnalState.form.energi = Number(btn.dataset.jEnergi);
+        renderJurnal(true);
+      });
+    });
+    sec.querySelectorAll("[data-j-level]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        jurnalState.form.prestasi_level = btn.dataset.jLevel;
+        renderJurnal(true);
+      });
+    });
+    sec.querySelectorAll("[data-j-dim]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const d = btn.dataset.jDim;
+        const idx = jurnalState.form.dimensi.indexOf(d);
+        if (idx >= 0) jurnalState.form.dimensi.splice(idx, 1);
+        else jurnalState.form.dimensi.push(d);
+        renderJurnal(true);
+      });
+    });
+
+    // Sync input teks tanpa kehilangan kursor
+    document.getElementById("j-ringkas")?.addEventListener("input", e => {
+      jurnalState.form.ringkas = e.target.value;
+    });
+    const isiEl = document.getElementById("j-isi");
+    isiEl?.addEventListener("input", e => {
+      jurnalState.form.isi = e.target.value;
+      const cntEl = document.getElementById("j-word-counter");
+      if (cntEl) {
+        cntEl.textContent = `${countWordsId(jurnalState.form.isi).toLocaleString("id-ID")} kata · ${jurnalState.form.isi.length.toLocaleString("id-ID")} karakter`;
+      }
+    });
+
+    async function doReflectJurnal(autoMeta = true) {
+      jurnalState.reflecting = true;
+      jurnalState.kompasMsg = "";
+      jurnalState.statusOk = true;
+      jurnalState.statusMsg = "Mencari kartu relevan & menyusun refleksi AI...";
+      renderJurnal(true);
+      try {
+        const resp = await fetch("/api/jurnal/refleksi", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tanggal: jurnalState.form.tanggal, auto_meta: autoMeta }),
+        });
+        const out = await resp.json();
+        if (resp.ok && out.ok && out.item) {
+          const it = out.item;
+          jurnalState.form.prestasi_level = it.prestasi_level || jurnalState.form.prestasi_level;
+          jurnalState.form.ringkas = it["prestasi_ringkas"] || jurnalState.form.ringkas;
+          jurnalState.form.dimensi = Array.isArray(it.dimensi) ? [...it.dimensi] : jurnalState.form.dimensi;
+          jurnalState.form.kartu_terkait = Array.isArray(it.kartu_terkait) ? [...it.kartu_terkait] : [];
+          jurnalState.form.refleksi_ai = it.refleksi_ai || "";
+          jurnalState.statusOk = true;
+          jurnalState.statusMsg = `Refleksi selesai (${out.model || out.mode}) · ${jurnalState.form.kartu_terkait.length} kartu dirujuk`;
+          await fetchJurnalList();
+        } else {
+          jurnalState.statusOk = false;
+          jurnalState.statusMsg = out.error || "Gagal menyusun refleksi AI.";
+        }
+      } catch {
+        jurnalState.statusOk = false;
+        jurnalState.statusMsg = "Gagal menghubungi server lokal untuk refleksi AI.";
+      } finally {
+        jurnalState.reflecting = false;
+        renderJurnal(true);
+      }
+    }
+
+    async function doSaveJurnal(triggerReflect = null) {
+      const isiVal = (jurnalState.form.isi || "").trim();
+      if (!isiVal) {
+        jurnalState.statusOk = false;
+        jurnalState.statusMsg = "Isi catatan masih kosong.";
+        renderJurnal(true);
+        return;
+      }
+      jurnalState.saving = true;
+      jurnalState.statusMsg = "";
+      jurnalState.kompasMsg = "";
+      renderJurnal(true);
+      let savedOk = false;
+      try {
+        const bodyPayload = {
+          tanggal: jurnalState.form.tanggal,
+          suasana: jurnalState.form.suasana,
+          energi: jurnalState.form.energi,
+          prestasi_level: jurnalState.form.prestasi_level,
+          dimensi: jurnalState.form.dimensi,
+          isi: isiVal,
+        };
+        bodyPayload["prestasi_ringkas"] = jurnalState.form.ringkas;
+        const resp = await fetch("/api/jurnal", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(bodyPayload),
+        });
+        const out = await resp.json();
+        if (resp.ok && out.ok) {
+          savedOk = true;
+          jurnalState.form.exists = true;
+          jurnalState.form.path_relatif = out.item?.path_relatif || jurnalState.form.path_relatif;
+          jurnalState.statusOk = true;
+          jurnalState.statusMsg = `Tersimpan ke ${jurnalState.form.path_relatif}`;
+          await fetchJurnalList();
+        } else {
+          jurnalState.statusOk = false;
+          jurnalState.statusMsg = out.error || "Gagal menyimpan jurnal.";
+        }
+      } catch {
+        jurnalState.statusOk = false;
+        jurnalState.statusMsg = "Gagal menghubungi server lokal.";
+      } finally {
+        jurnalState.saving = false;
+        renderJurnal(true);
+      }
+
+      const shouldReflect = triggerReflect !== null ? triggerReflect : jurnalState.autoReflect;
+      if (savedOk && shouldReflect) {
+        await doReflectJurnal(true);
+      }
+    }
+
+    document.getElementById("chk-j-auto-reflect")?.addEventListener("change", e => {
+      jurnalState.autoReflect = Boolean(e.target.checked);
+    });
+    document.getElementById("btn-j-save")?.addEventListener("click", () => doSaveJurnal());
+    document.getElementById("btn-j-reflect")?.addEventListener("click", async () => {
+      if (!jurnalState.form.exists || (jurnalState.form.isi || "").trim()) {
+        await doSaveJurnal(true);
+      } else {
+        await doReflectJurnal(true);
+      }
+    });
+    document.getElementById("btn-j-save-kompas")?.addEventListener("click", async () => {
+      const sikapTxt = extractSikapFromRefleksi(jurnalState.form.refleksi_ai);
+      if (!sikapTxt) return;
+      try {
+        const resp = await fetch("/api/jurnal/kompas", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sikap: sikapTxt,
+            tanggal: jurnalState.form.tanggal,
+            kartu: jurnalState.form.kartu_terkait || [],
+            dimensi: jurnalState.form.dimensi || [],
+          }),
+        });
+        const out = await resp.json();
+        if (resp.ok && out.ok) {
+          jurnalState.kompasItems = out.items || [];
+          jurnalState.kompasMsg = out.pesan || "Disimpan ke Kompas Sikap.";
+        } else {
+          jurnalState.kompasMsg = out.error || "Gagal menyimpan ke Kompas Sikap.";
+        }
+      } catch {
+        jurnalState.kompasMsg = "Gagal menghubungi server lokal.";
+      }
+      renderJurnal(true);
+    });
+    isiEl?.addEventListener("keydown", e => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        doSaveJurnal();
+      }
+    });
+  }
+
   // ======================== PANDUAN KONTEKSTUAL (? TOMBOL BANTUAN PER FITUR) ========================
   const FEATURE_TUTORIALS = {
     beranda: {
@@ -3530,6 +4612,17 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
         "<strong>📱 Sedang di HP / Web Online (Mode Antrean):</strong> Karena web online tidak terhubung ke harddisk laptop, cukup salin teks postingan → tempel langsung di kotak teks besar → klik <strong>Simpan</strong>. Catatan masuk ke <strong>🎒 Kantong Antrean Browser</strong> dan bisa disinkronkan 1-klik saat laptop menyala.",
         "<strong>📷 Dari Gambar / Screenshot (Khusus Laptop):</strong> Klik <strong>📷 Baca Teks dari Gambar / Screenshot</strong> untuk menyalin teks dari tangkapan layar secara otomatis.",
         "<strong>✂️ Atur Jumlah Kartu &amp; Topik:</strong> Pilih <em>Simpan Jadi 1 Kartu Utuh Saja</em> atau <em>Pecah Otomatis Jadi 1–3 Kartu Poin Inti</em>. Buka laci <em>Pengaturan Detail — Opsional</em> bila ingin memilih atau membuat topik baru sendiri."
+      ]
+    },
+    jurnal: {
+      title: "Cara Memakai Jurnal Harian & Biografi (Khusus Lokal)",
+      steps: [
+        "<strong>Tulis Tanpa Batas Kata:</strong> Pilih tanggal (default hari ini), isi suasana hati, energi, level prestasi, dimensi yang terlatih, lalu tulis cerita penghujung hari secara bebas di kotak besar.",
+        "<strong>Simpan Otomatis ke Markdown:</strong> Tekan <strong>Simpan Jurnal ke Markdown</strong> (atau <code>Ctrl+S</code>). File otomatis tersimpan rapi di <code>jurnal/YYYY/MM/YYYY-MM-DD.md</code>.",
+        "<strong>Tanggapan Berbasis Otak Ilmu Sendiri:</strong> Centang <em>Otomatis refleksi AI saat simpan</em> (atau klik <strong>✨ Minta Tanggapan &amp; Refleksi AI</strong>) untuk mengekstrak level prestasi, dimensi karakter, dan mendapat cermin refleksi bersitasi <code>[K-XXXX]</code> dari kartu Pohon Pengetahuan Anda.",
+        "<strong>Kompas Sikap:</strong> Klik <strong>🧭 Simpan ke Kompas Sikap</strong> pada pernyataan sikap yang resonan agar terkumpul rapi di sub-tab <em>Kompas Sikap</em> (<code>jurnal/_kompas_sikap.md</code>).",
+        "<strong>Timeline Biografi &amp; Radar Pertumbuhan:</strong> Buka sub-tab <em>🌳 Timeline Biografi</em> untuk melihat garis waktu pencapaian lintas tahun (filter Besar/Menengah/Kecil), dan <em>📈 Pertumbuhan Karakter</em> untuk melihat radar 5 dimensi &amp; tren bulanan berbasis bukti nyata.",
+        "<strong>100% Pribadi:</strong> Folder <code>jurnal/</code> dan tab ini hanya muncul di laptop lokal dan diblokir ketat dari situs publik."
       ]
     }
   };

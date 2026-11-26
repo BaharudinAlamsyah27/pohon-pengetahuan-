@@ -14,3 +14,6 @@ Peta tingkat atas seluruh bidang pengetahuan. Empat bab pertama adalah **fokus d
 | Motivasi & Mindset | 4 | Pola pikir, disiplin, kebiasaan, dan ketahanan mental. | `cabang/motivasi-dan-mindset/_cabang.md` |
 | Relasi | 0 | Komunikasi, jejaring, keluarga, dan hubungan sosial. | `cabang/relasi/_cabang.md` |
 | Lainnya | 0 | Wawasan lintas bidang atau topik yang belum punya cabang khusus. | `cabang/lainnya/_cabang.md` |
+| Agama | 0 | Topik baru: Agama | `cabang/agama/_cabang.md` |
+| Berita | 0 | Topik baru: Berita | `cabang/berita/_cabang.md` |
+| Kliping Hiburan | 0 | Topik baru: Kliping Hiburan | `cabang/kliping-hiburan/_cabang.md` |

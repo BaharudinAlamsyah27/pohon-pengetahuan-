@@ -31,10 +31,11 @@ ALLOWED_JENIS = {"postingan", "artikel", "transkrip-video", "transkrip-podcast",
 CARD_ID_RE = re.compile(r"^K-\d{4,6}$")
 SRC_ID_RE = re.compile(r"^S-\d{4,6}$")
 
-# Impor fungsi bangun ulang, ambil_link, dan mesin_cerdas
+# Impor fungsi bangun ulang, ambil_link, jurnal_engine, dan mesin_cerdas
 sys.path.insert(0, str(ROOT / "scripts"))
 import ambil_link  # noqa: E402
 import bangun_pohon  # noqa: E402
+import jurnal_engine  # noqa: E402
 import mesin_cerdas  # noqa: E402
 
 
@@ -153,18 +154,34 @@ BIDANG_KEYWORDS = {
         "negotiation", "empati", "empathy", "menikah", "marriage", "parenting", "persuasif",
         "public speaking", "charisma", "karisma", "leadership", "kepemimpinan", "tim",
     ],
+    "agama": [
+        "agama", "islam", "quran", "alquran", "hadis", "hadits", "sunnah", "fiqih", "tauhid",
+        "akhlak", "ibadah", "sholat", "salat", "puasa", "sedekah", "zakat", "doa", "dzikir",
+        "tafsir", "ulama", "ustadz", "kajian", "dakwah", "akhirat", "tawakal", "syukur", "sabar",
+    ],
+    "berita": [
+        "berita", "news", "breaking", "pemerintah", "presiden", "menteri", "undang-undang",
+        "geopolitik", "ekonomi makro", "inflasi nasional", "pilpres", "kebijakan publik",
+        "peristiwa", "konflik dunia", "bursa global", "laporan resmi",
+    ],
+    "kliping-hiburan": [
+        "meme", "guyonan", "lucu", "ngakak", "receh", "absurd", "shitpost", "candaan",
+        "parodi", "komedi", "lawak", "hiburan", "wkwk", "lmao", "rofl",
+    ],
 }
 
 TOP_BRANCHES = {
     "ai", "bisnis", "sosmed", "digital-marketing",
-    "keuangan", "kesuksesan", "kesehatan", "motivasi-dan-mindset", "relasi", "lainnya",
+    "keuangan", "kesuksesan", "kesehatan", "motivasi-dan-mindset", "relasi",
+    "agama", "berita", "kliping-hiburan", "lainnya",
 }
 
 VALID_BRANCHES = {
     "ai", "ai/video-dan-clipping", "ai/tulisan-dan-artikel", "ai/coding-dan-proyek",
     "ai/prompt-dan-agen", "ai/perbandingan-model",
     "bisnis", "sosmed", "digital-marketing",
-    "keuangan", "kesuksesan", "kesehatan", "motivasi-dan-mindset", "relasi", "lainnya",
+    "keuangan", "kesuksesan", "kesehatan", "motivasi-dan-mindset", "relasi",
+    "agama", "berita", "kliping-hiburan", "lainnya",
 }
 
 
@@ -182,6 +199,9 @@ def _classify_branch_gemini(text: str) -> str | None:
         "- kesuksesan: karier, CPNS, beasiswa, magang, kerja, wawancara, pencapaian\n"
         "- motivasi-dan-mindset: disiplin, kebiasaan, fokus, overthinking, mentalitas, psikologi diri\n"
         "- relasi: hubungan, komunikasi, keluarga, pasangan, teman, networking\n"
+        "- agama: ilmu agama, akhlak, ibadah, tafsir, hadis, nasihat ulama, spiritualitas\n"
+        "- berita: berita terkini, kebijakan pemerintah, peristiwa dunia, geopolitik, tren sesaat\n"
+        "- kliping-hiburan: guyonan, meme, lelucon, hiburan ringan, konten absurd tanpa pelajaran serius\n"
         "- ai/coding-dan-proyek: coding dengan AI, Claude Code, Cursor, Python, GitHub, API, bikin aplikasi\n"
         "- ai/prompt-dan-agen: prompt engineering, agen AI, MCP, skill AI, workflow otomasi\n"
         "- ai/video-dan-clipping: video AI, dubbing, voiceover, CapCut, Kling, Veo, Runway, Sora\n"
@@ -1034,14 +1054,58 @@ class PohonHandler(BaseHTTPRequestHandler):
                 self._send_json(500, {"error": str(exc)})
             return
 
+        if path == "/api/jurnal":
+            qs = parse_qs(parsed.query)
+            tahun = (qs.get("tahun", [""])[0] or "").strip()[:4]
+            bulan = (qs.get("bulan", [""])[0] or "").strip()[:2]
+            level = (qs.get("level", [""])[0] or "").strip()[:20]
+            dimensi = (qs.get("dimensi", [""])[0] or "").strip()[:30]
+            q = (qs.get("q", [""])[0] or "").strip()[:200]
+            try:
+                self._send_json(200, jurnal_engine.list_jurnal(tahun=tahun, bulan=bulan, level=level, q=q, dimensi=dimensi))
+            except Exception as exc:
+                self._send_json(500, {"error": str(exc)})
+            return
+
+        if path == "/api/jurnal/kompas":
+            try:
+                self._send_json(200, {"ok": True, "items": jurnal_engine.list_kompas_sikap()})
+            except Exception as exc:
+                self._send_json(500, {"error": str(exc)})
+            return
+
+        if path == "/api/jurnal/biografi":
+            qs = parse_qs(parsed.query)
+            tahun = (qs.get("tahun", [""])[0] or "").strip()[:4]
+            level = (qs.get("level", [""])[0] or "").strip()[:20]
+            try:
+                self._send_json(200, jurnal_engine.get_biografi_dan_pertumbuhan(tahun=tahun, level=level))
+            except Exception as exc:
+                self._send_json(500, {"error": str(exc)})
+            return
+
+        if path.startswith("/api/jurnal/"):
+            tgl = path.removeprefix("/api/jurnal/").strip()
+            try:
+                jurnal_engine.validate_date_str(tgl)
+            except ValueError as exc:
+                self._send_json(400, {"error": str(exc)})
+                return
+            item = jurnal_engine.get_jurnal(tgl)
+            if not item:
+                self._send_json(404, {"ok": False, "error": "Belum ada catatan untuk tanggal ini", "tanggal": tgl})
+                return
+            self._send_json(200, {"ok": True, "item": item})
+            return
+
         self.send_error(404, "Tidak ditemukan")
 
     def do_POST(self) -> None:
         parsed = urlparse(self.path)
-        if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar", "/api/rapikan-draf"):
+        if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar", "/api/rapikan-draf", "/api/jurnal", "/api/jurnal/refleksi", "/api/jurnal/kompas"):
             self.send_error(404, "Endpoint tidak dikenal")
             return
-        max_len = 8_000_000 if parsed.path == "/api/ocr-gambar" else (512_000 if parsed.path in ("/api/simpan-sumber", "/api/ekstrak-matematika") else (32_768 if parsed.path == "/api/edit-kartu" else 4096))
+        max_len = 8_000_000 if parsed.path == "/api/ocr-gambar" else (2_000_000 if parsed.path == "/api/jurnal" else (512_000 if parsed.path in ("/api/simpan-sumber", "/api/ekstrak-matematika") else (32_768 if parsed.path in ("/api/edit-kartu", "/api/jurnal/kompas") else 4096)))
         try:
             length = int(self.headers.get("Content-Length", "0"))
             if length <= 0 or length > max_len:
@@ -1050,6 +1114,53 @@ class PohonHandler(BaseHTTPRequestHandler):
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
         except Exception:
             self._send_json(400, {"error": "JSON tidak valid"})
+            return
+
+        if parsed.path == "/api/jurnal/refleksi":
+            tgl = str(payload.get("tanggal", "")).strip()
+            auto_meta = bool(payload.get("auto_meta", True))
+            try:
+                jurnal_engine.validate_date_str(tgl)
+                out = jurnal_engine.analyze_and_reflect_journal(tgl, apply_auto_meta=auto_meta)
+            except ValueError as exc:
+                self._send_json(400, {"error": str(exc)})
+                return
+            except FileNotFoundError as exc:
+                self._send_json(404, {"error": str(exc)})
+                return
+            except Exception as exc:
+                self._send_json(500, {"error": f"Gagal membuat refleksi AI: {exc}"})
+                return
+            self._send_json(200, out)
+            return
+
+        if parsed.path == "/api/jurnal/kompas":
+            try:
+                out = jurnal_engine.save_kompas_sikap(
+                    sikap=str(payload.get("sikap", "")),
+                    tanggal=str(payload.get("tanggal", "")),
+                    kartu=payload.get("kartu") if isinstance(payload.get("kartu"), list) else [],
+                    dimensi=payload.get("dimensi") if isinstance(payload.get("dimensi"), list) else [],
+                )
+            except ValueError as exc:
+                self._send_json(400, {"error": str(exc)})
+                return
+            except Exception as exc:
+                self._send_json(500, {"error": f"Gagal menyimpan Kompas Sikap: {exc}"})
+                return
+            self._send_json(200, out)
+            return
+
+        if parsed.path == "/api/jurnal":
+            try:
+                out = jurnal_engine.save_jurnal(payload)
+            except ValueError as exc:
+                self._send_json(400, {"error": str(exc)})
+                return
+            except Exception as exc:
+                self._send_json(500, {"error": f"Gagal menyimpan jurnal: {exc}"})
+                return
+            self._send_json(200, out)
             return
 
         if parsed.path == "/api/ambil-link":
