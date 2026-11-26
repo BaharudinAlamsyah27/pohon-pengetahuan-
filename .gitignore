@@ -6,4 +6,7 @@ Thumbs.db
 .env
 .env.local
 scratch/
+.koreksi_cabang.jsonl
+.tanya_feedback.jsonl
+
 

@@ -709,6 +709,22 @@ def multinomial_naive_bayes_branch(
                 class_word_counts[b][tok] += 1
                 vocab.add(tok)
 
+    # 3. Active Learning: pelajari koreksi cabang manual pengguna (.koreksi_cabang.jsonl, bobot 5x!)
+    kor_fp = ROOT / ".koreksi_cabang.jsonl"
+    if kor_fp.is_file():
+        for ln in kor_fp.read_text(encoding="utf-8", errors="ignore").splitlines()[-300:]:
+            try:
+                rec = json.loads(ln)
+                kb = str(rec.get("cabang") or "").strip()
+                kt = str(rec.get("teks") or "").strip()
+                if kb in lexicon and kt:
+                    class_doc_counts[kb] += 5
+                    for tok in tokenize(kt):
+                        class_word_counts[kb][tok] += 5
+                        vocab.add(tok)
+            except Exception:
+                continue
+
     q_toks = expand_bilingual_tokens(tokenize(text))
     if not q_toks or not vocab:
         return []
@@ -871,6 +887,42 @@ def translate_and_polish_card_gemini(ide_text: str, penjelasan: str) -> tuple[st
         except Exception:
             pass
     return ide_text, penjelasan
+
+
+def synthesize_branch_summary_llm(cabang_slug: str, old_summary: str, active_cards: list[dict]) -> dict | None:
+    """
+    Sintesis ulang Ringkasan & Poin Kunci cabang (<=260 kata) via cascade 6 penyedia AI gratis.
+    Dipicu otomatis setiap >=5 kartu baru masuk ke sebuah cabang.
+    """
+    if not active_cards or not has_any_free_llm_key():
+        return None
+    card_lines = "\n".join(
+        f"- [{c['id']}] ({c.get('kepercayaan', '?')}): {c.get('ide', '')[:180]}"
+        for c in active_cards[:25]
+    )
+    prompt = (
+        f"Sintesis ulang ringkasan cabang '{cabang_slug}' dalam Bahasa Indonesia yang padat dan jernih.\n"
+        "Balas HANYA JSON valid:\n"
+        '{"ringkasan": "maksimal 220 kata merangkum tema besar cabang ini", '
+        '"poin_kunci": ["maksimal 5 poin kunci singkat dengan sitasi [[K-XXXX]]"]}\n\n'
+        f"RINGKASAN LAMA:\n{(old_summary or '')[:600]}\n\n"
+        f"DAFTAR KARTU AKTIF:\n{card_lines}"
+    )
+    raw, _mdl, _err = call_free_llm_cascade("", prompt, json_mode=True, max_tokens=1024, temperature=0.2)
+    if not raw:
+        return None
+    try:
+        m = re.search(r"\{[\s\S]*\}", raw)
+        if not m:
+            return None
+        parsed = json.loads(m.group(0))
+        ring = str(parsed.get("ringkasan") or "").strip()
+        poin = [str(p).strip().lstrip("-• ") for p in (parsed.get("poin_kunci") or []) if str(p).strip()][:5]
+        if len(ring) >= 30:
+            return {"ringkasan": ring, "poin_kunci": poin}
+    except Exception:
+        pass
+    return None
 
 ALLOWED_JENIS_KARTU = {"fakta", "data", "nasihat", "opini", "kisah", "prinsip"}
 ALLOWED_DASAR_KARTU = {"riset", "pengalaman-pribadi", "opini-umum", "tidak-jelas"}

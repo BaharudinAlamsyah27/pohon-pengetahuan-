@@ -384,6 +384,24 @@ def recount_branch_and_index(cabang_slug: str, today: str) -> None:
         txt = re.sub(r"^jumlah-kartu:\s*\d+", f"jumlah-kartu: {len(b_cards)}", txt, count=1, flags=re.M)
         txt = re.sub(r"^jumlah-sumber:\s*\d+", f"jumlah-sumber: {len(b_srcs)}", txt, count=1, flags=re.M)
         txt = re.sub(r"^diperbarui:\s*.*$", f"diperbarui: {today}", txt, count=1, flags=re.M)
+
+        # Sintesis Ringkasan Cabang Otomatis: dipicu bila ada >=5 kartu baru sejak sintesis terakhir
+        m_last = re.search(r"^kartu-saat-sintesis:\s*(\d+)", txt, flags=re.M)
+        last_synth = int(m_last.group(1)) if m_last else 0
+        if len(b_cards) >= 5 and (len(b_cards) - last_synth) >= 5 and target_slug == cabang_slug:
+            m_ring = re.search(r"(## Ringkasan[^\n]*\n)([\s\S]*?)(\n## Poin Kunci)", txt)
+            old_ring = m_ring.group(2).strip() if m_ring else ""
+            synth = mesin_cerdas.synthesize_branch_summary_llm(target_slug, old_ring, b_cards)
+            if synth and m_ring:
+                txt = txt[:m_ring.start()] + m_ring.group(1) + synth["ringkasan"] + "\n" + m_ring.group(3) + txt[m_ring.end():]
+                if synth.get("poin_kunci"):
+                    m_pk = re.search(r"(## Poin Kunci\s*\n)([\s\S]*?)(\n## Pertentangan)", txt)
+                    if m_pk:
+                        pk_body = "\n".join(f"- {p}" for p in synth["poin_kunci"])
+                        txt = txt[:m_pk.start()] + m_pk.group(1) + pk_body + "\n" + m_pk.group(3) + txt[m_pk.end():]
+                txt = set_fm_field(txt, "disintesis", today)
+                txt = set_fm_field(txt, "kartu-saat-sintesis", str(len(b_cards)))
+
         cab_fp.write_text(txt, encoding="utf-8")
 
     idx_fp = ROOT / "indeks.md"
@@ -808,12 +826,71 @@ def edit_card(card_id: str, payload: dict) -> dict:
     recount_branch_and_index(old_cabang, today)
     if new_cabang != old_cabang:
         recount_branch_and_index(new_cabang, today)
+        # Active Learning: catat koreksi cabang manual agar Naive Bayes makin pintar setiap hari
+        kor_rec = {
+            "ts": today,
+            "id": card_id,
+            "dari": old_cabang,
+            "cabang": new_cabang,
+            "teks": f"{fm.get('ide', '')} {body[:260]}",
+        }
+        with (ROOT / ".koreksi_cabang.jsonl").open("a", encoding="utf-8") as kf:
+            kf.write(json.dumps(kor_rec, ensure_ascii=False) + "\n")
 
     with (ROOT / "log.md").open("a", encoding="utf-8") as f:
         f.write(f"\n[{today}] EDIT {card_id} | cabang: {new_cabang}")
 
     rebuild_local_artifacts()
     return {"ok": True, "id": card_id, "cabang": new_cabang}
+
+
+def polish_draft_cards(card_id: str = "") -> dict:
+    """Rapikan & terjemahkan kartu draf-ekstraktif / berbahasa asing ke Bahasa Indonesia (maks 5 kartu per klik)."""
+    cards = bangun_pohon.load_cards(ROOT / "kartu")
+    targets = []
+    if card_id and card_id in cards:
+        targets = [cards[card_id]]
+    else:
+        for cid, c in sorted(cards.items()):
+            if c.get("status") != "aktif":
+                continue
+            is_draft = any(t in ("draf-ekstraktif", "ekstraksi-matematika", "draf-otomatis") for t in (c.get("tag") or []))
+            is_foreign = mesin_cerdas._is_mostly_non_indonesian(f"{c.get('ide', '')} {c.get('penjelasan', '')}")
+            if is_draft or is_foreign:
+                targets.append(c)
+            if len(targets) >= 5:
+                break
+
+    if not targets:
+        return {"ok": True, "dirapikan": [], "pesan": "Semua kartu sudah rapi dalam Bahasa Indonesia!"}
+
+    today = date.today().isoformat()
+    polished_ids: list[str] = []
+    for c in targets:
+        cid = c["id"]
+        fp = ROOT / "kartu" / f"{cid}.md"
+        if not fp.is_file():
+            continue
+        new_ide, new_penj = mesin_cerdas.translate_and_polish_card_gemini(c["ide"], c["penjelasan"])
+        txt = fp.read_text(encoding="utf-8").replace("\r\n", "\n")
+        clean_ide = new_ide.replace('"', "'").strip()
+        txt = set_fm_field(txt, "ide", f'"{clean_ide}"')
+        new_tags = [t for t in (c.get("tag") or []) if t not in ("draf-ekstraktif", "ekstraksi-matematika", "draf-otomatis")]
+        if not new_tags:
+            new_tags = [c.get("bidang", "lainnya")]
+        txt = set_fm_field(txt, "tag", "[" + ", ".join(dict.fromkeys(new_tags)) + "]")
+        txt = set_fm_field(txt, "terakhir-ditinjau", today)
+        m_ide = re.search(r"(## Ide\s*\n)([\s\S]*?)(\n## Kutipan Pendukung|\n## Catatan Agen|\Z)", txt)
+        if m_ide and new_penj:
+            txt = txt[:m_ide.start()] + m_ide.group(1) + new_penj + "\n\n" + txt[m_ide.end():].lstrip("\n")
+        fp.write_text(txt, encoding="utf-8")
+        polished_ids.append(cid)
+
+    if polished_ids:
+        with (ROOT / "log.md").open("a", encoding="utf-8") as f:
+            f.write(f"\n[{today}] RAPIKAN-DRAF {', '.join(polished_ids)} | diterjemahkan & dirapikan otomatis")
+        rebuild_local_artifacts()
+    return {"ok": True, "dirapikan": polished_ids, "pesan": f"{len(polished_ids)} kartu berhasil dirapikan: {', '.join(polished_ids)}"}
 
 
 def archive_card(card_id: str, alasan: str = "") -> None:
@@ -942,7 +1019,7 @@ class PohonHandler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:
         parsed = urlparse(self.path)
-        if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar"):
+        if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar", "/api/rapikan-draf"):
             self.send_error(404, "Endpoint tidak dikenal")
             return
         max_len = 8_000_000 if parsed.path == "/api/ocr-gambar" else (512_000 if parsed.path in ("/api/simpan-sumber", "/api/ekstrak-matematika") else (32_768 if parsed.path == "/api/edit-kartu" else 4096))
@@ -983,6 +1060,19 @@ class PohonHandler(BaseHTTPRequestHandler):
             api_key = (local_env.get("GEMINI_API_KEY") or "").strip()
             res = ambil_link.extract_image_text(img_b64, mime_type=mime, api_key=api_key)
             self._send_json(200 if res.get("ok") else 422, res)
+            return
+
+        if parsed.path == "/api/rapikan-draf":
+            cid = str(payload.get("id", "")).strip()
+            if cid and not CARD_ID_RE.match(cid):
+                self._send_json(400, {"error": "Format ID kartu harus K-XXXX"})
+                return
+            try:
+                out = polish_draft_cards(cid)
+            except Exception as exc:
+                self._send_json(500, {"error": f"Gagal merapikan draf: {exc}"})
+                return
+            self._send_json(200, out)
             return
 
         if parsed.path == "/api/simpan-sumber":

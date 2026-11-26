@@ -20,3 +20,9 @@ S-0013 | 2026-11-22 | postingan | Alex Kataev (@AlexKataev) | "posted this a mon
 S-0014 | 2026-11-22 | postingan | Samgor (@biggor888) | "如果你已经订阅 google ai 套餐" | bidang: ai | 3 kartu
 S-0015 | 2026-11-22 | postingan | Vid (@MethodByVid) | "if you drop a raw ElevenLabs voiceover straight into CapCut, Youtube already fla" | bidang: ai | 3 kartu
 S-0016 | 2026-11-22 | postingan | Cozyman 🕵️ (@CozyGreenVibes) | "Terjawab sudah rasa penasaran ku! 😳🌱" | bidang: ai | 1 kartu
+S-0017 | 2026-11-26 | postingan | Bryan Johnson (@bryan_johnson) | "Same math applies to sleep." | bidang: kesehatan | 1 kartu
+S-0018 | 2026-11-26 | postingan | x.com | "(83) alexei di X: 'neuroscience shows that the easiest way to become confident and actually believe in yourself is to ch" | bidang: ai | 3 kartu
+S-0019 | 2026-11-26 | postingan | alexei (@alexeixbt) | "neuroscience shows that the easiest way to become confident and actually believe" | bidang: motivasi-dan-mindset | 3 kartu
+S-0020 | 2026-11-26 | postingan | Mrs Angel (@mrsangelkelechi) | "Normalize being very direct. Very straight to the point. Very assertive. You'll get everyt" | bidang: motivasi-dan-mindset | 1 kartu
+S-0021 | 2026-11-26 | postingan | dr. Adam Prabata (@AdamPrabata) | "Terlalu sering scrolling media sosial --> Gangguan reseptor dopamin di otak --> Brain rot" | bidang: kesehatan | 1 kartu
+S-0022 | 2026-11-26 | postingan | alexei (@alexeixbt) | "science shows that complaining or talking about your problems the wrong way can actually m" | bidang: motivasi-dan-mindset | 1 kartu

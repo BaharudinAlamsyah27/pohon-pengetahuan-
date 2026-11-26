@@ -4,7 +4,7 @@ nama: AI
 induk: ""
 jumlah-kartu: 13
 jumlah-sumber: 8
-diperbarui: 2026-11-22
+diperbarui: 2026-11-26
 catatan-sudut-pandang: "2 sumber berbeda (draf awal)"
 ---
 
@@ -38,3 +38,6 @@ Bab dominan untuk penguasaan AI secara praktis: mulai dari video & clipping AI, 
 - K-0018 | raw ElevenLabs audio files are generated in a digital void, so every | semua-usia | belum-diverifikasi
 - K-0019 | even worse, default ElevenLabs leaves the exact same 0.25 second gap after | semua-usia | belum-diverifikasi
 - K-0020 | lay that track underneath your ElevenLabs voiceover in CapCut for the entire | semua-usia | belum-diverifikasi
+- K-0024 | tidak ada bicara negatif pada diri sendiri: kamu akan berhenti mengatakan hal-hal | semua-usia | belum-diverifikasi
+- K-0025 | reframing perjuanganmu: daripada mengatakan 'aku sedang berjuang,' katakan pada dirimu sendiri 'aku | semua-usia | belum-diverifikasi
+- K-0026 | jadi lain kali kamu mengatakan sesuatu yang negatif pada dirimu sendiri, secara | semua-usia | belum-diverifikasi

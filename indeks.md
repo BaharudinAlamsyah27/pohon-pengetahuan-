@@ -10,7 +10,7 @@ Peta tingkat atas seluruh bidang pengetahuan. Empat bab pertama adalah **fokus d
 | Digital Marketing | 0 | Copywriting, SEO/AI-search, funnel, konten konversi, iklan, dan distribusi audiens. | `cabang/digital-marketing/_cabang.md` |
 | Keuangan | 3 | Pengelolaan arus kas, tabungan, investasi, monetisasi konten, dan manajemen risiko. | `cabang/keuangan/_cabang.md` |
 | Kesuksesan | 0 | Strategi pengembangan diri, karier, CPNS/beasiswa, dan pencapaian per tahap hidup. | `cabang/kesuksesan/_cabang.md` |
-| Kesehatan | 1 | Tidur, nutrisi, olahraga, dan kebugaran fisik maupun mental. | `cabang/kesehatan/_cabang.md` |
-| Motivasi & Mindset | 1 | Pola pikir, disiplin, kebiasaan, dan ketahanan mental. | `cabang/motivasi-dan-mindset/_cabang.md` |
+| Kesehatan | 3 | Tidur, nutrisi, olahraga, dan kebugaran fisik maupun mental. | `cabang/kesehatan/_cabang.md` |
+| Motivasi & Mindset | 4 | Pola pikir, disiplin, kebiasaan, dan ketahanan mental. | `cabang/motivasi-dan-mindset/_cabang.md` |
 | Relasi | 0 | Komunikasi, jejaring, keluarga, dan hubungan sosial. | `cabang/relasi/_cabang.md` |
 | Lainnya | 0 | Wawasan lintas bidang atau topik yang belum punya cabang khusus. | `cabang/lainnya/_cabang.md` |
