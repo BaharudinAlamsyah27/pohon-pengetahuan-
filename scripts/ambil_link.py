@@ -119,7 +119,7 @@ def fetch_x_fxtwitter(url: str) -> dict | None:
       1. Otomatis melacak thread berantai ke atas (self-reply) hingga 15 tweet jika ditempel link tweet akhir.
       2. Otomatis membaca teks/infografis dari foto lampiran tweet (via altText / Tesseract / Gemini Vision Gratis).
     """
-    m = re.search(r"(?:x\.com|twitter\.com)/([^/]+)/status/(\d+)", url)
+    m = re.search(r"(?:x\.com|twitter\.com)/([^/]+)/(?:status|article)/(\d+)", url)
     if not m:
         return None
     user, status_id = m.group(1), m.group(2)
@@ -180,9 +180,26 @@ def fetch_x_fxtwitter(url: str) -> dict | None:
                 photo_items.append((qph["url"], (qph.get("altText") or "").strip(), f"kutipan {q_label}"))
         _collect_quotes(q, depth + 1)
 
+    is_x_article = False
+    article_title = ""
     for idx, item in enumerate(chain, 1):
+        art_obj = item.get("article")
+        if isinstance(art_obj, dict):
+            is_x_article = True
+            a_title = (art_obj.get("title") or "").strip()
+            if a_title and not article_title:
+                article_title = a_title
+            blocks = ((art_obj.get("content") or {}).get("blocks") or [])
+            block_texts = [str(b.get("text") or "").strip() for b in blocks if isinstance(b, dict) and str(b.get("text") or "").strip()]
+            a_body = "\n\n".join(block_texts) if block_texts else (art_obj.get("preview_text") or "").strip()
+            if a_title or a_body:
+                header_line = f"# {a_title}\n\n" if a_title else ""
+                text_blocks.append(f"{header_line}{a_body}".strip())
+            cover = (art_obj.get("cover_media") or {}).get("media_info") or {}
+            if cover.get("original_img_url") and len(photo_items) < 4:
+                photo_items.append((cover["original_img_url"], "", penulis))
         t = (item.get("text") or "").strip()
-        if t:
+        if t and not (is_x_article and re.fullmatch(r"https?://t\.co/\S+", t)):
             prefix = f"[{idx}/{len(chain)}] " if len(chain) > 1 else ""
             text_blocks.append(f"{prefix}{t}")
         photos = ((item.get("media") or {}).get("photos") or [])
@@ -224,8 +241,8 @@ def fetch_x_fxtwitter(url: str) -> dict | None:
     if ocr_blocks:
         teks = (teks + "\n\n" + "\n\n".join(ocr_blocks)).strip()
 
-    first_line = (teks.splitlines()[0] if teks else f"Postingan {penulis}")[:90]
-    notes = ["Teks penuh berhasil ditarik."]
+    first_line = (article_title or (teks.splitlines()[0] if teks else f"Postingan {penulis}"))[:110]
+    notes = ["Artikel X berhasil ditarik." if is_x_article else "Teks penuh berhasil ditarik."]
     if len(chain) > 1:
         notes.append(f"Thread utuh {len(chain)} tweet berhasil digabung otomatis.")
     if quote_count > 0:
@@ -235,7 +252,7 @@ def fetch_x_fxtwitter(url: str) -> dict | None:
     return {
         "ok": True,
         "platform": "X",
-        "jenis": "postingan",
+        "jenis": "artikel" if is_x_article else "postingan",
         "judul": first_line,
         "penulis": penulis,
         "url": url,
