@@ -423,6 +423,10 @@
       "relasi": [
         {
           "tipe": "terkait",
+          "ke": "K-0012"
+        },
+        {
+          "tipe": "terkait",
           "ke": "K-0005"
         },
         {

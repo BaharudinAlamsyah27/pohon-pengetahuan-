@@ -169,13 +169,9 @@ VALID_BRANCHES = {
 
 
 def _classify_branch_gemini(text: str) -> str | None:
-    """Lapis 1: Klasifikasi topik berbasis pemahaman makna (semantik) via Gemini Free Tier."""
-    local_env = mesin_cerdas.load_local_env()
-    api_key = (os.environ.get("GEMINI_API_KEY") or local_env.get("GEMINI_API_KEY") or "").strip()
-    if not api_key:
+    """Lapis 1: Klasifikasi topik berbasis pemahaman makna (semantik) via cascade 6 penyedia AI gratis."""
+    if not mesin_cerdas.has_any_free_llm_key():
         return None
-    import urllib.request
-    import urllib.error
     prompt = (
         "Pilih TEPAT SATU nama topik paling cocok untuk teks berikut:\n"
         "- kesehatan: tidur/sleep, olahraga, nutrisi, diet, tubuh, otak, brain fog, biologis, kebugaran, energi, medis\n"
@@ -196,35 +192,15 @@ def _classify_branch_gemini(text: str) -> str | None:
         "Aturan: balas HANYA satu slug topik persis seperti di sebelah kiri tanda titik dua (contoh: kesehatan), tanpa penjelasan.\n\n"
         f"Teks:\n{text[:1200]}"
     )
-    for mdl in ("gemini-3.5-flash-lite", "gemini-2.5-flash"):
-        try:
-            endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:generateContent?key={api_key}"
-            body = {
-                "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-                "generationConfig": {"temperature": 0.0, "maxOutputTokens": 512},
-            }
-            req = urllib.request.Request(
-                endpoint,
-                data=json.dumps(body).encode("utf-8"),
-                headers={"Content-Type": "application/json"},
-                method="POST",
-            )
-            with urllib.request.urlopen(req, timeout=8) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-            cands = data.get("candidates") or []
-            parts = ((cands[0].get("content") or {}).get("parts") or []) if cands else []
-            ans = "".join(p.get("text", "") for p in parts).strip().lower().strip("`\"'. \n")
-            if ans in VALID_BRANCHES:
-                return ans
-            for b in sorted(VALID_BRANCHES, key=len, reverse=True):
-                if b in ans:
-                    return b
-        except urllib.error.HTTPError as exc:
-            if exc.code == 404:
-                continue
-            break
-        except Exception:
-            break
+    raw, _mdl, _err = mesin_cerdas.call_free_llm_cascade("", prompt, json_mode=False, max_tokens=64, temperature=0.0)
+    if not raw:
+        return None
+    ans = raw.strip().lower().strip("`\"'. \n")
+    if ans in VALID_BRANCHES:
+        return ans
+    for b in sorted(VALID_BRANCHES, key=len, reverse=True):
+        if b in ans:
+            return b
     return None
 
 
@@ -456,12 +432,12 @@ def add_inverse_relation(target_cid: str, rel_type: str, from_cid: str) -> None:
     fp.write_text(txt, encoding="utf-8")
 
 
-def sync_branch_and_index(cabang_slug: str, cid: str, ide_short: str, tahap: str, today: str) -> None:
+def sync_branch_and_index(cabang_slug: str, cid: str, ide_short: str, tahap: str, today: str, kepercayaan: str = "belum-diverifikasi") -> None:
     """Tambahkan entri draf kartu tepat di bawah '## Daftar Kartu' dan sinkronkan cabang induk & indeks.md."""
     cab_fp = ROOT / "cabang" / Path(*cabang_slug.split("/")) / "_cabang.md"
     if cab_fp.is_file():
         txt = cab_fp.read_text(encoding="utf-8")
-        entry = f"- {cid} | {ide_short} | {tahap} | belum-diverifikasi"
+        entry = f"- {cid} | {ide_short} | {tahap} | {kepercayaan}"
         marker = "## Daftar Kartu"
         pos = txt.find(marker)
         if pos != -1 and entry not in txt:
@@ -522,6 +498,19 @@ def create_new_source(
         raise ValueError(f"Postingan yang hampir identik ({int(near_sim * 100)}% mirip) sudah tersimpan di {near_sid}.")
 
     extra_tags: list[str] = []
+    existing_cards_snapshot = bangun_pohon.load_cards(ROOT / "kartu")
+    max_cards_lim = max(1, min(5, int(max_daun or 3)))
+
+    # Pipeline 1-Panggilan Terstruktur (hemat 50% kuota API: langsung tebak cabang + ekstrak + cek duplikat sekaligus!)
+    candidate_neighbors = mesin_cerdas.query_relevant_cards(f"{clean_judul} {raw_text[:600]}", existing_cards_snapshot, limit=12)
+    structured_ai = mesin_cerdas.extract_structured_cards_gemini(
+        raw_text=raw_text,
+        candidate_neighbors=candidate_neighbors,
+        valid_branches=VALID_BRANCHES,
+        max_cards=max_cards_lim,
+        platform=clean_platform,
+    ) if buat_draf else None
+
     if subcabang_baru:
         if "/" in subcabang_baru:
             cabang_slug = ensure_subbranch_exists(subcabang_baru, today)
@@ -532,6 +521,8 @@ def create_new_source(
         or (ROOT / "cabang" / Path(*bidang_pilihan.split("/")) / "_cabang.md").is_file()
     ):
         cabang_slug = bidang_pilihan
+    elif structured_ai and structured_ai.get("kartu") and structured_ai["kartu"][0].get("cabang"):
+        cabang_slug = structured_ai["kartu"][0]["cabang"]
     else:
         cabang_slug, score = guess_branch(f"{clean_judul} {raw_text}")
         if score == 0:
@@ -545,19 +536,8 @@ def create_new_source(
     default_tahap = tahap_pilihan if (tahap_pilihan in valid_tahap and tahap_pilihan != "semua-usia") else meta_auto["tahap"]
 
     created_cids: list[str] = []
-    created_entries: list[tuple[str, str, str, str]] = []  # (cid, ide_short, card_cabang, card_tahap)
-    existing_cards_snapshot = bangun_pohon.load_cards(ROOT / "kartu")
-    max_cards_lim = max(1, min(5, int(max_daun or 3)))
-
-    # Pipeline 1-Panggilan Terstruktur (Gemini JSON + Top-12 kartu tetangga + validasi anti-halusinasi)
-    candidate_neighbors = mesin_cerdas.query_relevant_cards(f"{clean_judul} {raw_text[:600]}", existing_cards_snapshot, limit=12)
-    structured_ai = mesin_cerdas.extract_structured_cards_gemini(
-        raw_text=raw_text,
-        candidate_neighbors=candidate_neighbors,
-        valid_branches=VALID_BRANCHES,
-        max_cards=max_cards_lim,
-        platform=clean_platform,
-    ) if buat_draf else None
+    created_entries: list[tuple[str, str, str, str, str]] = []  # (cid, ide_short, card_cabang, card_tahap, card_trust)
+    merged_into_cid: str | None = None
 
     extracted_points = []
     if not structured_ai:
@@ -567,7 +547,21 @@ def create_new_source(
     source_saripati_items: list[str] = []
     used_branches: set[str] = set()
 
-    if buat_draf:
+    # Penanganan Duplikat Semantik (AGENTS.md Bagian 4 Langkah 4): tambahkan sumber baru ke kartu lama
+    if buat_draf and structured_ai and structured_ai.get("duplikat_dari") and len(structured_ai.get("kartu") or []) <= 1:
+        dup_id = structured_ai["duplikat_dari"]
+        dup_fp = ROOT / "kartu" / f"{dup_id}.md"
+        if dup_fp.is_file():
+            dtxt = dup_fp.read_text(encoding="utf-8").replace("\r\n", "\n")
+            if f"[[{sid}]]" not in dtxt:
+                dtxt = re.sub(r"^(sumber:\s*.+)$", rf"\1, [[{sid}]]", dtxt, count=1, flags=re.M)
+                dup_fp.write_text(dtxt, encoding="utf-8")
+            merged_into_cid = dup_id
+            created_cids.append(dup_id)
+            source_saripati_items.append(structured_ai["kartu"][0]["ide"] if structured_ai.get("kartu") else clean_judul)
+            used_branches.add(existing_cards_snapshot.get(dup_id, {}).get("cabang") or cabang_slug)
+
+    if buat_draf and not merged_into_cid:
         cur_num = int(next_card_id().split("-")[1])
         items_to_create = structured_ai["kartu"] if structured_ai else extracted_points
         for idx_pt, pt in enumerate(items_to_create):
@@ -616,7 +610,7 @@ def create_new_source(
             used_branches.add(card_cabang)
             ide_short = " ".join(ide_text.split()[:12])
             source_saripati_items.append(ide_text)
-            created_entries.append((cid, ide_short, card_cabang, card_tahap))
+            created_entries.append((cid, ide_short, card_cabang, card_tahap, card_trust))
             alat_yaml = f"[{', '.join(detected_tools)}]" if detected_tools else "[]"
             konsep_yaml = "[" + ", ".join(dict.fromkeys(konsep_list)) + "]" if konsep_list else "[]"
             tags_yaml = "[" + ", ".join(dict.fromkeys(tags_all)) + "]"
@@ -699,8 +693,8 @@ def create_new_source(
     )
     fp.write_text(content, encoding="utf-8")
 
-    for cid, ide_short, c_cabang, c_tahap in created_entries:
-        sync_branch_and_index(c_cabang, cid, ide_short, c_tahap, today)
+    for cid, ide_short, c_cabang, c_tahap, c_trust in created_entries:
+        sync_branch_and_index(c_cabang, cid, ide_short, c_tahap, today, kepercayaan=c_trust)
 
     # Append ke sumber/_katalog.md dan log.md
     kat_fp = ROOT / "sumber" / "_katalog.md"
@@ -710,12 +704,25 @@ def create_new_source(
 
     log_fp = ROOT / "log.md"
     with log_fp.open("a", encoding="utf-8") as f:
-        extra = f" -> daun {', '.join(created_cids)} ({branches_summary})" if created_cids else " | menunggu ekstraksi kartu"
+        if merged_into_cid:
+            extra = f" -> digabung ke {merged_into_cid} ({branches_summary})"
+        elif created_cids:
+            extra = f" -> daun {', '.join(created_cids)} ({branches_summary})"
+        else:
+            extra = " | menunggu ekstraksi kartu"
         f.write(f'\n[{today}] TANGKAP {sid} | "{clean_judul}" ({clean_platform}){extra}')
 
     # Sinkronkan FTS5, data.json & peta-pohon.html lokal
     rebuild_local_artifacts()
-    return {"ok": True, "id": sid, "kartu_id": created_cid, "kartu_ids": created_cids, "bidang": branches_summary, "file": f"sumber/{sid}.md"}
+    return {
+        "ok": True,
+        "id": sid,
+        "kartu_id": created_cid,
+        "kartu_ids": created_cids,
+        "digabung_ke": merged_into_cid,
+        "bidang": branches_summary,
+        "file": f"sumber/{sid}.md",
+    }
 
 
 def set_fm_field(content: str, key: str, val: str) -> str:

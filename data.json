@@ -2,11 +2,11 @@
   "mode": "lokal",
   "dibangun": "2026-11-26",
   "ringkasan": {
-    "total_kartu": 21,
-    "total_sumber": 17,
+    "total_kartu": 30,
+    "total_sumber": 22,
     "total_cabang": 16,
     "penerapan": {
-      "belum-dicoba": 21,
+      "belum-dicoba": 30,
       "sedang-dicoba": 0,
       "diterapkan": 0,
       "ditolak": 0
@@ -47,9 +47,9 @@
       "nama": "AI",
       "induk": "",
       "file": "cabang/ai/_cabang.md",
-      "jumlah_kartu_tercatat": 13,
-      "jumlah_sumber_tercatat": 8,
-      "diperbarui": "2026-11-22",
+      "jumlah_kartu_tercatat": 16,
+      "jumlah_sumber_tercatat": 9,
+      "diperbarui": "2026-11-26",
       "catatan_sudut_pandang": "2 sumber berbeda (draf awal)",
       "ringkasan": "Bab dominan untuk penguasaan AI secara praktis: mulai dari video & clipping AI, penulisan artikel/copywriting, coding & pembangunan proyek, perancangan prompt & agen, hingga perbandingan model dan alat terbaik untuk tiap kebutuhan.",
       "poin_kunci": [
@@ -68,8 +68,8 @@
         "Prompt & Agen AI → `cabang/ai/prompt-dan-agen/_cabang.md` (0 kartu)",
         "Perbandingan Model & Alat AI → `cabang/ai/perbandingan-model/_cabang.md` (0 kartu)"
       ],
-      "jumlah_kartu": 13,
-      "jumlah_sumber": 8,
+      "jumlah_kartu": 16,
+      "jumlah_sumber": 9,
       "urutan": 0
     },
     {
@@ -318,8 +318,8 @@
       "nama": "Kesehatan",
       "induk": "",
       "file": "cabang/kesehatan/_cabang.md",
-      "jumlah_kartu_tercatat": 2,
-      "jumlah_sumber_tercatat": 2,
+      "jumlah_kartu_tercatat": 3,
+      "jumlah_sumber_tercatat": 3,
       "diperbarui": "2026-11-26",
       "catatan_sudut_pandang": "belum ada sumber",
       "ringkasan": "Belum ada kartu pada cabang ini.",
@@ -330,8 +330,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 2,
-      "jumlah_sumber": 2,
+      "jumlah_kartu": 3,
+      "jumlah_sumber": 3,
       "urutan": 6
     },
     {
@@ -339,9 +339,9 @@
       "nama": "Motivasi & Mindset",
       "induk": "",
       "file": "cabang/motivasi-dan-mindset/_cabang.md",
-      "jumlah_kartu_tercatat": 1,
-      "jumlah_sumber_tercatat": 1,
-      "diperbarui": "2026-11-22",
+      "jumlah_kartu_tercatat": 6,
+      "jumlah_sumber_tercatat": 4,
+      "diperbarui": "2026-11-26",
       "catatan_sudut_pandang": "belum ada sumber",
       "ringkasan": "Belum ada kartu pada cabang ini.",
       "poin_kunci": [],
@@ -351,8 +351,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 1,
-      "jumlah_sumber": 1,
+      "jumlah_kartu": 6,
+      "jumlah_sumber": 4,
       "urutan": 7
     },
     {
@@ -524,6 +524,10 @@
         "S-0003"
       ],
       "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0012"
+        },
         {
           "tipe": "terkait",
           "ke": "K-0005"
@@ -1355,7 +1359,12 @@
       "sumber": [
         "S-0017"
       ],
-      "relasi": [],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0031"
+        }
+      ],
       "dibuat": "2026-11-26",
       "status": "aktif",
       "publik": false,
@@ -1371,6 +1380,415 @@
       "kutipan": "6hr vs 8hr pushes your system near 100% capacity, multiplying errors, brain fog, and biological debt by 12x.",
       "catatan_agen": "[inferensi AI] Diekstrak otomatis dengan pipeline matematika (TextTiling segmen #1, LexRank=1.0, Entropi=4.2939).",
       "penulis": "Bryan Johnson (@bryan_johnson)"
+    },
+    {
+      "id": "K-0024",
+      "file": "kartu/K-0024.md",
+      "ide": "tidak ada bicara negatif pada diri sendiri: kamu akan berhenti mengatakan hal-hal negatif tentang dirimu sendiri, baik secara keras maupun di dalam kepala, dan tidak, aku tidak peduli apakah kamu bercanda atau tidak.",
+      "bidang": "ai",
+      "cabang": "ai",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "belum-diverifikasi",
+      "dasar": "tidak-jelas",
+      "tag": [
+        "ekstraksi-matematika",
+        "x"
+      ],
+      "konsep": [],
+      "sumber": [
+        "S-0018"
+      ],
+      "relasi": [
+        {
+          "tipe": "prasyarat-untuk",
+          "ke": "K-0025"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "publik": false,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-26",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "ai",
+      "tahap_kerja": "produksi",
+      "penjelasan": "tidak ada bicara negatif pada diri sendiri: kamu akan berhenti mengatakan hal-hal negatif tentang dirimu sendiri, baik secara keras maupun di dalam kepala, dan tidak, aku tidak peduli apakah kamu bercanda atau tidak. bahkan jika itu lelucon, otakmu mempercayai segala sesuatu yang kamu katakan padanya.",
+      "kutipan": "tidak ada bicara negatif pada diri sendiri: kamu akan berhenti mengatakan hal-hal negatif tentang dirimu sendiri, baik secara keras maupun di dalam kepala, dan tidak, aku tidak peduli apakah kamu bercanda atau tidak.",
+      "catatan_agen": "[inferensi AI] Diekstrak otomatis dengan pipeline matematika (TextTiling segmen #3, LexRank=1.0, Entropi=3.4186).",
+      "penulis": "x.com"
+    },
+    {
+      "id": "K-0025",
+      "file": "kartu/K-0025.md",
+      "ide": "reframing perjuanganmu: daripada mengatakan 'aku sedang berjuang,' katakan pada dirimu sendiri 'aku sedang belajar.' daripada mengatakan 'ini sangat sulit,' katakan pada dirimu sendiri 'ini semakin mudah.'",
+      "bidang": "ai",
+      "cabang": "ai",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "belum-diverifikasi",
+      "dasar": "tidak-jelas",
+      "tag": [
+        "ekstraksi-matematika",
+        "x"
+      ],
+      "konsep": [],
+      "sumber": [
+        "S-0018"
+      ],
+      "relasi": [
+        {
+          "tipe": "prasyarat-untuk",
+          "ke": "K-0026"
+        },
+        {
+          "tipe": "lanjutan-dari",
+          "ke": "K-0024"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "publik": false,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-26",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "ai",
+      "tahap_kerja": "produksi",
+      "penjelasan": "ia tidak tahu perbedaan antara apa yang palsu, apa yang lelucon, dan apa yang nyata, karena pikiran bawah sadarmu selalu mendengarkan apa yang kamu berikan padanya, dan ia akan mulai mengidentifikasi diri dengan apa pun yang kamu katakan padanya. reframing perjuanganmu: daripada mengatakan \"aku sedang berjuang,\" katakan pada dirimu sendiri \"aku sedang belajar.\" daripada mengatakan \"ini sangat sulit,\" katakan pada dirimu sendiri \"ini semakin mudah.\"",
+      "kutipan": "reframing perjuanganmu: daripada mengatakan \"aku sedang berjuang,\" katakan pada dirimu sendiri \"aku sedang belajar.\" daripada mengatakan \"ini sangat sulit,\" katakan pada dirimu sendiri \"ini semakin mudah.\"",
+      "catatan_agen": "[inferensi AI] Diekstrak otomatis dengan pipeline matematika (TextTiling segmen #3, LexRank=0.8989, Entropi=3.5437).",
+      "penulis": "x.com"
+    },
+    {
+      "id": "K-0026",
+      "file": "kartu/K-0026.md",
+      "ide": "jadi lain kali kamu mengatakan sesuatu yang negatif pada dirimu sendiri, secara harfiah bayangkan versi yang lebih muda dari dirimu, foto kecilmu di pikiranmu, dan ingatkan dirimu sendiri bahwa kamu sedang berbicara pada",
+      "bidang": "ai",
+      "cabang": "ai",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "belum-diverifikasi",
+      "dasar": "tidak-jelas",
+      "tag": [
+        "ekstraksi-matematika",
+        "x"
+      ],
+      "konsep": [],
+      "sumber": [
+        "S-0018"
+      ],
+      "relasi": [
+        {
+          "tipe": "lanjutan-dari",
+          "ke": "K-0025"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "publik": false,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-26",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "ai",
+      "tahap_kerja": "produksi",
+      "penjelasan": "jadi lain kali kamu mengatakan sesuatu yang negatif pada dirimu sendiri, secara harfiah bayangkan versi yang lebih muda dari dirimu, foto kecilmu di pikiranmu, dan ingatkan dirimu sendiri bahwa kamu sedang berbicara pada anak kecil itu. dan itu akan mengubah segalanya.",
+      "kutipan": "jadi lain kali kamu mengatakan sesuatu yang negatif pada dirimu sendiri, secara harfiah bayangkan versi yang lebih muda dari dirimu, foto kecilmu di pikiranmu, dan ingatkan dirimu sendiri bahwa kamu sedang berbicara pada anak kecil itu.",
+      "catatan_agen": "[inferensi AI] Diekstrak otomatis dengan pipeline matematika (TextTiling segmen #6, LexRank=0.9596, Entropi=4.194).",
+      "penulis": "x.com"
+    },
+    {
+      "id": "K-0027",
+      "file": "kartu/K-0027.md",
+      "ide": "neuroscience shows that the easiest way to become confident and actually believe in yourself is to change your self-talk.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "belum-diverifikasi",
+      "dasar": "tidak-jelas",
+      "tag": [
+        "ekstraksi-matematika",
+        "x"
+      ],
+      "konsep": [],
+      "sumber": [
+        "S-0019"
+      ],
+      "relasi": [
+        {
+          "tipe": "prasyarat-untuk",
+          "ke": "K-0028"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0032"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0030"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "publik": false,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-26",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "produksi",
+      "penjelasan": "neuroscience shows that the easiest way to become confident and actually believe in yourself is to change your self-talk. athletes do it, authors do it, artists do it.",
+      "kutipan": "neuroscience shows that the easiest way to become confident and actually believe in yourself is to change your self-talk.",
+      "catatan_agen": "[inferensi AI] Diekstrak otomatis dengan pipeline matematika (TextTiling segmen #1, LexRank=0.6003, Entropi=3.4057).",
+      "penulis": "alexei (@alexeixbt)"
+    },
+    {
+      "id": "K-0028",
+      "file": "kartu/K-0028.md",
+      "ide": "no negative self-talk: you're gonna stop saying negative things about yourself, out loud or in your head, and no, i don't care if you're joking or not.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "belum-diverifikasi",
+      "dasar": "tidak-jelas",
+      "tag": [
+        "ekstraksi-matematika",
+        "x"
+      ],
+      "konsep": [],
+      "sumber": [
+        "S-0019"
+      ],
+      "relasi": [
+        {
+          "tipe": "prasyarat-untuk",
+          "ke": "K-0029"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0030"
+        },
+        {
+          "tipe": "lanjutan-dari",
+          "ke": "K-0027"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "publik": false,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-26",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "produksi",
+      "penjelasan": "no negative self-talk: you're gonna stop saying negative things about yourself, out loud or in your head, and no, i don't care if you're joking or not. even if it's a joke, your brain believes everything that you tell it.",
+      "kutipan": "no negative self-talk: you're gonna stop saying negative things about yourself, out loud or in your head, and no, i don't care if you're joking or not.",
+      "catatan_agen": "[inferensi AI] Diekstrak otomatis dengan pipeline matematika (TextTiling segmen #2, LexRank=1.0, Entropi=3.0249).",
+      "penulis": "alexei (@alexeixbt)"
+    },
+    {
+      "id": "K-0029",
+      "file": "kartu/K-0029.md",
+      "ide": "reframe your struggles: instead of saying 'i am struggling,' tell yourself 'i am learning.' instead of saying 'this is so hard,' tell yourself 'this is getting easier.'",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "belum-diverifikasi",
+      "dasar": "tidak-jelas",
+      "tag": [
+        "ekstraksi-matematika",
+        "x"
+      ],
+      "konsep": [],
+      "sumber": [
+        "S-0019"
+      ],
+      "relasi": [
+        {
+          "tipe": "lanjutan-dari",
+          "ke": "K-0028"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "publik": false,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-26",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "riset",
+      "penjelasan": "it does not know the difference between what's fake, what's a joke, and what's reality, because your subconscious mind is always listening to what you feed it, and it will start to identify with whatever you tell it. reframe your struggles: instead of saying \"i am struggling,\" tell yourself \"i am learning.\" instead of saying \"this is so hard,\" tell yourself \"this is getting easier.\"",
+      "kutipan": "reframe your struggles: instead of saying \"i am struggling,\" tell yourself \"i am learning.\" instead of saying \"this is so hard,\" tell yourself \"this is getting easier.\"",
+      "catatan_agen": "[inferensi AI] Diekstrak otomatis dengan pipeline matematika (TextTiling segmen #2, LexRank=0.7964, Entropi=2.5552).",
+      "penulis": "alexei (@alexeixbt)"
+    },
+    {
+      "id": "K-0030",
+      "file": "kartu/K-0030.md",
+      "ide": "Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa yang Anda inginkan dalam hidup.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "nasihat",
+      "kepercayaan": "sedang",
+      "dasar": "opini-umum",
+      "tag": [
+        "komunikasi-langsung",
+        "assertiveness",
+        "self-empowerment",
+        "personal-growth",
+        "x"
+      ],
+      "konsep": [
+        "komunikasi-efektif",
+        "ketegasan",
+        "kepercayaan-diri",
+        "pencapaian-tujuan",
+        "kejelasan"
+      ],
+      "sumber": [
+        "S-0020"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0027"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0028"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "publik": false,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-26",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "produksi",
+      "penjelasan": "Hentikan basa-basi dan mulailah berbicara dengan percaya diri karena orang tidak menghargai isyarat, melainkan kejelasan. Katakan apa yang Anda maksud dan maksudkan apa yang Anda katakan.",
+      "kutipan": "People don't respect hints. They respect clarity.",
+      "catatan_agen": "[inferensi AI] Diekstrak lewat 1-panggilan terstruktur (gemini-2.5-flash), kutipan terverifikasi.",
+      "penulis": "Mrs Angel (@mrsangelkelechi)"
+    },
+    {
+      "id": "K-0031",
+      "file": "kartu/K-0031.md",
+      "ide": "Brain rot memicu depresi secara tidak langsung melalui kelelahan mental, stres, dan kecemasan.",
+      "bidang": "kesehatan",
+      "cabang": "kesehatan",
+      "tahap": "semua-usia",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "riset",
+      "tag": [
+        "brain-rot",
+        "burnout",
+        "depresi",
+        "stres",
+        "x"
+      ],
+      "konsep": [
+        "beban-kognitif",
+        "kelelahan-mental",
+        "kesehatan-mental",
+        "konsumsi-digital"
+      ],
+      "sumber": [
+        "S-0021"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0023"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "publik": false,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-26",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "kesehatan",
+      "tahap_kerja": "produksi",
+      "penjelasan": "1. Brain rot ditandai oleh kelelahan kognitif dan kelelahan mental akibat keterlibatan digital.\n2. Kondisi ini memicu 'loss spiral' dengan menguras sumber daya psikologis yang berujung pada burnout.\n3. Burnout kemudian meningkatkan stres dan kecemasan, yang akhirnya memicu gejala depresi.",
+      "kutipan": "The Cognitive Cost of Brain Rot",
+      "catatan_agen": "[inferensi AI] Diekstrak lewat 1-panggilan terstruktur (gemini-3.5-flash-lite), kutipan terverifikasi.",
+      "penulis": "dr. Adam Prabata (@AdamPrabata)"
+    },
+    {
+      "id": "K-0032",
+      "file": "kartu/K-0032.md",
+      "ide": "science shows that complaining or talking about your problems the wrong way can actually make your brain and your anxiety worse, and i will tell you the neuroscience behind why and what to do instead.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "riset",
+      "tag": [
+        "draf-ekstraktif",
+        "talking",
+        "problems",
+        "shows",
+        "science",
+        "x"
+      ],
+      "konsep": [
+        "talking",
+        "problems",
+        "shows"
+      ],
+      "sumber": [
+        "S-0022"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0027"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "publik": false,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-26",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "riset",
+      "penjelasan": "science shows that complaining or talking about your problems the wrong way can actually make your brain and your anxiety worse, and i will tell you the neuroscience behind why and what to do instead. most people think they're just talking about their problems to get it off their chest, and it's fine, but research in clinical psychology shows that repeatedly talking about your problems without finding a resolution can prolong negative emotions and increase stress.",
+      "kutipan": "science shows that complaining or talking about your problems the wrong way can actually...",
+      "catatan_agen": "[inferensi AI] Draf ekstraktif offline (perlu ditinjau) — TextTiling #1, LexRank=1.0, Entropi=3.604.",
+      "penulis": "alexei (@alexeixbt)"
     }
   ],
   "sumber": [
@@ -1688,6 +2106,100 @@
         "K-0023"
       ],
       "saripati": "(1) 6hr vs 8hr pushes your system near 100% capacity, multiplying errors, brain fog, and biological debt by 12x."
+    },
+    {
+      "id": "S-0018",
+      "file": "sumber/S-0018.md",
+      "judul": "(83) alexei di X: 'neuroscience shows that the easiest way to become confident and actually believe in yourself is to ch",
+      "jenis": "postingan",
+      "penulis": "x.com",
+      "platform": "X",
+      "url": "https://x.com/alexeixbt/status/2125270489354346580",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0024",
+        "K-0025",
+        "K-0026"
+      ],
+      "saripati": "(1) tidak ada bicara negatif pada diri sendiri: kamu akan berhenti mengatakan hal-hal negatif tentang dirimu sendiri, baik secara keras maupun di dalam kepala, dan tidak, aku tidak peduli apakah kamu bercanda atau tidak. | (2) reframing perjuanganmu: daripada mengatakan 'aku sedang berjuang,' katakan pada dirimu sendiri 'aku sedang belajar.' daripada mengatakan 'ini sangat sulit,' katakan pada dirimu sendiri 'ini sem"
+    },
+    {
+      "id": "S-0019",
+      "file": "sumber/S-0019.md",
+      "judul": "neuroscience shows that the easiest way to become confident and actually believe",
+      "jenis": "postingan",
+      "penulis": "alexei (@alexeixbt)",
+      "platform": "X",
+      "url": "https://x.com/alexeixbt/status/2125270489354346580?a=-rYYPR1FfSfF1xergvs&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0027",
+        "K-0028",
+        "K-0029"
+      ],
+      "saripati": "(1) neuroscience shows that the easiest way to become confident and actually believe in yourself is to change your self-talk. | (2) no negative self-talk: you're gonna stop saying negative things about yourself, out loud or in your head, and no, i don't care if you're joking or not. | (3) reframe your struggles: instead of saying 'i am struggling,' tell yourself 'i am learning.' instead of saying 'this is so hard,' t"
+    },
+    {
+      "id": "S-0020",
+      "file": "sumber/S-0020.md",
+      "judul": "Normalize being very direct. Very straight to the point. Very assertive. You'll get everyt",
+      "jenis": "postingan",
+      "penulis": "Mrs Angel (@mrsangelkelechi)",
+      "platform": "X",
+      "url": "https://x.com/mrsangelkelechi/status/2125523638019662139?a=LWDmSIVBVoo2a1hdurc&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0030"
+      ],
+      "saripati": "(1) Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa yang Anda inginkan dalam hidup."
+    },
+    {
+      "id": "S-0021",
+      "file": "sumber/S-0021.md",
+      "judul": "Terlalu sering scrolling media sosial --> Gangguan reseptor dopamin di otak --> Brain rot",
+      "jenis": "postingan",
+      "penulis": "dr. Adam Prabata (@AdamPrabata)",
+      "platform": "X",
+      "url": "https://x.com/AdamPrabata/status/2125545050637529230?a=yPMeKoxb0IlYYSi1cwo&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "kesehatan"
+      ],
+      "kartu": [
+        "K-0031"
+      ],
+      "saripati": "(1) Brain rot memicu depresi secara tidak langsung melalui kelelahan mental, stres, dan kecemasan."
+    },
+    {
+      "id": "S-0022",
+      "file": "sumber/S-0022.md",
+      "judul": "science shows that complaining or talking about your problems the wrong way can actually m",
+      "jenis": "postingan",
+      "penulis": "alexei (@alexeixbt)",
+      "platform": "X",
+      "url": "https://x.com/alexeixbt/status/2125227957534785672?a=Qo_PEwaqOj0nU5J5Wpo&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0032"
+      ],
+      "saripati": "(1) science shows that complaining or talking about your problems the wrong way can actually make your brain and your anxiety worse, and i will tell you the neuroscience behind why and what to do instead."
     }
   ]
 }

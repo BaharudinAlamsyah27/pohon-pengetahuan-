@@ -2945,7 +2945,9 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
           const mathBox = document.getElementById("tk-math-preview");
           if (mathBox) { mathBox.style.display = "none"; mathBox.innerHTML = ""; }
           const daunList = (d.kartu_ids && d.kartu_ids.length) ? d.kartu_ids.join(", ") : d.kartu_id;
-          out.innerHTML = d.kartu_id
+          out.innerHTML = d.digabung_ke
+            ? `<strong>♻️ Duplikat Semantik Terdeteksi!</strong> Sumber <strong>${esc(d.id)}</strong> otomatis digabungkan ke kartu yang sudah ada <strong>${esc(d.digabung_ke)}</strong> (${esc(d.bidang)}). <button class="btn-secondary" onclick="location.hash='#kartu/${esc(d.digabung_ke)}';location.reload()">Lihat Kartu →</button>`
+            : d.kartu_id
             ? `<strong>Tersimpan!</strong> Akar <strong>${esc(d.id)}</strong> → Daun <strong>${esc(daunList)}</strong> (${esc(d.bidang)}). Form telah dibersihkan. <button class="btn-secondary" onclick="location.hash='#kartu/${esc(d.kartu_id)}';location.reload()">Lihat di Pohon →</button>`
             : `<strong>Tersimpan sebagai ${esc(d.id)}</strong> (${esc(d.file)}). Form telah dibersihkan.`;
         } else {

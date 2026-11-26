@@ -522,7 +522,7 @@ KNOWN_TOOLS = [
     "gemini-4-neon", "gemini", "cursor", "antigravity", "codex", "chatgpt", "gpt",
     "kling", "veo", "runway", "sora", "luma", "pika", "hailuo", "heygen", "elevenlabs",
     "capcut", "opus-clip", "midjourney", "flux", "ideogram", "canva", "figma",
-    "perplexity", "notebooklm", "n8n", "make", "zapier", "obsidian",
+    "perplexity", "notebooklm", "n8n", "make.com", "zapier", "obsidian",
     "ocr-x", "tiktok", "instagram", "youtube", "threads", "facebook", "seo", "mcp",
 ]
 
@@ -846,12 +846,31 @@ def _is_mostly_non_indonesian(text: str) -> bool:
 
 def translate_and_polish_card_gemini(ide_text: str, penjelasan: str) -> tuple[str, str]:
     """
-    Jika kartu hasil ekstraksi berbahasa asing (Inggris/Mandarin) dan GEMINI_API_KEY aktif,
-    terjemahkan & rapikan menjadi Bahasa Indonesia alami (<1 detik, thinkingBudget: 0).
+    Jika kartu hasil ekstraksi berbahasa asing (Inggris/Mandarin) dan ada API key gratis aktif,
+    terjemahkan & rapikan menjadi Bahasa Indonesia alami lewat cascade 6 penyedia gratis.
     Teks Asli di sumber/ tetap suci tidak pernah diubah.
     """
-    if not _is_mostly_non_indonesian(f"{ide_text} {penjelasan}"):
+    if not _is_mostly_non_indonesian(f"{ide_text} {penjelasan}") or not has_any_free_llm_key():
         return ide_text, penjelasan
+    prompt = (
+        "Terjemahkan dan rapikan wawasan berikut ke Bahasa Indonesia yang jelas, natural, dan setia pada isi (jangan mengarang).\n"
+        'Balas HANYA JSON valid: {"ide": "1-2 kalimat inti", "penjelasan": "2-4 kalimat penjelasan"}.\n\n'
+        f"IDE ASLI: {ide_text}\n"
+        f"PENJELASAN ASLI: {penjelasan}"
+    )
+    raw, _mdl, _err = call_free_llm_cascade("", prompt, json_mode=True, max_tokens=1024, temperature=0.1)
+    if raw:
+        try:
+            m = re.search(r"\{[\s\S]*\}", raw)
+            if m:
+                parsed = json.loads(m.group(0))
+                new_ide = str(parsed.get("ide") or "").strip().replace('"', "'")
+                new_penj = str(parsed.get("penjelasan") or "").strip()
+                if len(new_ide) >= 12:
+                    return new_ide[:240], (new_penj or penjelasan)[:1200]
+        except Exception:
+            pass
+    return ide_text, penjelasan
 
 ALLOWED_JENIS_KARTU = {"fakta", "data", "nasihat", "opini", "kisah", "prinsip"}
 ALLOWED_DASAR_KARTU = {"riset", "pengalaman-pribadi", "opini-umum", "tidak-jelas"}

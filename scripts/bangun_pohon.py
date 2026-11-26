@@ -632,6 +632,8 @@ def run_audit() -> int:
     warnings: list[str] = []
 
     for cid, c in cards.items():
+        if c.get("status") != "aktif":
+            continue
         if not c["sumber"]:
             warnings.append(f"[TANPA SUMBER] {cid} tidak menautkan ke sumber mana pun.")
         for sid in c["sumber"]:
