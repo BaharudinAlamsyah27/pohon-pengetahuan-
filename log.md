@@ -86,3 +86,5 @@ Catatan kronologis (append-only).
 [2026-11-27] UI UPGRADE: Meng-upgrade animasi Pohon Loki di scripts/template_peta.html dari 2D menjadi mesin 3D Recursive Fractal Yggdrasil (7 pilinan heliks batang timeline, 9 dahan bercabang rekursif 4 tingkat, 10 akar 3D 3 tingkat, ~450 daun bokeh kosmik emerald/emas, additive bloom, konstelasi garis pengetahuan, 42 pulsa cahaya, putar 3D 360° dengan drag, dan gelombang energi emas saat diklik); rebuild lokal & publik serta verifikasi kebocoran.
 
 [2026-11-27] FITUR KOTAK TITIPAN (OPSI 1): Menambahkan api/titip.js (Vercel Serverless Function → GitHub Issues), endpoint lokal GET /api/titipan & POST /api/titipan/proses di scripts/server_lokal.py, form Titip Ilmu publik super simpel di #tangkap, serta panel 1-klik Terima/Abaikan di mode lokal.
+
+[2026-11-27] SEO / WA PREVIEW: Menambahkan meta tag Open Graph (og:title, og:description, og:image, og:url, og:type) & Twitter Card di scripts/template_peta.html serta gambar thumbnail terkompresi assets/og-pohon.jpg (1200x630, <300 KB) agar tautan menampilkan pratinjau kaya di WhatsApp.
