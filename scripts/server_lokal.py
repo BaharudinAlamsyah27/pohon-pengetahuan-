@@ -1299,7 +1299,7 @@ class PohonHandler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:
         parsed = urlparse(self.path)
-        if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar", "/api/baca-pdf", "/api/rapikan-draf", "/api/keputusan", "/api/jurnal", "/api/jurnal/refleksi", "/api/jurnal/kompas"):
+        if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar", "/api/baca-pdf", "/api/rapikan-draf", "/api/keputusan", "/api/jurnal", "/api/jurnal/refleksi", "/api/jurnal/kompas", "/api/titipan/proses"):
             self.send_error(404, "Endpoint tidak dikenal")
             return
         max_len = 16_000_000 if parsed.path == "/api/baca-pdf" else (8_000_000 if parsed.path == "/api/ocr-gambar" else (2_000_000 if parsed.path == "/api/jurnal" else (512_000 if parsed.path in ("/api/simpan-sumber", "/api/ekstrak-matematika") else (32_768 if parsed.path in ("/api/edit-kartu", "/api/jurnal/kompas") else 4096))))
