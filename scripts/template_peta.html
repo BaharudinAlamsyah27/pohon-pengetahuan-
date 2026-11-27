@@ -1872,8 +1872,23 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       sz: 0.8 + Math.random() * 1.5,
       gold: Math.random() < 0.72,
     }));
+    // Sungai Alkimia Kosmik 1: Lubang Hitam (Input Chaos) -> Akar Pohon
+    const bhStream = Array.from({ length: 28 }, (_, i) => ({
+      t: i / 28,
+      spd: 0.0042 + Math.random() * 0.0038,
+      spread: (Math.random() - 0.5) * 26,
+      sz: 2.2 + Math.random() * 2.6,
+    }));
+    // Sungai Alkimia Kosmik 2: Mahkota Daun Pohon -> Galaksi Spiral (Karya & Bintang Baru)
+    const galStream = Array.from({ length: 28 }, (_, i) => ({
+      t: i / 28,
+      spd: 0.0040 + Math.random() * 0.0036,
+      spread: (Math.random() - 0.5) * 28,
+      sz: 2.2 + Math.random() * 2.6,
+      cyan: i % 2 === 0,
+    }));
 
-    return { segments, leaves, hubs, paths, pulses, embers, stars, deepStars, galaxyStars, bhParticles };
+    return { segments, leaves, hubs, paths, pulses, embers, stars, deepStars, galaxyStars, bhParticles, bhStream, galStream };
   }
 
   function _drawLokiTreeFrame(ctx, w, h, tree, tState, time) {
@@ -1956,30 +1971,45 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
     }
 
     // D. GALAKSI SPIRAL BERPUTAR (Sisi Kanan Kosmos — keagungan Andromeda/Bima Sakti)
+    tState.bhSurge = Math.max(0, (tState.bhSurge || 0) * 0.955);
+    tState.galSurge = Math.max(0, (tState.galSurge || 0) * 0.955);
+    if (tState.bhSurge > 0.45 && (tState.surge || 0) < 0.5) tState.surge = Math.max(tState.surge || 0, tState.bhSurge * 0.72);
+    if ((tState.surge || 0) > 0.45 && tState.galSurge < 0.5) tState.galSurge = Math.max(tState.galSurge, tState.surge * 0.68);
+    const bhBoost = 1 + tState.bhSurge * 1.5;
+    const galBoost = 1 + tState.galSurge * 1.6;
+
     const gx = w * 0.835 - parX * 0.55;
     const gy = h * 0.31 - parY * 0.45;
-    const gRad = Math.min(w, h) * 0.21;
+    const gRad = Math.min(w, h) * 0.21 * (1 + tState.galSurge * 0.16);
     const gTilt = -0.36;
     const cosGT = Math.cos(gTilt), sinGT = Math.sin(gTilt);
     const gCore = ctx.createRadialGradient(gx, gy, 1, gx, gy, gRad * 0.95);
-    gCore.addColorStop(0, "rgba(255,251,235,0.62)");
-    gCore.addColorStop(0.25, "rgba(186,230,253,0.22)");
-    gCore.addColorStop(0.6, "rgba(167,139,250,0.08)");
+    gCore.addColorStop(0, `rgba(255,251,235,${Math.min(0.95, 0.62 * galBoost).toFixed(2)})`);
+    gCore.addColorStop(0.25, `rgba(186,230,253,${Math.min(0.65, 0.22 * galBoost).toFixed(2)})`);
+    gCore.addColorStop(0.6, `rgba(167,139,250,${Math.min(0.32, 0.08 * galBoost).toFixed(2)})`);
     gCore.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = gCore;
     ctx.beginPath();
     ctx.arc(gx, gy, gRad * 0.95, 0, Math.PI * 2);
     ctx.fill();
-    const gSpin = time * 0.085;
+    if (tState.galSurge > 0.06) {
+      const sbR = gRad * (1.6 - tState.galSurge * 0.9);
+      ctx.strokeStyle = `rgba(186,230,253,${(tState.galSurge * 0.55).toFixed(2)})`;
+      ctx.lineWidth = 2.0;
+      ctx.beginPath();
+      ctx.arc(gx, gy, sbR, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    const gSpin = time * (0.085 + tState.galSurge * 0.35);
     for (let gs of tree.galaxyStars) {
       const a = gs.ang + gSpin;
       const lx = Math.cos(a) * gs.r * gRad;
       const ly = Math.sin(a) * gs.r * gRad * 0.40;
       const px = gx + lx * cosGT - ly * sinGT;
       const py = gy + lx * sinGT + ly * cosGT;
-      ctx.fillStyle = `rgba(${gs.col},${(gs.a * 0.72).toFixed(2)})`;
+      ctx.fillStyle = `rgba(${gs.col},${Math.min(0.98, gs.a * 0.72 * galBoost).toFixed(2)})`;
       ctx.beginPath();
-      ctx.arc(px, py, gs.sz * 0.75, 0, Math.PI * 2);
+      ctx.arc(px, py, gs.sz * (0.75 + tState.galSurge * 0.35), 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -1994,14 +2024,14 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
     ctx.rotate(bhTilt);
 
     // 1) Aura pembengkokan gravitasi di belakang lubang hitam
-    const bhAura = ctx.createRadialGradient(0, 0, bhR * 0.9, 0, 0, bhR * 3.4);
-    bhAura.addColorStop(0, "rgba(251,191,36,0.45)");
-    bhAura.addColorStop(0.32, "rgba(245,158,11,0.18)");
-    bhAura.addColorStop(0.65, "rgba(124,58,237,0.07)");
+    const bhAura = ctx.createRadialGradient(0, 0, bhR * 0.9, 0, 0, bhR * 3.4 * (1 + tState.bhSurge * 0.25));
+    bhAura.addColorStop(0, `rgba(251,191,36,${Math.min(0.9, 0.45 * bhBoost).toFixed(2)})`);
+    bhAura.addColorStop(0.32, `rgba(245,158,11,${Math.min(0.55, 0.18 * bhBoost).toFixed(2)})`);
+    bhAura.addColorStop(0.65, "rgba(124,58,237,0.08)");
     bhAura.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = bhAura;
     ctx.beginPath();
-    ctx.arc(0, 0, bhR * 3.4, 0, Math.PI * 2);
+    ctx.arc(0, 0, bhR * 3.4 * (1 + tState.bhSurge * 0.25), 0, Math.PI * 2);
     ctx.fill();
 
     // 2) Busur Lensing Gravitasi atas & bawah (cahaya piringan belakang yang dibelokkan gravitasi!)
@@ -2310,6 +2340,65 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       ctx.fill();
     }
 
+    // 6. SIKLUS ALKIMIA KOSMIK: Jembatan Energi Lubang Hitam -> Akar Pohon -> Mahkota -> Galaksi Spiral
+    const rootTargetX = cx, rootTargetY = cy + scale * 0.42;
+    const crownSrcX = cx + scale * 0.14, crownSrcY = cy - scale * 0.52;
+
+    // 6a. Sungai Plasma Emas: Lubang Hitam (kiri) -> Akar Pohon (bawah)
+    ctx.strokeStyle = `rgba(251,191,36,${Math.min(0.45, 0.14 * bhBoost).toFixed(2)})`;
+    ctx.lineWidth = 1.4 + tState.bhSurge * 1.8;
+    ctx.beginPath();
+    ctx.moveTo(bx + bhR * 1.1, by + bhR * 0.45);
+    ctx.bezierCurveTo(bx + w * 0.06, h * 0.78, cx - w * 0.16, h * 0.92, rootTargetX, rootTargetY);
+    ctx.stroke();
+
+    for (let pt of tree.bhStream) {
+      pt.t = (pt.t + pt.spd * (1 + tState.bhSurge * 2.4)) % 1;
+      const u = pt.t, mu = 1 - u;
+      const x0 = bx + bhR * 1.1, y0 = by + bhR * 0.45;
+      const c1x = bx + w * 0.06, c1y = h * 0.78 + pt.spread;
+      const c2x = cx - w * 0.16, c2y = h * 0.92 + pt.spread * 0.5;
+      const px = mu * mu * mu * x0 + 3 * mu * mu * u * c1x + 3 * mu * u * u * c2x + u * u * u * rootTargetX;
+      const py = mu * mu * mu * y0 + 3 * mu * mu * u * c1y + 3 * mu * u * u * c2y + u * u * u * rootTargetY;
+      const fade = Math.sin(u * Math.PI);
+      const r = pt.sz * (0.75 + 0.4 * fade) * (1 + tState.bhSurge * 0.5);
+      const g = ctx.createRadialGradient(px, py, 0, px, py, r * 2.2);
+      g.addColorStop(0, `rgba(255,251,235,${(0.92 * fade).toFixed(2)})`);
+      g.addColorStop(0.4, `rgba(251,191,36,${(0.68 * fade).toFixed(2)})`);
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(px, py, r * 2.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 6b. Sungai Benih Bintang Zamrud-Biru: Mahkota Daun Pohon (atas) -> Galaksi Spiral (kanan)
+    ctx.strokeStyle = `rgba(52,211,153,${Math.min(0.45, 0.14 * galBoost).toFixed(2)})`;
+    ctx.lineWidth = 1.4 + tState.galSurge * 1.8;
+    ctx.beginPath();
+    ctx.moveTo(crownSrcX, crownSrcY);
+    ctx.bezierCurveTo(cx + w * 0.18, h * 0.06, gx - w * 0.12, gy - h * 0.14, gx, gy);
+    ctx.stroke();
+
+    for (let pt of tree.galStream) {
+      pt.t = (pt.t + pt.spd * (1 + tState.surge * 1.8 + tState.galSurge * 2.0)) % 1;
+      const u = pt.t, mu = 1 - u;
+      const c1x = cx + w * 0.18, c1y = h * 0.06 + pt.spread;
+      const c2x = gx - w * 0.12, c2y = gy - h * 0.14 + pt.spread * 0.5;
+      const px = mu * mu * mu * crownSrcX + 3 * mu * mu * u * c1x + 3 * mu * u * u * c2x + u * u * u * gx;
+      const py = mu * mu * mu * crownSrcY + 3 * mu * mu * u * c1y + 3 * mu * u * u * c2y + u * u * u * gy;
+      const fade = Math.sin(u * Math.PI);
+      const r = pt.sz * (0.75 + 0.4 * fade) * (1 + tState.galSurge * 0.5);
+      const g = ctx.createRadialGradient(px, py, 0, px, py, r * 2.2);
+      g.addColorStop(0, `rgba(240,253,250,${(0.92 * fade).toFixed(2)})`);
+      g.addColorStop(0.4, pt.cyan ? `rgba(56,189,248,${(0.68 * fade).toFixed(2)})` : `rgba(52,211,153,${(0.68 * fade).toFixed(2)})`);
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(px, py, r * 2.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     // Kembali ke mode normal untuk label HUD tipis
     ctx.globalCompositeOperation = "source-over";
     ctx.font = "700 10px ui-monospace, monospace";
@@ -2318,7 +2407,7 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
     ctx.fillText("BATANG · ALIRAN TIMELINE", 12, h * 0.54);
     ctx.fillText("AKAR · SUMBER ASLI", 12, h - 10);
     ctx.textAlign = "right";
-    ctx.fillText("SERET UNTUK PUTAR 3D · KLIK = GELOMBANG CAHAYA", w - 12, h - 10);
+    ctx.fillText("SERET PUTAR 3D · KLIK LUBANG HITAM / POHON / GALAKSI", w - 12, h - 10);
     ctx.textAlign = "left";
   }
 
@@ -2348,15 +2437,25 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       glow: 6 + Math.random() * 5,
       color: i % 3 === 0 ? "rgba(251,191,36,0.9)" : (i % 3 === 1 ? "rgba(52,211,153,0.95)" : "rgba(56,189,248,0.95)"),
     }));
-    const camState = { rotY: 0.25, rotX: 0.08, dragging: false, moved: false, lx: 0, ly: 0, surge: 0 };
+    const camState = { rotY: 0.25, rotX: 0.08, dragging: false, moved: false, lx: 0, ly: 0, surge: 0, bhSurge: 0, galSurge: 0 };
 
     canvas.addEventListener("pointerdown", e => {
       camState.dragging = true; camState.moved = false;
       camState.lx = e.clientX; camState.ly = e.clientY;
       canvas.style.cursor = "grabbing";
     });
-    window.addEventListener("pointerup", () => {
-      if (camState.dragging && !camState.moved && mode === "tree") camState.surge = 1.0;
+    window.addEventListener("pointerup", e => {
+      if (camState.dragging && !camState.moved && mode === "tree") {
+        const rect = canvas.getBoundingClientRect();
+        const relX = rect.width ? (e.clientX - rect.left) / rect.width : 0.5;
+        if (relX < 0.30) {
+          camState.bhSurge = 1.0;
+        } else if (relX > 0.70) {
+          camState.galSurge = 1.0;
+        } else {
+          camState.surge = 1.0;
+        }
+      }
       camState.dragging = false;
       canvas.style.cursor = "grab";
     });
