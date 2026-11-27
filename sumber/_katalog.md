@@ -26,3 +26,4 @@ S-0019 | 2026-11-26 | postingan | alexei (@alexeixbt) | "neuroscience shows that
 S-0020 | 2026-11-26 | postingan | Mrs Angel (@mrsangelkelechi) | "Normalize being very direct. Very straight to the point. Very assertive. You'll get everyt" | bidang: motivasi-dan-mindset | 1 kartu
 S-0021 | 2026-11-26 | postingan | dr. Adam Prabata (@AdamPrabata) | "Terlalu sering scrolling media sosial --> Gangguan reseptor dopamin di otak --> Brain rot" | bidang: kesehatan | 1 kartu
 S-0022 | 2026-11-26 | postingan | alexei (@alexeixbt) | "science shows that complaining or talking about your problems the wrong way can actually m" | bidang: motivasi-dan-mindset | 1 kartu
+S-0023 | 2026-11-27 | postingan | Vox (@Voxyz_ai) | "Jalankan Waktu, Energi & Sumber Daya di Bawah Kapasitas 80% (Teori Antrean)" | bidang: motivasi-dan-mindset | 1 kartu

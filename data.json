@@ -1,12 +1,12 @@
 {
   "mode": "lokal",
-  "dibangun": "2026-11-26",
+  "dibangun": "2026-11-27",
   "ringkasan": {
-    "total_kartu": 25,
-    "total_sumber": 22,
+    "total_kartu": 26,
+    "total_sumber": 23,
     "total_cabang": 19,
     "penerapan": {
-      "belum-dicoba": 25,
+      "belum-dicoba": 26,
       "sedang-dicoba": 0,
       "diterapkan": 0,
       "ditolak": 0
@@ -342,9 +342,9 @@
       "nama": "Motivasi & Mindset",
       "induk": "",
       "file": "cabang/motivasi-dan-mindset/_cabang.md",
-      "jumlah_kartu_tercatat": 4,
-      "jumlah_sumber_tercatat": 5,
-      "diperbarui": "2026-11-26",
+      "jumlah_kartu_tercatat": 5,
+      "jumlah_sumber_tercatat": 6,
+      "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
       "ringkasan": "Belum ada kartu pada cabang ini.",
       "poin_kunci": [],
@@ -354,8 +354,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 4,
-      "jumlah_sumber": 5,
+      "jumlah_kartu": 5,
+      "jumlah_sumber": 6,
       "urutan": 7
     },
     {
@@ -1501,6 +1501,10 @@
       ],
       "relasi": [
         {
+          "tipe": "memperkuat",
+          "ke": "K-0033"
+        },
+        {
           "tipe": "terkait",
           "ke": "K-0031"
         },
@@ -1736,6 +1740,58 @@
       "kutipan": "complaining or talking about your problems the wrong way can make anxiety worse.",
       "catatan_agen": "Diterjemahkan dan dirapikan dalam Bahasa Indonesia dari S-0022 atas persetujuan pengguna.",
       "penulis": "alexei (@alexeixbt)"
+    },
+    {
+      "id": "K-0033",
+      "file": "kartu/K-0033.md",
+      "ide": "Menjalankan waktu, energi, dan sumber daya di bawah kapasitas 80% (strategic slack) mencegah ledakan penundaan akibat beban penuh dan memampukan Anda menangkap peluang asimetris.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "prinsip",
+      "kepercayaan": "sedang",
+      "dasar": "opini-umum",
+      "tag": [
+        "teori-antrean",
+        "kapasitas",
+        "produktivitas",
+        "strategi",
+        "x"
+      ],
+      "konsep": [
+        "kapasitas-tubuh",
+        "manajemen-waktu",
+        "teori-antrean",
+        "peluang-asimetris",
+        "fokus-strategis"
+      ],
+      "kondisi_berlaku": "berlaku jika ruang kosong (slack) dijaga tetap likuid dan tidak diboroskan untuk scrolling atau menunda pekerjaan berat",
+      "model_ekstrak": "kurasi-agen",
+      "versi_prompt": "manual-v1",
+      "sumber": [
+        "S-0023"
+      ],
+      "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0023"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": false,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "semua",
+      "penjelasan": "Secara matematis berdasarkan teori antrean (*queueing theory*), kemacetan dan waktu tunggu tidak naik secara linear, melainkan mengikuti rasio ρ/(1−ρ) dengan ρ sebagai tingkat utilisasi kapasitas:\n1. **Bahaya Penuh 95–100%:** Pada utilisasi 80% pengali penundaannya adalah 4x, di 90% melonjak ke 9x, dan di 98% meledak hingga 49x. Memaksakan sisa 18% output justru melipatgandakan waktu tunggu, kesalahan, dan biaya pemulihan lebih dari 12 kali lipat.\n2. **Keunggulan 1 — Tahan Guncangan:** Saat ada masalah mendadak 3 jam, orang berkapasitas 98% mengalami efek domino stres berminggu-minggu, sedangkan yang berjalan di 75% bisa meredamnya di hari yang sama.\n3. **Keunggulan 2 — Menangkap Peluang Asimetris:** Terobosan langka tidak pernah memberi jadwal dua bulan sebelumnya; hanya orang yang punya ruang cadangan (*slack*) yang bisa langsung mengambilnya di hari pertama.\n4. **Jebakan yang Harus Dihindari:** *Strategic slack* bukanlah waktu santai pasif (*scrolling* atau menunda tugas tersulit); ruang kosong ini harus dijaga ketat dari komitmen rutin agar tetap likuid untuk berpikir jernih dan mengeksekusi taruhan bernilai besar.",
+      "kutipan": "Deliberately run your time, energy, and resources below 80% capacity.",
+      "catatan_agen": "[inferensi AI] Diekstrak dari tangkapan layar postingan @Voxyz_ai (S-0023). Kartu ini menjadi landasan teori antrean bagi K-0023 (matematika tidur 6 jam vs 8 jam).",
+      "penulis": "Vox (@Voxyz_ai)"
     }
   ],
   "sumber": [
@@ -2147,6 +2203,25 @@
         "K-0032"
       ],
       "saripati": "(1) science shows that complaining or talking about your problems the wrong way can actually make your brain and your anxiety worse, and i will tell you the neuroscience behind why and what to do instead."
+    },
+    {
+      "id": "S-0023",
+      "file": "sumber/S-0023.md",
+      "judul": "Jalankan Waktu, Energi & Sumber Daya di Bawah Kapasitas 80% (Teori Antrean)",
+      "jenis": "postingan",
+      "penulis": "Vox (@Voxyz_ai)",
+      "platform": "X",
+      "url": "https://x.com/Voxyz_ai/status/2125591320341229890",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "motivasi-dan-mindset",
+        "bisnis"
+      ],
+      "kartu": [
+        "K-0033"
+      ],
+      "saripati": "Berdasarkan teori antrean (queueing theory), kemacetan dan penundaan dalam sistem tidak meningkat secara linear, melainkan mengikuti rumus ρ/(1−ρ) di mana ρ adalah tingkat utilisasi. Pada kapasitas 80% pengali penundaannya 4x, pada 90% melonjak menjadi 9x, dan pada 98% meledak menjadi 49x. Oleh karena itu, sengaja menyisakan ruang cadangan sekitar 20–25% (strategic slack) memberi dua keunggulan besar: guncangan tak terduga tidak merusak seluruh bulan, dan Anda punya kapasitas untuk langsung menyambar peluang langka berdaya ungkit tinggi. Namun ruang kosong ini harus dijaga tetap likuid—bukan dihabiskan untuk scrolling atau bermalas-malasan."
     }
   ]
 }

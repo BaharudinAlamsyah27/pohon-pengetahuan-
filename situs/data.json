@@ -1,6 +1,6 @@
 {
   "mode": "publik",
-  "dibangun": "2026-11-26",
+  "dibangun": "2026-11-27",
   "ringkasan": {
     "total_kartu": 19,
     "total_sumber": 13,
@@ -297,9 +297,9 @@
       "nama": "Motivasi & Mindset",
       "induk": "",
       "file": "cabang/motivasi-dan-mindset/_cabang.md",
-      "jumlah_kartu_tercatat": 4,
-      "jumlah_sumber_tercatat": 5,
-      "diperbarui": "2026-11-26",
+      "jumlah_kartu_tercatat": 5,
+      "jumlah_sumber_tercatat": 6,
+      "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
       "ringkasan": "Jangan habiskan usia 25 hingga 29 tahun untuk mengkhawatirkan hal-hal yang sebenarnya tidak penting; hentikan overthinking dan mulailah bertindak.",
       "poin_kunci": [

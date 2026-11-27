@@ -2,9 +2,9 @@
 cabang: motivasi-dan-mindset
 nama: Motivasi & Mindset
 induk: ""
-jumlah-kartu: 4
-jumlah-sumber: 5
-diperbarui: 2026-11-26
+jumlah-kartu: 5
+jumlah-sumber: 6
+diperbarui: 2026-11-27
 catatan-sudut-pandang: "belum ada sumber"
 ---
 
@@ -31,3 +31,4 @@ Belum ada kartu pada cabang ini.
 - K-0029 | reframe your struggles: instead of saying 'i am struggling,' tell yourself 'i | semua-usia | belum-diverifikasi
 - K-0030 | Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa | semua-usia | belum-diverifikasi
 - K-0032 | science shows that complaining or talking about your problems the wrong way | semua-usia | belum-diverifikasi
+- K-0033 | Menjalankan waktu, energi, dan sumber daya di bawah kapasitas 80% (strategic slack) | semua-usia | sedang
