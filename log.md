@@ -90,3 +90,5 @@ Catatan kronologis (append-only).
 [2026-11-27] SEO / WA PREVIEW: Menambahkan meta tag Open Graph (og:title, og:description, og:image, og:url, og:type) & Twitter Card di scripts/template_peta.html serta gambar thumbnail terkompresi assets/og-pohon.jpg (1200x630, <300 KB) agar tautan menampilkan pratinjau kaya di WhatsApp.
 
 [2026-11-27] SEO / WA PREVIEW: Mengganti thumbnail Open Graph WhatsApp menjadi ilustrasi Pohon Cahaya Loki 3D (assets/og-pohon-loki.jpg, 1200x630) agar pratinjau tautan selaras dengan tampilan Beranda terbaru.
+
+[2026-11-27] FIX KOTAK TITIPAN: Mendukung nama environment variable pohon_key / POHON_KEY selain GITHUB_TOKEN di api/titip.js dan scripts/server_lokal.py.

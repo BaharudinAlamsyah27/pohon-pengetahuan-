@@ -1011,10 +1011,23 @@ def _parse_titipan_issue(issue: dict) -> dict:
     }
 
 
-def list_github_titipan() -> dict:
+def _get_github_token_and_repo() -> tuple[str, str]:
     env = mesin_cerdas.load_local_env()
-    token = (env.get("GITHUB_TOKEN") or os.environ.get("GITHUB_TOKEN") or "").strip()
+    token = (
+        env.get("GITHUB_TOKEN")
+        or env.get("pohon_key")
+        or env.get("POHON_KEY")
+        or os.environ.get("GITHUB_TOKEN")
+        or os.environ.get("pohon_key")
+        or os.environ.get("POHON_KEY")
+        or ""
+    ).strip()
     repo = (env.get("GITHUB_REPO") or os.environ.get("GITHUB_REPO") or DEFAULT_GITHUB_REPO).strip()
+    return token, repo
+
+
+def list_github_titipan() -> dict:
+    token, repo = _get_github_token_and_repo()
     if not token:
         return {"ok": True, "configured": False, "repo": repo, "items": []}
     code, data = _github_api_request("GET", f"/repos/{repo}/issues?state=open&per_page=30", token)
@@ -1038,11 +1051,9 @@ def list_github_titipan() -> dict:
 
 
 def process_github_titipan(nomor: int, aksi: str) -> dict:
-    env = mesin_cerdas.load_local_env()
-    token = (env.get("GITHUB_TOKEN") or os.environ.get("GITHUB_TOKEN") or "").strip()
-    repo = (env.get("GITHUB_REPO") or os.environ.get("GITHUB_REPO") or DEFAULT_GITHUB_REPO).strip()
+    token, repo = _get_github_token_and_repo()
     if not token:
-        raise ValueError("GITHUB_TOKEN belum dipasang di file .env")
+        raise ValueError("GITHUB_TOKEN / pohon_key belum dipasang di file .env")
 
     code, issue = _github_api_request("GET", f"/repos/{repo}/issues/{nomor}", token)
     if code != 200 or not isinstance(issue, dict):

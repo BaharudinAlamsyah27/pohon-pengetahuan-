@@ -85,11 +85,11 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const token = (process.env.GITHUB_TOKEN || "").trim();
+  const token = (process.env.GITHUB_TOKEN || process.env.pohon_key || process.env.POHON_KEY || "").trim();
   const repo = (process.env.GITHUB_REPO || DEFAULT_REPO).trim();
   if (!token) {
     res.status(503).json({
-      error: "Kotak Titipan online belum diaktifkan oleh pemilik (GITHUB_TOKEN belum dipasang di Vercel).",
+      error: "Kotak Titipan online belum diaktifkan oleh pemilik (GITHUB_TOKEN / pohon_key belum dipasang di Vercel).",
       needs_setup: true,
     });
     return;
