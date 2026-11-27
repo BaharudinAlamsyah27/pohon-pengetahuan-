@@ -2,11 +2,11 @@
   "mode": "lokal",
   "dibangun": "2026-11-27",
   "ringkasan": {
-    "total_kartu": 26,
-    "total_sumber": 23,
+    "total_kartu": 27,
+    "total_sumber": 24,
     "total_cabang": 19,
     "penerapan": {
-      "belum-dicoba": 26,
+      "belum-dicoba": 27,
       "sedang-dicoba": 0,
       "diterapkan": 0,
       "ditolak": 0
@@ -50,9 +50,9 @@
       "nama": "AI",
       "induk": "",
       "file": "cabang/ai/_cabang.md",
-      "jumlah_kartu_tercatat": 13,
-      "jumlah_sumber_tercatat": 8,
-      "diperbarui": "2026-11-26",
+      "jumlah_kartu_tercatat": 14,
+      "jumlah_sumber_tercatat": 9,
+      "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "2 sumber berbeda (draf awal)",
       "ringkasan": "Bab dominan untuk penguasaan AI secara praktis: mulai dari video & clipping AI, penulisan artikel/copywriting, coding & pembangunan proyek, perancangan prompt & agen, hingga perbandingan model dan alat terbaik untuk tiap kebutuhan.",
       "poin_kunci": [
@@ -71,8 +71,8 @@
         "Prompt & Agen AI → `cabang/ai/prompt-dan-agen/_cabang.md` (0 kartu)",
         "Perbandingan Model & Alat AI → `cabang/ai/perbandingan-model/_cabang.md` (0 kartu)"
       ],
-      "jumlah_kartu": 13,
-      "jumlah_sumber": 8,
+      "jumlah_kartu": 14,
+      "jumlah_sumber": 9,
       "urutan": 0
     },
     {
@@ -80,20 +80,26 @@
       "nama": "Coding & Proyek AI",
       "induk": "ai",
       "file": "cabang/ai/coding-dan-proyek/_cabang.md",
-      "jumlah_kartu_tercatat": 5,
-      "jumlah_sumber_tercatat": 3,
-      "diperbarui": "2026-11-22",
+      "jumlah_kartu_tercatat": 6,
+      "jumlah_sumber_tercatat": 4,
+      "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
-      "ringkasan": "Alur membangun aplikasi, skrip, otomasi, dan proyek perangkat lunak menggunakan agen coding (Claude Code, Cursor, Antigravity, Codex, dll.).",
-      "poin_kunci": [],
+      "ringkasan": "Cabang ini membahas alur pengembangan perangkat lunak modern menggunakan agen dan perkakas AI canggih untuk mengoptimalkan produktivitas teknis. Fokus utamanya mencakup peningkatan estetika antarmuka web buatan AI agar terbebas dari kesan kaku menggunakan pustaka skill desain khusus, pemanfaatan file instruksi sistem agar agen AI berfungsi optimal sebagai asisten teknis, serta integrasi komputasi awan melalui utilitas terminal untuk menjalankan skrip lokal di runtime jarak jauh secara otomatis. Selain itu, cabang ini mengeksplorasi efisiensi performa backend melalui migrasi bahasa pemrograman.",
+      "poin_kunci": [
+        "Penerapan lima pustaka skill desain frontend untuk mengatasi tampilan antarmuka web buatan AI yang kaku [[K-0005]]",
+        "Penggunaan file instruksi sistem spesifik untuk memandu agen AI bertindak sebagai asisten teknis [[K-0012]]",
+        "Pemanfaatan perkakas terminal google-colab-cli untuk mengelola runtime CPU, GPU, dan TPU secara langsung [[K-0015]]",
+        "Eksekusi tugas otomatis melalui Ephemeral Job Runner untuk menjalankan skrip dan mengambil hasil secara instan [[K-0016]]",
+        "Peningkatan efisiensi performa backend melalui migrasi API dari Python ke Rust [[K-0034]]"
+      ],
       "pertentangan": [],
       "lanjutan_timeline": [
         "Sebelumnya: -",
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 5,
-      "jumlah_sumber": 3,
+      "jumlah_kartu": 6,
+      "jumlah_sumber": 4,
       "urutan": 0
     },
     {
@@ -671,7 +677,7 @@
       ],
       "dibuat": "2026-11-22",
       "status": "aktif",
-      "publik": false,
+      "publik": true,
       "penerapan": "belum-dicoba",
       "penerapan_catatan": "",
       "terakhir_ditinjau": "2026-11-22",
@@ -1515,7 +1521,7 @@
       ],
       "dibuat": "2026-11-26",
       "status": "aktif",
-      "publik": false,
+      "publik": true,
       "penerapan": "belum-dicoba",
       "penerapan_catatan": "",
       "terakhir_ditinjau": "2026-11-26",
@@ -1570,7 +1576,7 @@
       ],
       "dibuat": "2026-11-26",
       "status": "aktif",
-      "publik": false,
+      "publik": true,
       "penerapan": "belum-dicoba",
       "penerapan_catatan": "",
       "terakhir_ditinjau": "2026-11-26",
@@ -1626,7 +1632,7 @@
       ],
       "dibuat": "2026-11-26",
       "status": "aktif",
-      "publik": false,
+      "publik": true,
       "penerapan": "belum-dicoba",
       "penerapan_catatan": "",
       "terakhir_ditinjau": "2026-11-26",
@@ -1677,7 +1683,7 @@
       ],
       "dibuat": "2026-11-26",
       "status": "aktif",
-      "publik": false,
+      "publik": true,
       "penerapan": "belum-dicoba",
       "penerapan_catatan": "",
       "terakhir_ditinjau": "2026-11-26",
@@ -1727,7 +1733,7 @@
       ],
       "dibuat": "2026-11-26",
       "status": "aktif",
-      "publik": false,
+      "publik": true,
       "penerapan": "belum-dicoba",
       "penerapan_catatan": "",
       "terakhir_ditinjau": "2026-11-26",
@@ -1779,7 +1785,7 @@
       ],
       "dibuat": "2026-11-27",
       "status": "aktif",
-      "publik": false,
+      "publik": true,
       "penerapan": "belum-dicoba",
       "penerapan_catatan": "",
       "terakhir_ditinjau": "2026-11-27",
@@ -1792,6 +1798,51 @@
       "kutipan": "Deliberately run your time, energy, and resources below 80% capacity.",
       "catatan_agen": "[inferensi AI] Diekstrak dari tangkapan layar postingan @Voxyz_ai (S-0023). Kartu ini menjadi landasan teori antrean bagi K-0023 (matematika tidur 6 jam vs 8 jam).",
       "penulis": "Vox (@Voxyz_ai)"
+    },
+    {
+      "id": "K-0034",
+      "file": "kartu/K-0034.md",
+      "ide": "Migrasi API Anthropic dari Python ke Rust menghasilkan penurunan penggunaan CPU sebesar 70% dan penghematan waktu 20%.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "semua-usia",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "riset",
+      "tag": [
+        "anthropic",
+        "python",
+        "rust",
+        "api",
+        "x"
+      ],
+      "konsep": [
+        "migrasi-bahasa",
+        "efisiensi-cpu",
+        "performa-api"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0024"
+      ],
+      "relasi": [],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "produksi",
+      "penjelasan": "1. Anthropic melakukan migrasi infrastruktur API dari bahasa Python ke Rust.\n2. Hasil migrasi tersebut mencatat efisiensi berupa 70% lebih sedikit penggunaan CPU.\n3. Proses tersebut juga memberikan penghematan waktu eksekusi sebesar 20%.",
+      "kutipan": "Anthropic migrou sua API de Python para Rust",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.84).",
+      "penulis": "Ricardo Pupo Larguesa (@rlarguesa)"
     }
   ],
   "sumber": [
@@ -2128,7 +2179,7 @@
         "K-0025",
         "K-0026"
       ],
-      "saripati": "(1) tidak ada bicara negatif pada diri sendiri: kamu akan berhenti mengatakan hal-hal negatif tentang dirimu sendiri, baik secara keras maupun di dalam kepala, dan tidak, aku tidak peduli apakah kamu bercanda atau tidak. | (2) reframing perjuanganmu: daripada mengatakan 'aku sedang berjuang,' katakan pada dirimu sendiri 'aku sedang belajar.' daripada mengatakan 'ini sangat sulit,' katakan pada dirimu sendiri 'ini sem"
+      "saripati": "Ringkasan 3 prinsip mengubah dialog batin (self-talk) untuk membangun rasa percaya diri menurut perspektif neurosains: menghentikan ucapan negatif pada diri sendiri (termasuk candaan), membingkai ulang kesulitan menjadi proses belajar, serta berbicara kepada diri sendiri dengan penuh empati."
     },
     {
       "id": "S-0019",
@@ -2148,7 +2199,7 @@
         "K-0028",
         "K-0029"
       ],
-      "saripati": "(1) neuroscience shows that the easiest way to become confident and actually believe in yourself is to change your self-talk. | (2) no negative self-talk: you're gonna stop saying negative things about yourself, out loud or in your head, and no, i don't care if you're joking or not. | (3) reframe your struggles: instead of saying 'i am struggling,' tell yourself 'i am learning.' instead of saying 'this is so hard,' t"
+      "saripati": "Utas berbahasa Inggris yang membahas tiga langkah membentuk rasa percaya diri melalui perbaikan dialog batin: menghapus kritik negatif pada diri sendiri, membingkai ulang hambatan sebagai latihan belajar, dan memperlakukan diri sendiri dengan bahasa yang hangat."
     },
     {
       "id": "S-0020",
@@ -2202,7 +2253,7 @@
       "kartu": [
         "K-0032"
       ],
-      "saripati": "(1) science shows that complaining or talking about your problems the wrong way can actually make your brain and your anxiety worse, and i will tell you the neuroscience behind why and what to do instead."
+      "saripati": "Penjelasan mengenai dampak negatif dari kebiasaan mengeluh berulang tanpa arah solusi terhadap amigdala dan tingkat kecemasan, serta cara curhat yang lebih sehat melalui reframing dan pencarian langkah konkret agar otak kembali tenang."
     },
     {
       "id": "S-0023",
@@ -2222,6 +2273,24 @@
         "K-0033"
       ],
       "saripati": "Berdasarkan teori antrean (queueing theory), kemacetan dan penundaan dalam sistem tidak meningkat secara linear, melainkan mengikuti rumus ρ/(1−ρ) di mana ρ adalah tingkat utilisasi. Pada kapasitas 80% pengali penundaannya 4x, pada 90% melonjak menjadi 9x, dan pada 98% meledak menjadi 49x. Oleh karena itu, sengaja menyisakan ruang cadangan sekitar 20–25% (strategic slack) memberi dua keunggulan besar: guncangan tak terduga tidak merusak seluruh bulan, dan Anda punya kapasitas untuk langsung menyambar peluang langka berdaya ungkit tinggi. Namun ruang kosong ini harus dijaga tetap likuid—bukan dihabiskan untuk scrolling atau bermalas-malasan."
+    },
+    {
+      "id": "S-0024",
+      "file": "sumber/S-0024.md",
+      "judul": "A Anthropic migrou sua API de Python para Rust. Resultado: 70% menos CPU e economia de 20% de tempo.",
+      "jenis": "postingan",
+      "penulis": "Ricardo Pupo Larguesa (@rlarguesa)",
+      "platform": "X",
+      "url": "https://x.com/rlarguesa/status/2125900355820995032?a=_sMVSctsm0_yA0-7nTI&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0034"
+      ],
+      "saripati": "(1) Migrasi API Anthropic dari Python ke Rust menghasilkan penurunan penggunaan CPU sebesar 70% dan penghematan waktu 20%."
     }
   ]
 }

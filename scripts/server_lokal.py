@@ -709,7 +709,7 @@ def create_new_source(
                 f"relasi: {rel_yaml}\n"
                 f"dibuat: {today}\n"
                 f"status: aktif\n"
-                f"publik: tidak\n"
+                f"publik: ya\n"
                 f"penerapan: belum-dicoba\n"
                 f'penerapan-catatan: ""\n'
                 f"terakhir-ditinjau: {today}\n"

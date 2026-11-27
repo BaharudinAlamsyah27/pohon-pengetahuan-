@@ -4,7 +4,7 @@ Peta tingkat atas seluruh bidang pengetahuan. Empat bab pertama adalah **fokus d
 
 | Bidang | Kartu | Ringkasan Singkat | Path |
 |---|---:|---|---|
-| AI | 13 | Model AI, prompt & agen, video/clipping AI, artikel, coding/proyek, dan perbandingan alat. | `cabang/ai/_cabang.md` |
+| AI | 14 | Model AI, prompt & agen, video/clipping AI, artikel, coding/proyek, dan perbandingan alat. | `cabang/ai/_cabang.md` |
 | Bisnis | 1 | Model bisnis, produk digital, validasi pasar, operasional, dan sistemasi pendapatan. | `cabang/bisnis/_cabang.md` |
 | Sosmed | 1 | Algoritma platform (X, IG, TikTok, YT, FB), pertumbuhan akun, clipping, dan monetisasi kreator. | `cabang/sosmed/_cabang.md` |
 | Digital Marketing | 0 | Copywriting, SEO/AI-search, funnel, konten konversi, iklan, dan distribusi audiens. | `cabang/digital-marketing/_cabang.md` |

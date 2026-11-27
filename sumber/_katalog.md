@@ -27,3 +27,4 @@ S-0020 | 2026-11-26 | postingan | Mrs Angel (@mrsangelkelechi) | "Normalize bein
 S-0021 | 2026-11-26 | postingan | dr. Adam Prabata (@AdamPrabata) | "Terlalu sering scrolling media sosial --> Gangguan reseptor dopamin di otak --> Brain rot" | bidang: kesehatan | 1 kartu
 S-0022 | 2026-11-26 | postingan | alexei (@alexeixbt) | "science shows that complaining or talking about your problems the wrong way can actually m" | bidang: motivasi-dan-mindset | 1 kartu
 S-0023 | 2026-11-27 | postingan | Vox (@Voxyz_ai) | "Jalankan Waktu, Energi & Sumber Daya di Bawah Kapasitas 80% (Teori Antrean)" | bidang: motivasi-dan-mindset | 1 kartu
+S-0024 | 2026-11-27 | postingan | Ricardo Pupo Larguesa (@rlarguesa) | "A Anthropic migrou sua API de Python para Rust. Resultado: 70% menos CPU e economia de 20% de tempo." | bidang: ai | 1 kartu

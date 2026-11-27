@@ -2,8 +2,8 @@
   "mode": "publik",
   "dibangun": "2026-11-27",
   "ringkasan": {
-    "total_kartu": 19,
-    "total_sumber": 13,
+    "total_kartu": 27,
+    "total_sumber": 22,
     "total_cabang": 11,
     "penerapan": {}
   },
@@ -36,8 +36,8 @@
     "K-0016",
     "K-0019",
     "K-0005",
-    "K-0018",
-    "K-0022"
+    "K-0007",
+    "K-0018"
   ],
   "cabang": [
     {
@@ -69,8 +69,8 @@
         "Prompt & Agen AI → `cabang/ai/prompt-dan-agen/_cabang.md` (0 kartu)",
         "Perbandingan Model & Alat AI → `cabang/ai/perbandingan-model/_cabang.md` (0 kartu)"
       ],
-      "jumlah_kartu": 13,
-      "jumlah_sumber": 8,
+      "jumlah_kartu": 14,
+      "jumlah_sumber": 9,
       "urutan": 0
     },
     {
@@ -96,8 +96,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 5,
-      "jumlah_sumber": 3,
+      "jumlah_kartu": 6,
+      "jumlah_sumber": 4,
       "urutan": 0
     },
     {
@@ -228,10 +228,11 @@
       "jumlah_sumber_tercatat": 2,
       "diperbarui": "2026-11-22",
       "catatan_sudut_pandang": "hanya 1 sumber (postingan media sosial)",
-      "ringkasan": "Platform X melarang reupload konten dari aplikasi lain untuk program OCR, dan akun yang terlalu sering melakukan reupload berisiko dikeluarkan dari program tersebut. Menurut satu pengamat di X, impresi konten reupload masih bisa terhitung dalam payout OCR selama profil tidak penuh berisi video repost dan tetap diselingi postingan original.",
+      "ringkasan": "Platform X melarang reupload konten dari aplikasi lain untuk program OCR, dan akun yang terlalu sering melakukan reupload berisiko dikeluarkan dari program tersebut. Menurut satu pengamat di X, impresi konten reupload masih bisa terhitung dalam payout OCR selama profil tidak penuh berisi video repost dan tetap diselingi postingan original. Klaim bahwa mengambil ulang konten viral luar negeri (India) dari Threads ke X secara cepat dapat meloloskan syarat OCR dalam hitungan hari.",
       "poin_kunci": [
         "Platform X melarang reupload konten dari aplikasi lain untuk program OCR, dan akun yang terlalu sering melakukan reupload berisiko dikeluarkan dari program tersebut. (K-0001)",
-        "Menurut satu pengamat di X, impresi konten reupload masih bisa terhitung dalam payout OCR selama profil tidak penuh berisi video repost dan tetap diselingi postingan original. (K-0002)"
+        "Menurut satu pengamat di X, impresi konten reupload masih bisa terhitung dalam payout OCR selama profil tidak penuh berisi video repost dan tetap diselingi postingan original. (K-0002)",
+        "Klaim bahwa mengambil ulang konten viral luar negeri (India) dari Threads ke X secara cepat dapat meloloskan syarat OCR dalam hitungan hari. (K-0004)"
       ],
       "pertentangan": [],
       "lanjutan_timeline": [
@@ -241,8 +242,8 @@
       "sub_cabang": [
         "Monetisasi Konten → `cabang/keuangan/monetisasi-konten/_cabang.md` (2 kartu)"
       ],
-      "jumlah_kartu": 2,
-      "jumlah_sumber": 1,
+      "jumlah_kartu": 3,
+      "jumlah_sumber": 2,
       "urutan": 4
     },
     {
@@ -254,10 +255,11 @@
       "jumlah_sumber_tercatat": 2,
       "diperbarui": "2026-11-22",
       "catatan_sudut_pandang": "hanya 1 sumber (postingan media sosial)",
-      "ringkasan": "Platform X melarang reupload konten dari aplikasi lain untuk program OCR, dan akun yang terlalu sering melakukan reupload berisiko dikeluarkan dari program tersebut. Menurut satu pengamat di X, impresi konten reupload masih bisa terhitung dalam payout OCR selama profil tidak penuh berisi video repost dan tetap diselingi postingan original.",
+      "ringkasan": "Platform X melarang reupload konten dari aplikasi lain untuk program OCR, dan akun yang terlalu sering melakukan reupload berisiko dikeluarkan dari program tersebut. Menurut satu pengamat di X, impresi konten reupload masih bisa terhitung dalam payout OCR selama profil tidak penuh berisi video repost dan tetap diselingi postingan original. Klaim bahwa mengambil ulang konten viral luar negeri (India) dari Threads ke X secara cepat dapat meloloskan syarat OCR dalam hitungan hari.",
       "poin_kunci": [
         "Platform X melarang reupload konten dari aplikasi lain untuk program OCR, dan akun yang terlalu sering melakukan reupload berisiko dikeluarkan dari program tersebut. (K-0001)",
-        "Menurut satu pengamat di X, impresi konten reupload masih bisa terhitung dalam payout OCR selama profil tidak penuh berisi video repost dan tetap diselingi postingan original. (K-0002)"
+        "Menurut satu pengamat di X, impresi konten reupload masih bisa terhitung dalam payout OCR selama profil tidak penuh berisi video repost dan tetap diselingi postingan original. (K-0002)",
+        "Klaim bahwa mengambil ulang konten viral luar negeri (India) dari Threads ke X secara cepat dapat meloloskan syarat OCR dalam hitungan hari. (K-0004)"
       ],
       "pertentangan": [],
       "lanjutan_timeline": [
@@ -265,8 +267,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 2,
-      "jumlah_sumber": 1,
+      "jumlah_kartu": 3,
+      "jumlah_sumber": 2,
       "urutan": 4
     },
     {
@@ -278,9 +280,11 @@
       "jumlah_sumber_tercatat": 3,
       "diperbarui": "2026-11-26",
       "catatan_sudut_pandang": "belum ada sumber",
-      "ringkasan": "Rawat penampilan, angkat beban, makan sehat, tidur seperti atlet, dan perbaiki postur tubuh karena penampilan adalah kartu nama pertama Anda.",
+      "ringkasan": "Rawat penampilan, angkat beban, makan sehat, tidur seperti atlet, dan perbaiki postur tubuh karena penampilan adalah kartu nama pertama Anda. Kurang tidur dari 8 jam menjadi 6 jam mendorong sistem tubuh mendekati kapasitas 100%, melipatgandakan kesalahan, kabut otak, dan utang biologis hingga 12 kali lipat. Brain rot memicu depresi secara tidak langsung melalui kelelahan mental, stres, dan kecemasan.",
       "poin_kunci": [
-        "Rawat penampilan, angkat beban, makan sehat, tidur seperti atlet, dan perbaiki postur tubuh karena penampilan adalah kartu nama pertama Anda. (K-0007)"
+        "Rawat penampilan, angkat beban, makan sehat, tidur seperti atlet, dan perbaiki postur tubuh karena penampilan adalah kartu nama pertama Anda. (K-0007)",
+        "Kurang tidur dari 8 jam menjadi 6 jam mendorong sistem tubuh mendekati kapasitas 100%, melipatgandakan kesalahan, kabut otak, dan utang biologis hingga 12 kali lipat. (K-0023)",
+        "Brain rot memicu depresi secara tidak langsung melalui kelelahan mental, stres, dan kecemasan. (K-0031)"
       ],
       "pertentangan": [],
       "lanjutan_timeline": [
@@ -288,8 +292,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 1,
-      "jumlah_sumber": 1,
+      "jumlah_kartu": 3,
+      "jumlah_sumber": 3,
       "urutan": 6
     },
     {
@@ -301,9 +305,13 @@
       "jumlah_sumber_tercatat": 6,
       "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
-      "ringkasan": "Jangan habiskan usia 25 hingga 29 tahun untuk mengkhawatirkan hal-hal yang sebenarnya tidak penting; hentikan overthinking dan mulailah bertindak.",
+      "ringkasan": "Jangan habiskan usia 25 hingga 29 tahun untuk mengkhawatirkan hal-hal yang sebenarnya tidak penting; hentikan overthinking dan mulailah bertindak. Cara tercepat membangun kepercayaan diri adalah mengubah dialog batin (self-talk) lewat 3 langkah praktis. Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa yang Anda inginkan dalam hidup.",
       "poin_kunci": [
-        "Jangan habiskan usia 25 hingga 29 tahun untuk mengkhawatirkan hal-hal yang sebenarnya tidak penting; hentikan overthinking dan mulailah bertindak. (K-0006)"
+        "Jangan habiskan usia 25 hingga 29 tahun untuk mengkhawatirkan hal-hal yang sebenarnya tidak penting; hentikan overthinking dan mulailah bertindak. (K-0006)",
+        "Cara tercepat membangun kepercayaan diri adalah mengubah dialog batin (self-talk) lewat 3 langkah praktis. (K-0027)",
+        "Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa yang Anda inginkan dalam hidup. (K-0030)",
+        "Mengeluh atau membicarakan masalah berulang kali tanpa mencari solusi justru memperburuk kecemasan dan memperpanjang emosi negatif di otak. (K-0032)",
+        "Menjalankan waktu, energi, dan sumber daya di bawah kapasitas 80% (strategic slack) mencegah ledakan penundaan akibat beban penuh dan memampukan Anda menangkap peluang asimetris. (K-0033)"
       ],
       "pertentangan": [],
       "lanjutan_timeline": [
@@ -311,8 +319,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 1,
-      "jumlah_sumber": 1,
+      "jumlah_kartu": 5,
+      "jumlah_sumber": 6,
       "urutan": 7
     }
   ],
@@ -345,6 +353,10 @@
         {
           "tipe": "terkait",
           "ke": "K-0002"
+        },
+        {
+          "tipe": "bertentangan-dengan",
+          "ke": "K-0004"
         },
         {
           "tipe": "memperkuat",
@@ -390,6 +402,10 @@
         {
           "tipe": "terkait",
           "ke": "K-0001"
+        },
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0004"
         },
         {
           "tipe": "bertentangan-dengan",
@@ -460,6 +476,54 @@
       "kutipan": "Open-sourced my full SEO and AI-search stack (30 skills).",
       "catatan_agen": "[inferensi AI] Diterjemahkan dari postingan X @illyism dan ditempatkan pada sub-cabang `ai/prompt-dan-agen`.",
       "penulis": "ILIAS ISM (@illyism)"
+    },
+    {
+      "id": "K-0004",
+      "file": "kartu/K-0004.md",
+      "ide": "Klaim bahwa mengambil ulang konten viral luar negeri (India) dari Threads ke X secara cepat dapat meloloskan syarat OCR dalam hitungan hari.",
+      "bidang": "keuangan",
+      "cabang": "keuangan/monetisasi-konten",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "rendah",
+      "dasar": "opini-umum",
+      "tag": [
+        "ocr-x",
+        "reupload",
+        "monetisasi",
+        "klaim-ekstrem"
+      ],
+      "konsep": [],
+      "kondisi_berlaku": "",
+      "model_ekstrak": "",
+      "versi_prompt": "",
+      "sumber": [
+        "S-0004"
+      ],
+      "relasi": [
+        {
+          "tipe": "bertentangan-dengan",
+          "ke": "K-0001"
+        },
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0002"
+        },
+        {
+          "tipe": "bertentangan-dengan",
+          "ke": "K-0011"
+        }
+      ],
+      "dibuat": "2026-11-22",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "monetisasi",
+      "tahap_kerja": "distribusi",
+      "penjelasan": "Sebuah komentar di X mengklaim bahwa mengunggah ulang konten viral dari kreator India di Threads atau media sosial lain ke X secara cepat terbukti bisa memenuhi syarat kelayakan OCR dalam beberapa hari tanpa perlu membuat konten orisinal.",
+      "kutipan": "Posting cepet2an ke X, bisa elig OCR beberapa hari.",
+      "catatan_agen": "[inferensi AI] Berkepercayaan `rendah` dan bertentangan langsung dengan larangan reupload pada [[K-0001]] serta ketentuan impresi konten asli pada [[K-0011]]. Disimpan sebagai `publik: tidak`.",
+      "penulis": "x.com"
     },
     {
       "id": "K-0005",
@@ -577,6 +641,10 @@
       "relasi": [
         {
           "tipe": "terkait",
+          "ke": "K-0023"
+        },
+        {
+          "tipe": "terkait",
           "ke": "K-0006"
         }
       ],
@@ -669,6 +737,10 @@
         {
           "tipe": "bertentangan-dengan",
           "ke": "K-0002"
+        },
+        {
+          "tipe": "bertentangan-dengan",
+          "ke": "K-0004"
         }
       ],
       "dibuat": "2026-11-22",
@@ -1158,6 +1230,334 @@
       "kutipan": "Sangat recommended bikin tone-of-voice guideline bagi AI agents.",
       "catatan_agen": "[inferensi AI] Diekstrak dari sumber S-0002 yang sebelumnya masih berstatus menunggu ekstraksi.",
       "penulis": "Ibrahim Arief (@ibamarief)"
+    },
+    {
+      "id": "K-0023",
+      "file": "kartu/K-0023.md",
+      "ide": "Kurang tidur dari 8 jam menjadi 6 jam mendorong sistem tubuh mendekati kapasitas 100%, melipatgandakan kesalahan, kabut otak, dan utang biologis hingga 12 kali lipat.",
+      "bidang": "kesehatan",
+      "cabang": "kesehatan",
+      "tahap": "semua-usia",
+      "jenis": "data",
+      "kepercayaan": "belum-diverifikasi",
+      "dasar": "opini-umum",
+      "tag": [
+        "tidur",
+        "kesehatan",
+        "otak",
+        "x"
+      ],
+      "konsep": [
+        "manajemen-tidur",
+        "utang-biologis",
+        "kapasitas-tubuh",
+        "kabut-otak"
+      ],
+      "kondisi_berlaku": "",
+      "model_ekstrak": "",
+      "versi_prompt": "",
+      "sumber": [
+        "S-0017"
+      ],
+      "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0033"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0031"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0007"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "kesehatan",
+      "tahap_kerja": "riset",
+      "penjelasan": "Banyak orang keliru menganggap tidur sebagai waktu yang terbuang. Padahal secara matematis (seperti teori antrean pada kapasitas sistem), memotong jam tidur dari 8 jam menjadi 6 jam memaksa sistem tubuh bekerja mendekati kapasitas 100%, sehingga risiko kesalahan, kabut otak (*brain fog*), dan utang biologis melonjak hingga 12 kali lipat.",
+      "kutipan": "6hr vs 8hr pushes your system near 100% capacity, multiplying errors.",
+      "catatan_agen": "Diterjemahkan dan dirapikan dalam Bahasa Indonesia atas persetujuan pengguna. Klaim angka 12x tetap ditandai belum-diverifikasi sampai ada rujukan riset primer.",
+      "penulis": "Bryan Johnson (@bryan_johnson)"
+    },
+    {
+      "id": "K-0027",
+      "file": "kartu/K-0027.md",
+      "ide": "Cara tercepat membangun kepercayaan diri adalah mengubah dialog batin (self-talk) lewat 3 langkah praktis.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "nasihat",
+      "kepercayaan": "sedang",
+      "dasar": "opini-umum",
+      "tag": [
+        "self-talk",
+        "kepercayaan-diri",
+        "mindset",
+        "x"
+      ],
+      "konsep": [
+        "self-talk",
+        "kepercayaan-diri",
+        "reframing-mental",
+        "pikiran-bawah-sadar"
+      ],
+      "kondisi_berlaku": "",
+      "model_ekstrak": "",
+      "versi_prompt": "",
+      "sumber": [
+        "S-0019",
+        "S-0018"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0032"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0030"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "riset",
+      "penjelasan": "Atlet, penulis, dan pelaku berkinerja tinggi membangun rasa percaya diri dengan mengendalikan dialog batin (*self-talk*) melalui 3 langkah utama:\n1. **Hentikan self-talk negatif (termasuk candaan):** Pikiran bawah sadar tidak membedakan mana yang serius dan mana yang bercanda; otak akan memercayai dan mengidentifikasi diri dengan apa pun yang terus Anda ucapkan.\n2. **Ubah bingkai perjuangan (*reframing*):** Ganti kalimat *\"aku sedang kesulitan\"* menjadi *\"aku sedang belajar\"*, dan *\"ini sangat sulit\"* menjadi *\"ini semakin lama semakin mudah\"*.\n3. **Berbicaralah pada diri sendiri dengan penuh kasih:** Bayangkan diri Anda versi kecil (*inner child*) setiap kali hendak mengkritik diri sendiri secara keras — komunikasi penuh kasih kepada diri sendiri membentuk sebagian besar rasa percaya diri.",
+      "kutipan": "the easiest way to become confident is to change your self-talk.",
+      "catatan_agen": "Digabung dan dirapikan dalam Bahasa Indonesia dari K-0024..K-0029 (S-0018 & S-0019) atas persetujuan pengguna.",
+      "penulis": "alexei (@alexeixbt), x.com"
+    },
+    {
+      "id": "K-0030",
+      "file": "kartu/K-0030.md",
+      "ide": "Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa yang Anda inginkan dalam hidup.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "nasihat",
+      "kepercayaan": "sedang",
+      "dasar": "opini-umum",
+      "tag": [
+        "komunikasi-langsung",
+        "assertiveness",
+        "self-empowerment",
+        "personal-growth",
+        "x"
+      ],
+      "konsep": [
+        "komunikasi-efektif",
+        "ketegasan",
+        "kepercayaan-diri",
+        "pencapaian-tujuan",
+        "kejelasan"
+      ],
+      "kondisi_berlaku": "",
+      "model_ekstrak": "",
+      "versi_prompt": "",
+      "sumber": [
+        "S-0020"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0027"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "produksi",
+      "penjelasan": "Hentikan basa-basi dan mulailah berbicara dengan percaya diri karena orang tidak menghargai isyarat, melainkan kejelasan. Katakan apa yang Anda maksud dan maksudkan apa yang Anda katakan.",
+      "kutipan": "People don't respect hints. They respect clarity.",
+      "catatan_agen": "[inferensi AI] Diekstrak lewat 1-panggilan terstruktur (gemini-2.5-flash), kutipan terverifikasi.",
+      "penulis": "Mrs Angel (@mrsangelkelechi)"
+    },
+    {
+      "id": "K-0031",
+      "file": "kartu/K-0031.md",
+      "ide": "Brain rot memicu depresi secara tidak langsung melalui kelelahan mental, stres, dan kecemasan.",
+      "bidang": "kesehatan",
+      "cabang": "kesehatan",
+      "tahap": "semua-usia",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "riset",
+      "tag": [
+        "brain-rot",
+        "burnout",
+        "depresi",
+        "stres",
+        "x"
+      ],
+      "konsep": [
+        "beban-kognitif",
+        "kelelahan-mental",
+        "kesehatan-mental",
+        "konsumsi-digital"
+      ],
+      "kondisi_berlaku": "",
+      "model_ekstrak": "",
+      "versi_prompt": "",
+      "sumber": [
+        "S-0021"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0023"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "kesehatan",
+      "tahap_kerja": "produksi",
+      "penjelasan": "1. Brain rot ditandai oleh kelelahan kognitif dan kelelahan mental akibat keterlibatan digital.\n2. Kondisi ini memicu 'loss spiral' dengan menguras sumber daya psikologis yang berujung pada burnout.\n3. Burnout kemudian meningkatkan stres dan kecemasan, yang akhirnya memicu gejala depresi.",
+      "kutipan": "The Cognitive Cost of Brain Rot",
+      "catatan_agen": "[inferensi AI] Diekstrak lewat 1-panggilan terstruktur (gemini-3.5-flash-lite), kutipan terverifikasi.",
+      "penulis": "dr. Adam Prabata (@AdamPrabata)"
+    },
+    {
+      "id": "K-0032",
+      "file": "kartu/K-0032.md",
+      "ide": "Mengeluh atau membicarakan masalah berulang kali tanpa mencari solusi justru memperburuk kecemasan dan memperpanjang emosi negatif di otak.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "riset",
+      "tag": [
+        "kecemasan",
+        "mengeluh",
+        "psikologi",
+        "x"
+      ],
+      "konsep": [
+        "regulasi-emosi",
+        "manajemen-stres",
+        "neurosains-keluhan",
+        "pemecahan-masalah"
+      ],
+      "kondisi_berlaku": "",
+      "model_ekstrak": "",
+      "versi_prompt": "",
+      "sumber": [
+        "S-0022"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0027"
+        }
+      ],
+      "dibuat": "2026-11-26",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "riset",
+      "penjelasan": "Banyak orang mengira membicarakan masalah berulang kali sekadar melegakan dada (*venting*). Namun riset psikologi klinis dan neurosains menunjukkan bahwa mengeluh atau mengulang cerita masalah secara keliru tanpa diarahkan pada solusi justru memperpanjang emosi negatif, meningkatkan stres, dan memperburuk kecemasan di otak.",
+      "kutipan": "complaining or talking about your problems the wrong way can make anxiety worse.",
+      "catatan_agen": "Diterjemahkan dan dirapikan dalam Bahasa Indonesia dari S-0022 atas persetujuan pengguna.",
+      "penulis": "alexei (@alexeixbt)"
+    },
+    {
+      "id": "K-0033",
+      "file": "kartu/K-0033.md",
+      "ide": "Menjalankan waktu, energi, dan sumber daya di bawah kapasitas 80% (strategic slack) mencegah ledakan penundaan akibat beban penuh dan memampukan Anda menangkap peluang asimetris.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "prinsip",
+      "kepercayaan": "sedang",
+      "dasar": "opini-umum",
+      "tag": [
+        "teori-antrean",
+        "kapasitas",
+        "produktivitas",
+        "strategi",
+        "x"
+      ],
+      "konsep": [
+        "kapasitas-tubuh",
+        "manajemen-waktu",
+        "teori-antrean",
+        "peluang-asimetris",
+        "fokus-strategis"
+      ],
+      "kondisi_berlaku": "berlaku jika ruang kosong (slack) dijaga tetap likuid dan tidak diboroskan untuk scrolling atau menunda pekerjaan berat",
+      "model_ekstrak": "kurasi-agen",
+      "versi_prompt": "manual-v1",
+      "sumber": [
+        "S-0023"
+      ],
+      "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0023"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "semua",
+      "penjelasan": "Secara matematis berdasarkan teori antrean (*queueing theory*), kemacetan dan waktu tunggu tidak naik secara linear, melainkan mengikuti rasio ρ/(1−ρ) dengan ρ sebagai tingkat utilisasi kapasitas:\n1. **Bahaya Penuh 95–100%:** Pada utilisasi 80% pengali penundaannya adalah 4x, di 90% melonjak ke 9x, dan di 98% meledak hingga 49x. Memaksakan sisa 18% output justru melipatgandakan waktu tunggu, kesalahan, dan biaya pemulihan lebih dari 12 kali lipat.\n2. **Keunggulan 1 — Tahan Guncangan:** Saat ada masalah mendadak 3 jam, orang berkapasitas 98% mengalami efek domino stres berminggu-minggu, sedangkan yang berjalan di 75% bisa meredamnya di hari yang sama.\n3. **Keunggulan 2 — Menangkap Peluang Asimetris:** Terobosan langka tidak pernah memberi jadwal dua bulan sebelumnya; hanya orang yang punya ruang cadangan (*slack*) yang bisa langsung mengambilnya di hari pertama.\n4. **Jebakan yang Harus Dihindari:** *Strategic slack* bukanlah waktu santai pasif (*scrolling* atau menunda tugas tersulit); ruang kosong ini harus dijaga ketat dari komitmen rutin agar tetap likuid untuk berpikir jernih dan mengeksekusi taruhan bernilai besar.",
+      "kutipan": "Deliberately run your time, energy, and resources below 80% capacity.",
+      "catatan_agen": "[inferensi AI] Diekstrak dari tangkapan layar postingan @Voxyz_ai (S-0023). Kartu ini menjadi landasan teori antrean bagi K-0023 (matematika tidur 6 jam vs 8 jam).",
+      "penulis": "Vox (@Voxyz_ai)"
+    },
+    {
+      "id": "K-0034",
+      "file": "kartu/K-0034.md",
+      "ide": "Migrasi API Anthropic dari Python ke Rust menghasilkan penurunan penggunaan CPU sebesar 70% dan penghematan waktu 20%.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "semua-usia",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "riset",
+      "tag": [
+        "anthropic",
+        "python",
+        "rust",
+        "api",
+        "x"
+      ],
+      "konsep": [
+        "migrasi-bahasa",
+        "efisiensi-cpu",
+        "performa-api"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0024"
+      ],
+      "relasi": [],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "produksi",
+      "penjelasan": "1. Anthropic melakukan migrasi infrastruktur API dari bahasa Python ke Rust.\n2. Hasil migrasi tersebut mencatat efisiensi berupa 70% lebih sedikit penggunaan CPU.\n3. Proses tersebut juga memberikan penghematan waktu eksekusi sebesar 20%.",
+      "kutipan": "Anthropic migrou sua API de Python para Rust",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.84).",
+      "penulis": "Ricardo Pupo Larguesa (@rlarguesa)"
     }
   ],
   "sumber": [
@@ -1216,6 +1616,24 @@
         "K-0003"
       ],
       "saripati": "Penulis membuka akses repositori 30 skill SEO (audit teknis, programmatic SEO, alur kerja Ahrefs/GSC) serta 4 server MCP aktif untuk Claude Code dan Cursor."
+    },
+    {
+      "id": "S-0004",
+      "file": "sumber/S-0004.md",
+      "judul": "Klaim komentar tentang reupload konten luar negeri untuk mengejar syarat OCR X",
+      "jenis": "postingan",
+      "penulis": "x.com",
+      "platform": "X",
+      "url": "https://x.com/home",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-22",
+      "bidang": [
+        "keuangan"
+      ],
+      "kartu": [
+        "K-0004"
+      ],
+      "saripati": "Komentar pengguna X yang mengklaim bahwa mengunggah ulang konten viral dari Threads ke X secara cepat dapat meloloskan kelayakan monetisasi OCR dalam beberapa hari."
     },
     {
       "id": "S-0005",
@@ -1401,6 +1819,149 @@
         "K-0021"
       ],
       "saripati": "Diskusi mengenai kelayakan ekonomis penggunaan mesin penjahit pita benih seledri dan wortel jika diterapkan di Indonesia yang memiliki biaya tenaga kerja terjangkau."
+    },
+    {
+      "id": "S-0017",
+      "file": "sumber/S-0017.md",
+      "judul": "Same math applies to sleep.",
+      "jenis": "postingan",
+      "penulis": "Bryan Johnson (@bryan_johnson)",
+      "platform": "X",
+      "url": "https://x.com/bryan_johnson/status/2125683008334446828?a=MPPbB5WFZ8LJoxO7Wwg&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "kesehatan"
+      ],
+      "kartu": [
+        "K-0023"
+      ],
+      "saripati": "(1) 6hr vs 8hr pushes your system near 100% capacity, multiplying errors, brain fog, and biological debt by 12x."
+    },
+    {
+      "id": "S-0018",
+      "file": "sumber/S-0018.md",
+      "judul": "(83) alexei di X: 'neuroscience shows that the easiest way to become confident and actually believe in yourself is to ch",
+      "jenis": "postingan",
+      "penulis": "x.com",
+      "platform": "X",
+      "url": "https://x.com/alexeixbt/status/2125270489354346580",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [],
+      "saripati": "Ringkasan 3 prinsip mengubah dialog batin (self-talk) untuk membangun rasa percaya diri menurut perspektif neurosains: menghentikan ucapan negatif pada diri sendiri (termasuk candaan), membingkai ulang kesulitan menjadi proses belajar, serta berbicara kepada diri sendiri dengan penuh empati."
+    },
+    {
+      "id": "S-0019",
+      "file": "sumber/S-0019.md",
+      "judul": "neuroscience shows that the easiest way to become confident and actually believe",
+      "jenis": "postingan",
+      "penulis": "alexei (@alexeixbt)",
+      "platform": "X",
+      "url": "https://x.com/alexeixbt/status/2125270489354346580?a=-rYYPR1FfSfF1xergvs&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0027"
+      ],
+      "saripati": "Utas berbahasa Inggris yang membahas tiga langkah membentuk rasa percaya diri melalui perbaikan dialog batin: menghapus kritik negatif pada diri sendiri, membingkai ulang hambatan sebagai latihan belajar, dan memperlakukan diri sendiri dengan bahasa yang hangat."
+    },
+    {
+      "id": "S-0020",
+      "file": "sumber/S-0020.md",
+      "judul": "Normalize being very direct. Very straight to the point. Very assertive. You'll get everyt",
+      "jenis": "postingan",
+      "penulis": "Mrs Angel (@mrsangelkelechi)",
+      "platform": "X",
+      "url": "https://x.com/mrsangelkelechi/status/2125523638019662139?a=LWDmSIVBVoo2a1hdurc&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0030"
+      ],
+      "saripati": "(1) Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa yang Anda inginkan dalam hidup."
+    },
+    {
+      "id": "S-0021",
+      "file": "sumber/S-0021.md",
+      "judul": "Terlalu sering scrolling media sosial --> Gangguan reseptor dopamin di otak --> Brain rot",
+      "jenis": "postingan",
+      "penulis": "dr. Adam Prabata (@AdamPrabata)",
+      "platform": "X",
+      "url": "https://x.com/AdamPrabata/status/2125545050637529230?a=yPMeKoxb0IlYYSi1cwo&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "kesehatan"
+      ],
+      "kartu": [
+        "K-0031"
+      ],
+      "saripati": "(1) Brain rot memicu depresi secara tidak langsung melalui kelelahan mental, stres, dan kecemasan."
+    },
+    {
+      "id": "S-0022",
+      "file": "sumber/S-0022.md",
+      "judul": "science shows that complaining or talking about your problems the wrong way can actually m",
+      "jenis": "postingan",
+      "penulis": "alexei (@alexeixbt)",
+      "platform": "X",
+      "url": "https://x.com/alexeixbt/status/2125227957534785672?a=Qo_PEwaqOj0nU5J5Wpo&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-26",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0032"
+      ],
+      "saripati": "Penjelasan mengenai dampak negatif dari kebiasaan mengeluh berulang tanpa arah solusi terhadap amigdala dan tingkat kecemasan, serta cara curhat yang lebih sehat melalui reframing dan pencarian langkah konkret agar otak kembali tenang."
+    },
+    {
+      "id": "S-0023",
+      "file": "sumber/S-0023.md",
+      "judul": "Jalankan Waktu, Energi & Sumber Daya di Bawah Kapasitas 80% (Teori Antrean)",
+      "jenis": "postingan",
+      "penulis": "Vox (@Voxyz_ai)",
+      "platform": "X",
+      "url": "https://x.com/Voxyz_ai/status/2125591320341229890",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "motivasi-dan-mindset",
+        "bisnis"
+      ],
+      "kartu": [
+        "K-0033"
+      ],
+      "saripati": "Berdasarkan teori antrean (queueing theory), kemacetan dan penundaan dalam sistem tidak meningkat secara linear, melainkan mengikuti rumus ρ/(1−ρ) di mana ρ adalah tingkat utilisasi. Pada kapasitas 80% pengali penundaannya 4x, pada 90% melonjak menjadi 9x, dan pada 98% meledak menjadi 49x. Oleh karena itu, sengaja menyisakan ruang cadangan sekitar 20–25% (strategic slack) memberi dua keunggulan besar: guncangan tak terduga tidak merusak seluruh bulan, dan Anda punya kapasitas untuk langsung menyambar peluang langka berdaya ungkit tinggi. Namun ruang kosong ini harus dijaga tetap likuid—bukan dihabiskan untuk scrolling atau bermalas-malasan."
+    },
+    {
+      "id": "S-0024",
+      "file": "sumber/S-0024.md",
+      "judul": "A Anthropic migrou sua API de Python para Rust. Resultado: 70% menos CPU e economia de 20% de tempo.",
+      "jenis": "postingan",
+      "penulis": "Ricardo Pupo Larguesa (@rlarguesa)",
+      "platform": "X",
+      "url": "https://x.com/rlarguesa/status/2125900355820995032?a=_sMVSctsm0_yA0-7nTI&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0034"
+      ],
+      "saripati": "(1) Migrasi API Anthropic dari Python ke Rust menghasilkan penurunan penggunaan CPU sebesar 70% dan penghematan waktu 20%."
     }
   ]
 }
