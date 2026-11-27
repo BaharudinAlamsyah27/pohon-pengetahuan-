@@ -1368,9 +1368,17 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
               Simpan postingan bagus dari X, YouTube, artikel web, atau screenshot ke satu tempat yang rapi. Sistem otomatis menyimpannya sebagai <strong>Akar (Sumber Asli)</strong>, memecah poin intinya menjadi <strong>Daun (Kartu Wawasan)</strong>, lalu membantu Anda menjawab pertanyaan dan menyusun langkah praktek — 100% gratis tanpa langganan.
             </p>
           </div>
-          <div class="hero-visual">
-            <img src="assets/hero-pohon.jpg" alt="Ilustrasi skematik Pohon Pengetahuan" onerror="this.style.display='none'">
-            <div class="hero-pipeline">
+          <div class="hero-visual" style="background:#070d12;border:2px solid var(--border-strong);border-radius:12px;overflow:hidden;position:relative">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:rgba(7,13,18,0.92);border-bottom:1px solid rgba(255,255,255,0.1);flex-wrap:wrap">
+              <span id="hero-stage-label" style="font-size:11.5px;font-weight:800;letter-spacing:0.06em;color:#34d399;font-family:var(--font-mono)">🌳 POHON CAHAYA · AKAR → BATANG → DAUN</span>
+              <div style="display:flex;gap:6px">
+                <button type="button" class="btn-secondary" id="btn-hero-mode-tree" style="min-height:26px;padding:2px 9px;font-size:11.5px;background:#fbbf24;color:#111;border-color:#111">🌳 Pohon Loki</button>
+                <button type="button" class="btn-secondary" id="btn-hero-mode-brain" style="min-height:26px;padding:2px 9px;font-size:11.5px">🧠 Otak Neural 3D</button>
+                <button type="button" class="btn-secondary" id="btn-hero-pause" style="min-height:26px;padding:2px 9px;font-size:11.5px">⏸ Jeda</button>
+              </div>
+            </div>
+            <canvas id="hero-anim-canvas" style="display:block;width:100%;height:260px;cursor:grab"></canvas>
+            <div class="hero-pipeline" style="background:var(--surface);color:var(--text-1)">
               <span>1. Simpan Link / Teks</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
               <span>2. Pecah Jadi Kartu Poin Inti</span>
@@ -1550,6 +1558,372 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       }
       showView("pohon");
     }));
+    initHeroAnimStage();
+  }
+
+  // ======================== ILUSTRASI BERGERAK: POHON LOKI (YGGDRASIL) & OTAK NEURAL 3D ========================
+  let _heroRafId = 0;
+  let _tanyaBrainRafId = 0;
+  let _brainThinking = false;
+
+  function _buildBrainPoints(count = 820) {
+    const pts = [];
+    for (let i = 0; i < count; i++) {
+      const r = Math.random();
+      let x, y, z, region;
+      if (r < 0.78) {
+        // Korteks serebral (2 hemisfer kiri & kanan dengan lekukan organik)
+        const side = i % 2 === 0 ? 1 : -1;
+        const u = Math.random() * Math.PI * 2;
+        const v = Math.acos(2 * Math.random() - 1);
+        const rad = 0.72 + Math.pow(Math.random(), 0.35) * 0.28;
+        const fold = 1 + 0.07 * Math.sin(u * 5) * Math.sin(v * 4);
+        x = Math.sin(v) * Math.cos(u) * 1.18 * rad * fold;
+        y = Math.cos(v) * 0.78 * rad * fold - 0.14;
+        z = (Math.abs(Math.sin(v) * Math.sin(u)) * 0.62 + 0.08) * side * rad * fold;
+        // Sedikit penyempitan di lobus frontal
+        if (x > 0.2) y += 0.06 * x;
+        region = x > 0.35 ? "front" : (x < -0.35 ? "back" : "mid");
+      } else if (r < 0.93) {
+        // Serebelum (otak kecil di belakang bawah)
+        const u = Math.random() * Math.PI * 2;
+        const v = Math.acos(2 * Math.random() - 1);
+        const rad = 0.65 + Math.random() * 0.35;
+        x = Math.sin(v) * Math.cos(u) * 0.42 * rad - 0.72;
+        y = Math.cos(v) * 0.30 * rad + 0.48;
+        z = Math.sin(v) * Math.sin(u) * 0.48 * rad;
+        region = "cereb";
+      } else {
+        // Batang otak (brainstem)
+        const t = Math.random();
+        const ang = Math.random() * Math.PI * 2;
+        const rad = 0.14 * (1 - t * 0.25);
+        x = -0.22 - t * 0.16 + Math.cos(ang) * rad;
+        y = 0.45 + t * 0.58;
+        z = Math.sin(ang) * rad;
+        region = "stem";
+      }
+      pts.push({ x, y, z, region, sz: 0.9 + Math.random() * 1.4, phase: Math.random() * Math.PI * 2 });
+    }
+    return pts;
+  }
+
+  function _drawNeuralBrainFrame(ctx, w, h, pts, sparks, stateObj, time) {
+    ctx.fillStyle = "#070d12";
+    ctx.fillRect(0, 0, w, h);
+
+    // Cahaya latar lembut
+    const bgGrad = ctx.createRadialGradient(w * 0.5, h * 0.48, 8, w * 0.5, h * 0.48, Math.min(w, h) * 0.6);
+    bgGrad.addColorStop(0, _brainThinking ? "rgba(52,211,153,0.16)" : "rgba(34,211,238,0.10)");
+    bgGrad.addColorStop(1, "rgba(7,13,18,0)");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    const rotY = stateObj.rotY;
+    const rotX = stateObj.rotX;
+    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+    const scale = Math.min(w, h) * 0.42;
+    const cx = w * 0.5, cy = h * 0.47;
+
+    const proj = pts.map(p => {
+      const x1 = p.x * cosY - p.z * sinY;
+      const z1 = p.x * sinY + p.z * cosY;
+      const y2 = p.y * cosX - z1 * sinX;
+      const z2 = p.y * sinX + z1 * cosX;
+      const persp = 2.6 / (2.6 - z2 * 0.65);
+      return { sx: cx + x1 * scale * persp, sy: cy + y2 * scale * persp, z: z2, region: p.region, sz: p.sz * persp, phase: p.phase };
+    });
+
+    // Gambar titik partikel otak (gradien cyan-teal -> rose/magenta di sisi depan seperti referensi)
+    for (let i = 0; i < proj.length; i++) {
+      const p = proj[i];
+      const depthAlpha = Math.max(0.14, Math.min(0.95, (p.z + 1.1) / 2.0));
+      const twinkle = 0.78 + 0.22 * Math.sin(time * 2.2 + p.phase);
+      let col;
+      if (p.region === "front") col = `rgba(244,63,94,${(depthAlpha * twinkle).toFixed(2)})`;
+      else if (p.region === "cereb") col = `rgba(56,189,248,${(depthAlpha * twinkle).toFixed(2)})`;
+      else col = `rgba(45,212,191,${(depthAlpha * twinkle).toFixed(2)})`;
+      ctx.fillStyle = col;
+      ctx.beginPath();
+      ctx.arc(p.sx, p.sy, p.sz, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Bintik cahaya & sambungan sinapsis yang mondar-mandir di dalam otak
+    const speedMult = _brainThinking ? 2.4 : 1.0;
+    for (let s of sparks) {
+      s.t += s.speed * speedMult;
+      if (s.t >= 1) {
+        s.t = 0;
+        s.from = s.to;
+        s.to = Math.floor(Math.random() * proj.length);
+      }
+      const a = proj[s.from];
+      const b = proj[s.to];
+      if (!a || !b) continue;
+      // Garis sinapsis tipis bercahaya
+      ctx.strokeStyle = _brainThinking ? "rgba(251,191,36,0.22)" : "rgba(94,234,212,0.16)";
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(a.sx, a.sy);
+      ctx.lineTo(b.sx, b.sy);
+      ctx.stroke();
+
+      // Bintik impuls cahaya mondar-mandir
+      const mx = a.sx + (b.sx - a.sx) * s.t;
+      const my = a.sy + (b.sy - a.sy) * s.t;
+      const g = ctx.createRadialGradient(mx, my, 0, mx, my, s.glow);
+      g.addColorStop(0, "rgba(255,255,255,0.98)");
+      g.addColorStop(0.35, s.color);
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(mx, my, s.glow, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function _drawLokiTreeFrame(ctx, w, h, strands, particles, time) {
+    ctx.fillStyle = "#060c10";
+    ctx.fillRect(0, 0, w, h);
+
+    // Aura zamrud & emas khas Pohon Loki Season 2
+    const aura = ctx.createRadialGradient(w * 0.5, h * 0.45, 10, w * 0.5, h * 0.45, w * 0.52);
+    aura.addColorStop(0, "rgba(16,185,129,0.22)");
+    aura.addColorStop(0.5, "rgba(251,191,36,0.08)");
+    aura.addColorStop(1, "rgba(6,12,16,0)");
+    ctx.fillStyle = aura;
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = w * 0.5;
+    const baseY = h * 0.72;
+    const crownY = h * 0.28;
+
+    // 1. Garis Akar (bawah) -> Batang berpilin -> Ranting & Daun (atas)
+    const leafNodes = [];
+    for (let idx = 0; idx < strands.length; idx++) {
+      const st = strands[idx];
+      const sway = Math.sin(time * 1.1 + st.phase) * 7;
+      const rx = cx + st.rootX * w * 0.42;
+      const ry = h * 0.94 + Math.sin(st.phase) * 6;
+      const tx = cx + st.trunkOff * 16 + Math.sin(time * 1.4 + st.phase) * 3;
+      const bx = cx + st.branchX * w * 0.44 + sway;
+      const by = crownY - st.branchY * h * 0.20 + Math.cos(time * 0.9 + st.phase) * 4;
+      leafNodes.push({ x: bx, y: by, col: st.isGold ? "#fbbf24" : "#34d399" });
+
+      // Akar bercahaya (bawah ke pangkal batang)
+      ctx.strokeStyle = st.isGold ? "rgba(251,191,36,0.38)" : "rgba(16,185,129,0.42)";
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(rx, ry);
+      ctx.bezierCurveTo(rx, baseY + 18, tx, baseY + 12, tx, baseY);
+      ctx.stroke();
+
+      // Batang pilinan timeline -> ranting atas
+      const grad = ctx.createLinearGradient(tx, baseY, bx, by);
+      grad.addColorStop(0, "rgba(16,185,129,0.85)");
+      grad.addColorStop(0.55, st.isGold ? "rgba(251,191,36,0.9)" : "rgba(52,211,153,0.85)");
+      grad.addColorStop(1, st.isGold ? "rgba(253,224,71,0.75)" : "rgba(45,212,191,0.75)");
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = st.width;
+      ctx.beginPath();
+      ctx.moveTo(tx, baseY);
+      ctx.bezierCurveTo(tx + sway * 0.3, h * 0.50, cx + st.branchX * w * 0.20, h * 0.36, bx, by);
+      ctx.stroke();
+
+      // Simpul daun bercahaya di ujung ranting
+      const pulse = 3.2 + 1.6 * Math.sin(time * 2.5 + st.phase);
+      const lg = ctx.createRadialGradient(bx, by, 0, bx, by, pulse * 2.6);
+      lg.addColorStop(0, "#ffffff");
+      lg.addColorStop(0.35, st.isGold ? "rgba(251,191,36,0.9)" : "rgba(52,211,153,0.9)");
+      lg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = lg;
+      ctx.beginPath();
+      ctx.arc(bx, by, pulse * 2.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 2. Garis-garis jaringan pengetahuan yang saling terhubung antar daun/cabang
+    for (let i = 0; i < leafNodes.length; i++) {
+      const a = leafNodes[i];
+      const b = leafNodes[(i + 2) % leafNodes.length];
+      const alpha = 0.14 + 0.12 * Math.sin(time * 1.8 + i);
+      ctx.strokeStyle = `rgba(167,243,208,${alpha.toFixed(2)})`;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    }
+
+    // 3. Partikel energi pengetahuan mengalir naik dari Akar -> Batang -> Daun
+    for (let pt of particles) {
+      pt.p += pt.speed;
+      if (pt.p > 1) pt.p = 0;
+      const st = strands[pt.strandIdx];
+      const sway = Math.sin(time * 1.1 + st.phase) * 7;
+      let px, py;
+      if (pt.p < 0.32) {
+        const t = pt.p / 0.32;
+        px = (cx + st.rootX * w * 0.42) * (1 - t) + (cx + st.trunkOff * 16) * t;
+        py = (h * 0.94) * (1 - t) + baseY * t;
+      } else {
+        const t = (pt.p - 0.32) / 0.68;
+        const x0 = cx + st.trunkOff * 16;
+        const x1 = cx + st.branchX * w * 0.44 + sway;
+        const y1 = crownY - st.branchY * h * 0.20;
+        px = x0 + (x1 - x0) * t * t;
+        py = baseY + (y1 - baseY) * t;
+      }
+      const g = ctx.createRadialGradient(px, py, 0, px, py, 5.5);
+      g.addColorStop(0, "#ffffff");
+      g.addColorStop(0.4, st.isGold ? "rgba(251,191,36,0.95)" : "rgba(52,211,153,0.95)");
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(px, py, 5.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Label lapisan Akar / Batang / Daun halus
+    ctx.font = "700 10px ui-monospace, monospace";
+    ctx.fillStyle = "rgba(148,163,184,0.75)";
+    ctx.fillText("DAUN · KARTU WAWASAN", 12, 20);
+    ctx.fillText("BATANG · ALIRAN PENGETAHUAN", 12, h * 0.55);
+    ctx.fillText("AKAR · SUMBER ASLI (X, YT, PDF)", 12, h - 10);
+  }
+
+  function initHeroAnimStage() {
+    cancelAnimationFrame(_heroRafId);
+    const canvas = document.getElementById("hero-anim-canvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(300, Math.floor(rect.width * dpr));
+      canvas.height = Math.max(200, Math.floor(rect.height * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+
+    let mode = "tree"; // "tree" | "brain"
+    let paused = false;
+    const strands = Array.from({ length: 18 }, (_, i) => {
+      const frac = (i / 17) * 2 - 1;
+      return {
+        rootX: frac * 0.85 + (Math.random() - 0.5) * 0.14,
+        trunkOff: frac * 0.85,
+        branchX: frac * 0.96,
+        branchY: 0.25 + (1 - Math.abs(frac)) * 0.72 + (Math.random() - 0.5) * 0.12,
+        width: 1.3 + (1 - Math.abs(frac)) * 1.4,
+        phase: i * 0.55,
+        isGold: i % 3 === 0,
+      };
+    });
+    const treeParticles = Array.from({ length: 34 }, (_, i) => ({
+      strandIdx: i % strands.length,
+      p: Math.random(),
+      speed: 0.003 + Math.random() * 0.0045,
+    }));
+    const brainPts = _buildBrainPoints(860);
+    const brainSparks = Array.from({ length: 14 }, (_, i) => ({
+      from: Math.floor(Math.random() * brainPts.length),
+      to: Math.floor(Math.random() * brainPts.length),
+      t: Math.random(),
+      speed: 0.012 + Math.random() * 0.018,
+      glow: 6 + Math.random() * 5,
+      color: i % 3 === 0 ? "rgba(251,191,36,0.9)" : (i % 3 === 1 ? "rgba(52,211,153,0.95)" : "rgba(56,189,248,0.95)"),
+    }));
+    const brainState = { rotY: 0.3, rotX: 0.12, dragging: false, lx: 0, ly: 0 };
+
+    canvas.addEventListener("pointerdown", e => { brainState.dragging = true; brainState.lx = e.clientX; brainState.ly = e.clientY; canvas.style.cursor = "grabbing"; });
+    window.addEventListener("pointerup", () => { brainState.dragging = false; canvas.style.cursor = "grab"; });
+    canvas.addEventListener("pointermove", e => {
+      if (!brainState.dragging || mode !== "brain") return;
+      brainState.rotY += (e.clientX - brainState.lx) * 0.009;
+      brainState.rotX = Math.max(-0.9, Math.min(0.9, brainState.rotX + (e.clientY - brainState.ly) * 0.009));
+      brainState.lx = e.clientX; brainState.ly = e.clientY;
+    });
+
+    const lbl = document.getElementById("hero-stage-label");
+    const btnTree = document.getElementById("btn-hero-mode-tree");
+    const btnBrain = document.getElementById("btn-hero-mode-brain");
+    const btnPause = document.getElementById("btn-hero-pause");
+    function setMode(m) {
+      mode = m;
+      if (lbl) lbl.textContent = m === "tree" ? "🌳 POHON CAHAYA · AKAR → BATANG → DAUN" : "🧠 OTAK NEURAL 3D · SINAPSIS PENGETAHUAN (SERET UNTUK PUTAR)";
+      if (btnTree) { btnTree.style.background = m === "tree" ? "#fbbf24" : ""; btnTree.style.color = m === "tree" ? "#111" : ""; }
+      if (btnBrain) { btnBrain.style.background = m === "brain" ? "#fbbf24" : ""; btnBrain.style.color = m === "brain" ? "#111" : ""; }
+    }
+    btnTree?.addEventListener("click", () => setMode("tree"));
+    btnBrain?.addEventListener("click", () => setMode("brain"));
+    btnPause?.addEventListener("click", () => {
+      paused = !paused;
+      btnPause.textContent = paused ? "▶ Lanjut" : "⏸ Jeda";
+    });
+
+    let t = 0;
+    function tick() {
+      if (!document.getElementById("hero-anim-canvas")) return;
+      const w = canvas.width / dpr, h = canvas.height / dpr;
+      if (!paused) {
+        t += 0.018;
+        if (mode === "brain" && !brainState.dragging) brainState.rotY += 0.0045;
+      }
+      if (mode === "tree") _drawLokiTreeFrame(ctx, w, h, strands, treeParticles, t);
+      else _drawNeuralBrainFrame(ctx, w, h, brainPts, brainSparks, brainState, t);
+      _heroRafId = requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  function initTanyaBrainStage() {
+    cancelAnimationFrame(_tanyaBrainRafId);
+    const canvas = document.getElementById("tanya-brain-canvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.max(240, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(180, Math.floor(rect.height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    let paused = false;
+    const brainPts = _buildBrainPoints(760);
+    const sparks = Array.from({ length: 12 }, (_, i) => ({
+      from: Math.floor(Math.random() * brainPts.length),
+      to: Math.floor(Math.random() * brainPts.length),
+      t: Math.random(),
+      speed: 0.012 + Math.random() * 0.016,
+      glow: 6 + Math.random() * 4.5,
+      color: i % 3 === 0 ? "rgba(251,191,36,0.9)" : (i % 3 === 1 ? "rgba(52,211,153,0.95)" : "rgba(56,189,248,0.95)"),
+    }));
+    const bState = { rotY: 0.4, rotX: 0.1, dragging: false, lx: 0, ly: 0 };
+    canvas.addEventListener("pointerdown", e => { bState.dragging = true; bState.lx = e.clientX; bState.ly = e.clientY; canvas.style.cursor = "grabbing"; });
+    window.addEventListener("pointerup", () => { bState.dragging = false; canvas.style.cursor = "grab"; });
+    canvas.addEventListener("pointermove", e => {
+      if (!bState.dragging) return;
+      bState.rotY += (e.clientX - bState.lx) * 0.01;
+      bState.rotX = Math.max(-0.9, Math.min(0.9, bState.rotX + (e.clientY - bState.ly) * 0.01));
+      bState.lx = e.clientX; bState.ly = e.clientY;
+    });
+    const btnP = document.getElementById("btn-tanya-brain-pause");
+    btnP?.addEventListener("click", () => { paused = !paused; btnP.textContent = paused ? "Lanjut" : "Jeda"; });
+
+    let t = 0;
+    function tick() {
+      if (!document.getElementById("tanya-brain-canvas")) return;
+      const w = canvas.width / dpr, h = canvas.height / dpr;
+      if (!paused) {
+        t += 0.02;
+        if (!bState.dragging) bState.rotY += _brainThinking ? 0.016 : 0.005;
+      }
+      _drawNeuralBrainFrame(ctx, w, h, brainPts, sparks, bState, t);
+      _tanyaBrainRafId = requestAnimationFrame(tick);
+    }
+    tick();
   }
 
   // ======================== 1. POHON (SCHEMATIC SVG + OUTLINE) ========================
@@ -3651,14 +4025,30 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
           </form>
         </div>
 
-        <aside class="panel">
-          <h3 style="margin-bottom:8px">Cara Kerja &amp; Efisiensi</h3>
+        <aside class="panel" style="display:grid;gap:12px;align-content:start">
+          <div style="background:#070d12;border:2px solid var(--border-strong);border-radius:10px;overflow:hidden">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.08)">
+              <div>
+                <div style="font-size:10px;letter-spacing:0.09em;color:#94a3b8;font-family:var(--font-mono)">NEURAL POHON PENGETAHUAN</div>
+                <div id="tanya-brain-status" style="font-size:13px;font-weight:800;color:#34d399">Menunggu pertanyaan</div>
+              </div>
+              <button type="button" class="btn-secondary" id="btn-tanya-brain-pause" style="min-height:26px;padding:2px 8px;font-size:11px">Jeda</button>
+            </div>
+            <canvas id="tanya-brain-canvas" style="display:block;width:100%;height:210px;cursor:grab"></canvas>
+            <div style="padding:6px 10px;font-size:11px;color:#94a3b8;font-family:var(--font-mono);border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px">
+              <span>Seret untuk memutar 3D</span>
+              <span>● konsep · ● sumber · ● sinapsis</span>
+            </div>
+          </div>
+          <div>
+            <h3 style="margin-bottom:8px">Cara Kerja &amp; Efisiensi</h3>
           <p style="font-size:13px;color:var(--text-2);margin:0 0 10px">
             <strong>Level 1 (Aktif Otomatis · 0 Biaya):</strong> menyaring kartu via BM25/TF-IDF lalu menyusun ringkasan ber-sitasi langsung di peramban/server.
           </p>
           <p style="font-size:13px;color:var(--text-2);margin:0">
             <strong>Level 2 (Opsional Gemini 3.5 Flash-Lite RAG):</strong> cukup isi <code>GEMINI_API_KEY</code> gratis di <code>.env</code> (lokal) atau Environment Variables Vercel agar jawaban dirangkai alami seperti ChatGPT dari Top-8 kartu terpilih.
           </p>
+          </div>
         </aside>
       </div>
     `;
@@ -3688,6 +4078,9 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       renderTanya();
       const sendBtn = document.getElementById("chat-send");
       if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = "Mencari..."; }
+      _brainThinking = true;
+      const bSt = document.getElementById("tanya-brain-status");
+      if (bSt) { bSt.textContent = "⚡ Memindai sinapsis pengetahuan..."; bSt.style.color = "#fbbf24"; }
 
       let resData = null;
       if (location.protocol.startsWith("http")) {
@@ -3702,6 +4095,7 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       }
       if (!resData) resData = localSynthesizeAnswer(q);
 
+      _brainThinking = false;
       chatHistory.push({
         role: "bot",
         mode: resData.mode || "sintesis-lokal",
@@ -3710,6 +4104,8 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
       });
       renderTanya();
     }
+
+    initTanyaBrainStage();
 
     sec.querySelectorAll("[data-ask-q]").forEach(btn => btn.addEventListener("click", () => submitQuestion(btn.dataset.askQ)));
     document.getElementById("chat-form")?.addEventListener("submit", e => {
