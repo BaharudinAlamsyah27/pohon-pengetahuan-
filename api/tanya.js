@@ -190,9 +190,52 @@ async function callFreeLlmCascade(question, relCards) {
   return { text: null, model: "none", err: lastErr };
 }
 
+const TANYA_RATE_WINDOW_MS = 5 * 60 * 1000;
+const TANYA_RATE_MAX = 15;
+const tanyaRateBuckets = new Map();
+
+function checkTanyaRate(req) {
+  const ip = String(req?.headers?.["x-forwarded-for"] || "").split(",")[0].trim() || req?.socket?.remoteAddress || "unknown";
+  const now = Date.now();
+  const arr = (tanyaRateBuckets.get(ip) || []).filter((ts) => now - ts < TANYA_RATE_WINDOW_MS);
+  if (arr.length >= TANYA_RATE_MAX) {
+    tanyaRateBuckets.set(ip, arr);
+    return false;
+  }
+  arr.push(now);
+  tanyaRateBuckets.set(ip, arr);
+  if (tanyaRateBuckets.size > 500) {
+    for (const [k, v] of tanyaRateBuckets.entries()) {
+      if (!v.some((ts) => now - ts < TANYA_RATE_WINDOW_MS)) tanyaRateBuckets.delete(k);
+    }
+  }
+  return true;
+}
+
+function isAllowedTanyaOrigin(req) {
+  const origin = String(req?.headers?.origin || "").trim();
+  if (!origin) return true;
+  const host = String(req?.headers?.["x-forwarded-host"] || req?.headers?.host || "").trim();
+  try {
+    const oHost = new URL(origin).host;
+    return oHost === host || oHost === "pohon-pengetahuan.vercel.app" || oHost.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+}
+
 module.exports = async function handler(req, res) {
+  res.setHeader("Cache-Control", "no-store");
   if (req.method !== "POST") {
     res.status(405).json({ error: "Gunakan POST /api/tanya" });
+    return;
+  }
+  if (!isAllowedTanyaOrigin(req)) {
+    res.status(403).json({ error: "Asal permintaan tidak diizinkan." });
+    return;
+  }
+  if (!checkTanyaRate(req)) {
+    res.status(429).json({ error: "Terlalu banyak pertanyaan dalam waktu singkat. Coba lagi 5 menit lagi." });
     return;
   }
 
@@ -239,13 +282,13 @@ module.exports = async function handler(req, res) {
         jawaban: level1Text,
         rujukan,
         pertentangan: [],
-        info: `Penyedia AI tidak merespons (${rag.err}); menampilkan sintesis lokal.`,
+        info: "Penyedia AI sedang sibuk; menampilkan ringkasan langsung dari kartu publik.",
       });
       return;
     }
 
     res.status(200).json({ ok: true, mode: "sintesis-lokal", jawaban: level1Text, rujukan, pertentangan: [] });
-  } catch (err) {
-    res.status(500).json({ error: err?.message || "Gagal memproses pertanyaan" });
+  } catch {
+    res.status(500).json({ error: "Gagal memproses pertanyaan saat ini." });
   }
 };

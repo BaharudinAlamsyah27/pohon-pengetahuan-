@@ -1,7 +1,54 @@
 const DEFAULT_REPO = "BaharudinAlamsyah27/pohon-pengetahuan-";
 
+// Rate limit ringan per IP (maks 5 titipan per 10 menit per instance)
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const RATE_MAX_REQ = 5;
+const rateBuckets = new Map();
+
+function getClientIp(req) {
+  const fwd = String(req?.headers?.["x-forwarded-for"] || "").split(",")[0].trim();
+  return fwd || req?.socket?.remoteAddress || "unknown";
+}
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const arr = (rateBuckets.get(ip) || []).filter((ts) => now - ts < RATE_WINDOW_MS);
+  if (arr.length >= RATE_MAX_REQ) {
+    rateBuckets.set(ip, arr);
+    return false;
+  }
+  arr.push(now);
+  rateBuckets.set(ip, arr);
+  if (rateBuckets.size > 500) {
+    for (const [k, v] of rateBuckets.entries()) {
+      if (!v.some((ts) => now - ts < RATE_WINDOW_MS)) rateBuckets.delete(k);
+    }
+  }
+  return true;
+}
+
+function isAllowedOrigin(req) {
+  const origin = String(req?.headers?.origin || "").trim();
+  if (!origin) return true;
+  const host = String(req?.headers?.["x-forwarded-host"] || req?.headers?.host || "").trim();
+  try {
+    const oHost = new URL(origin).host;
+    return oHost === host || oHost === "pohon-pengetahuan.vercel.app" || oHost.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+}
+
 function cleanStr(val, maxLen) {
   return String(val || "").replace(/\r\n/g, "\n").trim().slice(0, maxLen);
+}
+
+function sanitizeForMarkdown(text) {
+  return String(text || "")
+    .replace(/<!--/g, "< !--")
+    .replace(/-->/g, "-- >")
+    .replace(/POHON_TITIPAN_DATA/g, "POHON_TITIPAN")
+    .replace(/```/g, "'''");
 }
 
 function guessPlatformFromUrl(url) {
@@ -47,8 +94,17 @@ async function createGitHubIssue(token, repo, title, body, withLabel) {
 }
 
 module.exports = async function handler(req, res) {
+  res.setHeader("Cache-Control", "no-store");
   if (req.method !== "POST") {
     res.status(405).json({ error: "Gunakan POST /api/titip" });
+    return;
+  }
+  if (!isAllowedOrigin(req)) {
+    res.status(403).json({ error: "Asal permintaan tidak diizinkan." });
+    return;
+  }
+  if (!checkRateLimit(getClientIp(req))) {
+    res.status(429).json({ error: "Terlalu banyak kiriman dalam waktu singkat. Coba lagi 10 menit lagi." });
     return;
   }
 
@@ -80,23 +136,31 @@ module.exports = async function handler(req, res) {
     res.status(400).json({ error: "Isi minimal link atau teks catatan (minimal 5 karakter)." });
     return;
   }
-  if (url && !/^https?:\/\//i.test(url)) {
-    res.status(400).json({ error: "Link harus diawali http:// atau https://" });
-    return;
+  if (url) {
+    try {
+      const parsedUrl = new URL(url);
+      if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+        res.status(400).json({ error: "Link harus diawali http:// atau https://" });
+        return;
+      }
+    } catch {
+      res.status(400).json({ error: "Format link tidak valid." });
+      return;
+    }
   }
 
   const token = (process.env.GITHUB_TOKEN || process.env.pohon_key || process.env.POHON_KEY || "").trim();
   const repo = (process.env.GITHUB_REPO || DEFAULT_REPO).trim();
   if (!token) {
     res.status(503).json({
-      error: "Kotak Titipan online belum diaktifkan oleh pemilik (GITHUB_TOKEN / pohon_key belum dipasang di Vercel).",
+      error: "Kotak Titipan online belum diaktifkan oleh pemilik.",
       needs_setup: true,
     });
     return;
   }
 
   const shortTitle = makeShortTitle(judulInput, url, teksAsli);
-  const issueTitle = `[Titipan] ${shortTitle}`;
+  const issueTitle = `[Titipan] ${shortTitle.replace(/[\r\n]+/g, " ")}`;
   const dataObj = {
     nama,
     url: url || "tidak ada",
@@ -107,18 +171,21 @@ module.exports = async function handler(req, res) {
     waktu: new Date().toISOString(),
   };
 
+  const safeTeksDisplay = sanitizeForMarkdown(teksAsli);
+  const safeJson = JSON.stringify(dataObj, null, 2).replace(/```/g, "\\u0060\\u0060\\u0060");
+
   const issueBody = [
-    `**Pengirim:** ${nama}`,
-    `**Platform:** ${platform}`,
+    `**Pengirim:** ${sanitizeForMarkdown(nama)}`,
+    `**Platform:** ${sanitizeForMarkdown(platform)}`,
     url ? `**Link:** ${url}` : "",
-    bidang ? `**Usulan Topik:** ${bidang}` : "",
+    bidang ? `**Usulan Topik:** ${sanitizeForMarkdown(bidang)}` : "",
     "",
     "### Catatan / Teks",
-    teksAsli || "(Hanya mengirim link — akan ditarik otomatis saat diproses di laptop)",
+    safeTeksDisplay || "(Hanya mengirim link — akan ditarik otomatis saat diproses di laptop)",
     "",
     "<!-- POHON_TITIPAN_DATA -->",
     "```json",
-    JSON.stringify(dataObj, null, 2),
+    safeJson,
     "```",
   ]
     .filter(Boolean)
@@ -130,9 +197,8 @@ module.exports = async function handler(req, res) {
       resp = await createGitHubIssue(token, repo, issueTitle, issueBody, false);
     }
     if (!resp.ok) {
-      const errTxt = await resp.text().catch(() => "");
       res.status(502).json({
-        error: `Gagal mengirim ke Kotak Titipan (HTTP ${resp.status}). ${errTxt.slice(0, 120)}`,
+        error: "Gagal menyimpan ke Kotak Titipan saat ini. Coba lagi beberapa saat lagi.",
       });
       return;
     }
@@ -142,7 +208,7 @@ module.exports = async function handler(req, res) {
       nomor: created.number,
       pesan: `Berhasil dititipkan (#${created.number})! Pemilik Pohon akan meninjau dan merapikannya.`,
     });
-  } catch (err) {
-    res.status(500).json({ error: `Gagal menghubungi Kotak Titipan: ${err?.message || "timeout"}` });
+  } catch {
+    res.status(500).json({ error: "Gagal menghubungi Kotak Titipan. Coba lagi sebentar." });
   }
 };

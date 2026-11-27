@@ -16,9 +16,11 @@ Lalu buka:
 
 from __future__ import annotations
 
+import ipaddress
 import json
 import os
 import re
+import socket
 import sys
 from datetime import date
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -988,13 +990,39 @@ def _github_api_request(method: str, endpoint: str, token: str, payload: dict | 
         return 0, str(err.reason)
 
 
+def _is_safe_public_url(url: str) -> bool:
+    try:
+        parsed = urlparse(url)
+        if parsed.scheme not in {"http", "https"} or not parsed.hostname:
+            return False
+        host = parsed.hostname.lower().strip()
+        if host in {"localhost", "127.0.0.1", "::1"} or host.endswith(".local") or host.endswith(".internal"):
+            return False
+        infos = socket.getaddrinfo(host, None)
+        for info in infos:
+            ip_str = info[4][0]
+            ip_obj = ipaddress.ip_address(ip_str)
+            if (
+                ip_obj.is_private
+                or ip_obj.is_loopback
+                or ip_obj.is_link_local
+                or ip_obj.is_multicast
+                or ip_obj.is_reserved
+                or ip_obj.is_unspecified
+            ):
+                return False
+        return True
+    except Exception:
+        return False
+
+
 def _parse_titipan_issue(issue: dict) -> dict:
     body = str(issue.get("body") or "")
     parsed: dict = {}
-    m = re.search(r"<!--\s*POHON_TITIPAN_DATA\s*-->\s*```json\s*(\{[\s\S]*?\})\s*```", body)
-    if m:
+    matches = re.findall(r"<!--\s*POHON_TITIPAN_DATA\s*-->\s*```json\s*(\{[\s\S]*?\})\s*```", body)
+    if matches:
         try:
-            parsed = json.loads(m.group(1))
+            parsed = json.loads(matches[-1])
         except Exception:
             parsed = {}
     title_clean = re.sub(r"^\[Titipan\]\s*", "", str(issue.get("title") or "")).strip()
@@ -1071,8 +1099,8 @@ def process_github_titipan(nomor: int, aksi: str) -> dict:
     platform = item["platform"] or "lainnya"
     jenis = "postingan"
 
-    # Jika pengirim hanya menaruh link, coba tarik isi aslinya otomatis lewat ambil_link.py
-    if url.startswith("http") and (not teks or teks.strip() == url.strip() or len(teks.strip()) < 40):
+    # Jika pengirim hanya menaruh link, coba tarik isi aslinya otomatis (hanya URL publik aman, anti-SSRF)
+    if url.startswith("http") and _is_safe_public_url(url) and (not teks or teks.strip() == url.strip() or len(teks.strip()) < 40):
         try:
             fetched = ambil_link.fetch_url(url)
             if fetched.get("ok") and len(str(fetched.get("teks_asli") or "").strip()) >= 20:

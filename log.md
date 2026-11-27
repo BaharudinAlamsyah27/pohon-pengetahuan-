@@ -92,3 +92,5 @@ Catatan kronologis (append-only).
 [2026-11-27] SEO / WA PREVIEW: Mengganti thumbnail Open Graph WhatsApp menjadi ilustrasi Pohon Cahaya Loki 3D (assets/og-pohon-loki.jpg, 1200x630) agar pratinjau tautan selaras dengan tampilan Beranda terbaru.
 
 [2026-11-27] FIX KOTAK TITIPAN: Mendukung nama environment variable pohon_key / POHON_KEY selain GITHUB_TOKEN di api/titip.js dan scripts/server_lokal.py.
+
+[2026-11-27] AUDIT & HARDENING KEAMANAN: Menambahkan HTTP security headers di vercel.json (X-Content-Type-Options, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy), rate limiter per-IP + validasi Origin + sanitasi markdown/marker + penyembunyian detail error di api/titip.js & api/tanya.js, serta proteksi anti-SSRF (_is_safe_public_url) di scripts/server_lokal.py.
