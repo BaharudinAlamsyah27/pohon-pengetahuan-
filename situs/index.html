@@ -1377,7 +1377,7 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
                 <button type="button" class="btn-secondary" id="btn-hero-pause" style="min-height:26px;padding:2px 9px;font-size:11.5px">⏸ Jeda</button>
               </div>
             </div>
-            <canvas id="hero-anim-canvas" style="display:block;width:100%;height:260px;cursor:grab"></canvas>
+            <canvas id="hero-anim-canvas" style="display:block;width:100%;height:310px;cursor:grab"></canvas>
             <div class="hero-pipeline" style="background:var(--surface);color:var(--text-1)">
               <span>1. Simpan Link / Teks</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
@@ -1684,114 +1684,308 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
     }
   }
 
-  function _drawLokiTreeFrame(ctx, w, h, strands, particles, time) {
-    ctx.fillStyle = "#060c10";
-    ctx.fillRect(0, 0, w, h);
+  function _buildLokiTree3D() {
+    // Bangun pohon fraktal 3D organik sejati (Akar 3 level + Batang Berpilin + Cabang/Ranting 5 level + 450 Daun Kosmik)
+    const segments = [];   // {x1,y1,z1, x2,y2,z2, width, depth, kind:'root'|'trunk'|'branch', gold, phase}
+    const leaves = [];     // {x,y,z, sz, gold, phase, cluster}
+    const paths = [];      // jalur utuh untuk impuls cahaya mengalir dari akar -> batang -> ujung daun
+    const stars = Array.from({ length: 75 }, () => ({
+      x: Math.random(), y: Math.random(), sz: 0.5 + Math.random() * 1.4, phase: Math.random() * 6.28
+    }));
 
-    // Aura zamrud & emas khas Pohon Loki Season 2
-    const aura = ctx.createRadialGradient(w * 0.5, h * 0.45, 10, w * 0.5, h * 0.45, w * 0.52);
-    aura.addColorStop(0, "rgba(16,185,129,0.22)");
-    aura.addColorStop(0.5, "rgba(251,191,36,0.08)");
-    aura.addColorStop(1, "rgba(6,12,16,0)");
-    ctx.fillStyle = aura;
-    ctx.fillRect(0, 0, w, h);
-
-    const cx = w * 0.5;
-    const baseY = h * 0.72;
-    const crownY = h * 0.28;
-
-    // 1. Garis Akar (bawah) -> Batang berpilin -> Ranting & Daun (atas)
-    const leafNodes = [];
-    for (let idx = 0; idx < strands.length; idx++) {
-      const st = strands[idx];
-      const sway = Math.sin(time * 1.1 + st.phase) * 7;
-      const rx = cx + st.rootX * w * 0.42;
-      const ry = h * 0.94 + Math.sin(st.phase) * 6;
-      const tx = cx + st.trunkOff * 16 + Math.sin(time * 1.4 + st.phase) * 3;
-      const bx = cx + st.branchX * w * 0.44 + sway;
-      const by = crownY - st.branchY * h * 0.20 + Math.cos(time * 0.9 + st.phase) * 4;
-      leafNodes.push({ x: bx, y: by, col: st.isGold ? "#fbbf24" : "#34d399" });
-
-      // Akar bercahaya (bawah ke pangkal batang)
-      ctx.strokeStyle = st.isGold ? "rgba(251,191,36,0.38)" : "rgba(16,185,129,0.42)";
-      ctx.lineWidth = 1.4;
-      ctx.beginPath();
-      ctx.moveTo(rx, ry);
-      ctx.bezierCurveTo(rx, baseY + 18, tx, baseY + 12, tx, baseY);
-      ctx.stroke();
-
-      // Batang pilinan timeline -> ranting atas
-      const grad = ctx.createLinearGradient(tx, baseY, bx, by);
-      grad.addColorStop(0, "rgba(16,185,129,0.85)");
-      grad.addColorStop(0.55, st.isGold ? "rgba(251,191,36,0.9)" : "rgba(52,211,153,0.85)");
-      grad.addColorStop(1, st.isGold ? "rgba(253,224,71,0.75)" : "rgba(45,212,191,0.75)");
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = st.width;
-      ctx.beginPath();
-      ctx.moveTo(tx, baseY);
-      ctx.bezierCurveTo(tx + sway * 0.3, h * 0.50, cx + st.branchX * w * 0.20, h * 0.36, bx, by);
-      ctx.stroke();
-
-      // Simpul daun bercahaya di ujung ranting
-      const pulse = 3.2 + 1.6 * Math.sin(time * 2.5 + st.phase);
-      const lg = ctx.createRadialGradient(bx, by, 0, bx, by, pulse * 2.6);
-      lg.addColorStop(0, "#ffffff");
-      lg.addColorStop(0.35, st.isGold ? "rgba(251,191,36,0.9)" : "rgba(52,211,153,0.9)");
-      lg.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = lg;
-      ctx.beginPath();
-      ctx.arc(bx, by, pulse * 2.6, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // 2. Garis-garis jaringan pengetahuan yang saling terhubung antar daun/cabang
-    for (let i = 0; i < leafNodes.length; i++) {
-      const a = leafNodes[i];
-      const b = leafNodes[(i + 2) % leafNodes.length];
-      const alpha = 0.14 + 0.12 * Math.sin(time * 1.8 + i);
-      ctx.strokeStyle = `rgba(167,243,208,${alpha.toFixed(2)})`;
-      ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
-      ctx.stroke();
-    }
-
-    // 3. Partikel energi pengetahuan mengalir naik dari Akar -> Batang -> Daun
-    for (let pt of particles) {
-      pt.p += pt.speed;
-      if (pt.p > 1) pt.p = 0;
-      const st = strands[pt.strandIdx];
-      const sway = Math.sin(time * 1.1 + st.phase) * 7;
-      let px, py;
-      if (pt.p < 0.32) {
-        const t = pt.p / 0.32;
-        px = (cx + st.rootX * w * 0.42) * (1 - t) + (cx + st.trunkOff * 16) * t;
-        py = (h * 0.94) * (1 - t) + baseY * t;
-      } else {
-        const t = (pt.p - 0.32) / 0.68;
-        const x0 = cx + st.trunkOff * 16;
-        const x1 = cx + st.branchX * w * 0.44 + sway;
-        const y1 = crownY - st.branchY * h * 0.20;
-        px = x0 + (x1 - x0) * t * t;
-        py = baseY + (y1 - baseY) * t;
+    // 1. Batang utama berpilin (heliks timeline Loki) dari y=0.45 ke y=-0.08
+    const trunkSteps = 10;
+    const braidCount = 7;
+    for (let b = 0; b < braidCount; b++) {
+      const bAng0 = (b / braidCount) * Math.PI * 2;
+      const isGold = b % 3 === 0;
+      let px = Math.cos(bAng0) * 0.085, py = 0.44, pz = Math.sin(bAng0) * 0.085;
+      for (let s = 1; s <= trunkSteps; s++) {
+        const f = s / trunkSteps;
+        const twist = bAng0 + f * 2.4;
+        const rad = (0.095 * (1 - f * 0.45)) + Math.sin(f * Math.PI) * 0.02;
+        const nx = Math.cos(twist) * rad + Math.sin(f * 3.1) * 0.015;
+        const ny = 0.44 - f * 0.54;
+        const nz = Math.sin(twist) * rad;
+        segments.push({ x1: px, y1: py, z1: pz, x2: nx, y2: ny, z2: nz, width: 2.8 - f * 1.1, depth: 0, kind: "trunk", gold: isGold, phase: b * 0.9 + f });
+        px = nx; py = ny; pz = nz;
       }
-      const g = ctx.createRadialGradient(px, py, 0, px, py, 5.5);
-      g.addColorStop(0, "#ffffff");
-      g.addColorStop(0.4, st.isGold ? "rgba(251,191,36,0.95)" : "rgba(52,211,153,0.95)");
+    }
+
+    // 2. Cabang & Ranting Fraktal Rekursif 3D (5 level kedalaman organik)
+    function growBranch(x, y, z, dx, dy, dz, len, width, depth, maxDepth, isGold, trail) {
+      const steps = depth <= 1 ? 3 : 2;
+      let cx = x, cy = y, cz = z;
+      const curTrail = trail.slice();
+      for (let i = 1; i <= steps; i++) {
+        const bendX = (Math.random() - 0.5) * 0.14;
+        const bendZ = (Math.random() - 0.5) * 0.14;
+        const nx = cx + (dx + bendX) * (len / steps);
+        const ny = cy + (dy - 0.04) * (len / steps);
+        const nz = cz + (dz + bendZ) * (len / steps);
+        segments.push({ x1: cx, y1: cy, z1: cz, x2: nx, y2: ny, z2: nz, width: Math.max(0.45, width * (1 - i * 0.12)), depth, kind: "branch", gold: isGold, phase: (cx + ny) * 4 });
+        curTrail.push({ x: nx, y: ny, z: nz });
+        cx = nx; cy = ny; cz = nz;
+      }
+      if (depth >= maxDepth) {
+        paths.push({ pts: curTrail, gold: isGold });
+        // Gugus daun kosmik bercahaya di ujung ranting
+        const leafCnt = 6 + Math.floor(Math.random() * 5);
+        for (let k = 0; k < leafCnt; k++) {
+          const sp = 0.09 + Math.random() * 0.11;
+          leaves.push({
+            x: cx + (Math.random() - 0.5) * sp * 1.6,
+            y: cy + (Math.random() - 0.5) * sp * 1.1,
+            z: cz + (Math.random() - 0.5) * sp * 1.6,
+            sz: 1.6 + Math.random() * 3.0,
+            gold: isGold || Math.random() < 0.28,
+            phase: Math.random() * 6.28,
+            hub: k === 0,
+          });
+        }
+        return;
+      }
+      const children = depth === 0 ? 2 : (Math.random() < 0.72 ? 2 : 3);
+      for (let c = 0; c < children; c++) {
+        const yaw = (c - (children - 1) / 2) * (0.58 + Math.random() * 0.25) + (Math.random() - 0.5) * 0.25;
+        const pitch = -0.18 + (Math.random() - 0.45) * 0.38;
+        const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+        let ndx = dx * cosY - dz * sinY;
+        let ndz = dx * sinY + dz * cosY;
+        let ndy = dy + pitch;
+        const mag = Math.hypot(ndx, ndy, ndz) || 1;
+        ndx /= mag; ndy /= mag; ndz /= mag;
+        growBranch(cx, cy, cz, ndx, ndy, ndz, len * (0.72 + Math.random() * 0.14), width * 0.68, depth + 1, maxDepth, isGold && Math.random() < 0.75, curTrail);
+      }
+    }
+
+    // 9 dahan utama menyebar 360 derajat membentuk mahkota Yggdrasil
+    const mainBoughs = 9;
+    for (let i = 0; i < mainBoughs; i++) {
+      const ang = (i / mainBoughs) * Math.PI * 2 + (Math.random() - 0.5) * 0.22;
+      const spread = 0.52 + Math.random() * 0.34;
+      const dx = Math.cos(ang) * spread;
+      const dz = Math.sin(ang) * spread;
+      const dy = -0.82 - Math.random() * 0.22;
+      const mag = Math.hypot(dx, dy, dz);
+      const rootTrail = [{ x: Math.cos(ang) * 0.42, y: 0.88, z: Math.sin(ang) * 0.42 }, { x: 0, y: 0.44, z: 0 }, { x: 0, y: -0.06, z: 0 }];
+      growBranch(0, -0.06, 0, dx / mag, dy / mag, dz / mag, 0.30 + Math.random() * 0.08, 3.2, 1, 4, i % 3 === 0, rootTrail);
+    }
+
+    // 3. Akar Fraktal 3D Rekursif menjalar ke bawah (3 level)
+    function growRoot(x, y, z, dx, dy, dz, len, width, depth, isGold) {
+      const nx = x + dx * len;
+      const ny = y + dy * len;
+      const nz = z + dz * len;
+      segments.push({ x1: x, y1: y, z1: z, x2: nx, y2: ny, z2: nz, width: Math.max(0.45, width), depth, kind: "root", gold: isGold, phase: x * 5 });
+      if (depth >= 3) return;
+      const cnt = depth === 0 ? 2 : (Math.random() < 0.75 ? 2 : 1);
+      for (let c = 0; c < cnt; c++) {
+        const yaw = (c - (cnt - 1) / 2) * 0.65 + (Math.random() - 0.5) * 0.3;
+        const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+        let ndx = dx * cosY - dz * sinY;
+        let ndz = dx * sinY + dz * cosY;
+        let ndy = Math.max(0.18, dy * 0.75 + (Math.random() - 0.5) * 0.12);
+        const mag = Math.hypot(ndx, ndy, ndz) || 1;
+        growRoot(nx, ny, nz, ndx / mag, ndy / mag, ndz / mag, len * 0.74, width * 0.64, depth + 1, isGold);
+      }
+    }
+    const rootCount = 10;
+    for (let i = 0; i < rootCount; i++) {
+      const ang = (i / rootCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.2;
+      const dx = Math.cos(ang) * 0.85, dz = Math.sin(ang) * 0.85, dy = 0.52 + Math.random() * 0.25;
+      const mag = Math.hypot(dx, dy, dz);
+      growRoot(Math.cos(ang) * 0.06, 0.42, Math.sin(ang) * 0.06, dx / mag, dy / mag, dz / mag, 0.24 + Math.random() * 0.08, 2.5, 0, i % 3 === 0);
+    }
+
+    // Hub daun terpilih untuk garis konstelasi pengetahuan antar-cabang
+    const hubs = leaves.filter(l => l.hub);
+    const pulses = Array.from({ length: 42 }, (_, i) => ({
+      pathIdx: i % Math.max(1, paths.length),
+      p: Math.random(),
+      speed: 0.0045 + Math.random() * 0.0055,
+      sz: 3.5 + Math.random() * 3.5,
+    }));
+    const embers = Array.from({ length: 36 }, () => ({
+      x: (Math.random() - 0.5) * 1.9,
+      y: -0.9 + Math.random() * 1.8,
+      z: (Math.random() - 0.5) * 1.5,
+      vy: 0.0018 + Math.random() * 0.0028,
+      gold: Math.random() < 0.45,
+      phase: Math.random() * 6.28,
+    }));
+
+    return { segments, leaves, hubs, paths, pulses, embers, stars };
+  }
+
+  function _drawLokiTreeFrame(ctx, w, h, tree, tState, time) {
+    // Latar luar angkasa kosmik dalam
+    ctx.globalCompositeOperation = "source-over";
+    const bg = ctx.createRadialGradient(w * 0.5, h * 0.46, 12, w * 0.5, h * 0.5, Math.max(w, h) * 0.72);
+    bg.addColorStop(0, "#091c1a");
+    bg.addColorStop(0.45, "#061015");
+    bg.addColorStop(1, "#030609");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    // Bintang kosmik tipis berkelip
+    for (let s of tree.stars) {
+      const a = 0.18 + 0.35 * Math.abs(Math.sin(time * 0.9 + s.phase));
+      ctx.fillStyle = `rgba(209,250,229,${a.toFixed(2)})`;
+      ctx.fillRect(s.x * w, s.y * h, s.sz, s.sz);
+    }
+
+    const rotY = tState.rotY;
+    const rotX = tState.rotX;
+    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+    const scale = Math.min(w, h) * 0.56;
+    const cx = w * 0.5;
+    const cy = h * 0.54;
+
+    function proj3(x, y, z, swayAmt = 0) {
+      const sx0 = x + (swayAmt ? Math.sin(time * 1.15 + y * 3.2) * swayAmt : 0);
+      const x1 = sx0 * cosY - z * sinY;
+      const z1 = sx0 * sinY + z * cosY;
+      const y2 = y * cosX - z1 * sinX;
+      const z2 = y * sinX + z1 * cosX;
+      const persp = 2.9 / (2.9 - z2 * 0.75);
+      return { sx: cx + x1 * scale * persp, sy: cy + y2 * scale * persp, z: z2, p: persp };
+    }
+
+    // Mode Bloom Aditif agar cahaya Loki benar-benar berpendar realistis!
+    ctx.globalCompositeOperation = "lighter";
+
+    // Aura inti batang Yggdrasil (berdenyut saat klik surge)
+    tState.surge = Math.max(0, (tState.surge || 0) * 0.96);
+    const surgeBoost = 1 + tState.surge * 1.4;
+    const coreGlow = ctx.createRadialGradient(cx, cy + scale * 0.14, 4, cx, cy + scale * 0.14, scale * 0.65);
+    coreGlow.addColorStop(0, `rgba(52,211,153,${Math.min(0.45, 0.22 * surgeBoost).toFixed(2)})`);
+    coreGlow.addColorStop(0.5, `rgba(251,191,36,${Math.min(0.28, 0.10 * surgeBoost).toFixed(2)})`);
+    coreGlow.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = coreGlow;
+    ctx.fillRect(0, 0, w, h);
+
+    // 1. Gambar seluruh Akar, Batang Berpilin, dan Cabang/Ranting Fraktal 3D
+    ctx.lineCap = "round";
+    for (let seg of tree.segments) {
+      const sway = seg.kind === "branch" ? seg.depth * 0.005 : 0;
+      const a = proj3(seg.x1, seg.y1, seg.z1, sway);
+      const b = proj3(seg.x2, seg.y2, seg.z2, sway);
+      const depthFade = Math.max(0.18, Math.min(1.0, (a.z + 1.3) / 2.2));
+      const baseAlpha = seg.kind === "trunk" ? 0.62 : (seg.kind === "root" ? 0.42 : 0.52);
+      const alpha = Math.min(0.95, baseAlpha * depthFade * (0.9 + 0.12 * Math.sin(time * 2 + seg.phase)) * surgeBoost);
+
+      // Lapisan pendar luar (outer glow)
+      ctx.strokeStyle = seg.gold
+        ? `rgba(251,191,36,${(alpha * 0.42).toFixed(2)})`
+        : `rgba(16,185,129,${(alpha * 0.45).toFixed(2)})`;
+      ctx.lineWidth = seg.width * a.p * 2.4;
+      ctx.beginPath();
+      ctx.moveTo(a.sx, a.sy);
+      ctx.lineTo(b.sx, b.sy);
+      ctx.stroke();
+
+      // Inti filamen cahaya tajam (inner core)
+      ctx.strokeStyle = seg.gold
+        ? `rgba(254,240,138,${alpha.toFixed(2)})`
+        : `rgba(110,231,183,${alpha.toFixed(2)})`;
+      ctx.lineWidth = Math.max(0.5, seg.width * a.p * 0.75);
+      ctx.beginPath();
+      ctx.moveTo(a.sx, a.sy);
+      ctx.lineTo(b.sx, b.sy);
+      ctx.stroke();
+    }
+
+    // 2. Jaringan garis konstelasi pengetahuan yang menghubungkan mahkota daun
+    const pHubs = tree.hubs.map(h => proj3(h.x, h.y, h.z, 0.018));
+    for (let i = 0; i < pHubs.length; i++) {
+      const a = pHubs[i];
+      for (let j = i + 1; j < Math.min(i + 5, pHubs.length); j++) {
+        const b = pHubs[j];
+        const dist = Math.hypot(a.sx - b.sx, a.sy - b.sy);
+        if (dist < scale * 0.55) {
+          const lineA = (1 - dist / (scale * 0.55)) * 0.24 * (0.75 + 0.25 * Math.sin(time * 2.1 + i));
+          ctx.strokeStyle = `rgba(167,243,208,${lineA.toFixed(2)})`;
+          ctx.lineWidth = 0.7;
+          ctx.beginPath();
+          ctx.moveTo(a.sx, a.sy);
+          ctx.lineTo(b.sx, b.sy);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // 3. Mahkota 450+ Daun Kosmik Bercahaya (bokeh lembut zamrud, teal, & emas)
+    for (let lf of tree.leaves) {
+      const p = proj3(lf.x, lf.y, lf.z, 0.02);
+      const dFade = Math.max(0.12, Math.min(0.88, (p.z + 1.2) / 2.2));
+      const tw = 0.65 + 0.35 * Math.sin(time * 2.4 + lf.phase);
+      const r = lf.sz * p.p * (lf.hub ? 1.55 : 1.0);
+      const g = ctx.createRadialGradient(p.sx, p.sy, 0, p.sx, p.sy, r * 2.2);
+      if (lf.gold) {
+        g.addColorStop(0, `rgba(255,251,235,${(0.85 * dFade * tw).toFixed(2)})`);
+        g.addColorStop(0.4, `rgba(251,191,36,${(0.48 * dFade * tw).toFixed(2)})`);
+      } else {
+        g.addColorStop(0, `rgba(236,253,245,${(0.78 * dFade * tw).toFixed(2)})`);
+        g.addColorStop(0.4, `rgba(16,185,129,${(0.45 * dFade * tw).toFixed(2)})`);
+      }
       g.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.arc(px, py, 5.5, 0, Math.PI * 2);
+      ctx.arc(p.sx, p.sy, r * 2.2, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // Label lapisan Akar / Batang / Daun halus
+    // 4. Impuls Cahaya Mengalir Naik Persis Mengikuti Cabang Asli (Akar -> Batang -> Daun)
+    const speedM = 1 + tState.surge * 2.5;
+    for (let pl of tree.pulses) {
+      pl.p += pl.speed * speedM;
+      if (pl.p >= 1) {
+        pl.p = 0;
+        pl.pathIdx = Math.floor(Math.random() * tree.paths.length);
+      }
+      const pathObj = tree.paths[pl.pathIdx];
+      if (!pathObj || pathObj.pts.length < 2) continue;
+      const pts = pathObj.pts;
+      const pos = pl.p * (pts.length - 1);
+      const idx = Math.min(pts.length - 2, Math.floor(pos));
+      const frac = pos - idx;
+      const x = pts[idx].x + (pts[idx + 1].x - pts[idx].x) * frac;
+      const y = pts[idx].y + (pts[idx + 1].y - pts[idx].y) * frac;
+      const z = pts[idx].z + (pts[idx + 1].z - pts[idx].z) * frac;
+      const pp = proj3(x, y, z, 0.012);
+      const gr = ctx.createRadialGradient(pp.sx, pp.sy, 0, pp.sx, pp.sy, pl.sz * 2.2);
+      gr.addColorStop(0, "rgba(255,255,255,0.98)");
+      gr.addColorStop(0.35, pathObj.gold ? "rgba(251,191,36,0.92)" : "rgba(52,211,153,0.95)");
+      gr.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = gr;
+      ctx.beginPath();
+      ctx.arc(pp.sx, pp.sy, pl.sz * 2.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 5. Kunang-kunang / Bara Cahaya Mengambang Naik di Sekitar Pohon
+    for (let em of tree.embers) {
+      em.y -= em.vy;
+      if (em.y < -1.05) { em.y = 0.95; em.x = (Math.random() - 0.5) * 1.9; }
+      const p = proj3(em.x + Math.sin(time + em.phase) * 0.06, em.y, em.z, 0);
+      ctx.fillStyle = em.gold ? "rgba(253,224,71,0.55)" : "rgba(110,231,183,0.50)";
+      ctx.beginPath();
+      ctx.arc(p.sx, p.sy, 1.4 * p.p, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Kembali ke mode normal untuk label HUD tipis
+    ctx.globalCompositeOperation = "source-over";
     ctx.font = "700 10px ui-monospace, monospace";
-    ctx.fillStyle = "rgba(148,163,184,0.75)";
+    ctx.fillStyle = "rgba(148,163,184,0.72)";
     ctx.fillText("DAUN · KARTU WAWASAN", 12, 20);
-    ctx.fillText("BATANG · ALIRAN PENGETAHUAN", 12, h * 0.55);
-    ctx.fillText("AKAR · SUMBER ASLI (X, YT, PDF)", 12, h - 10);
+    ctx.fillText("BATANG · ALIRAN TIMELINE", 12, h * 0.54);
+    ctx.fillText("AKAR · SUMBER ASLI", 12, h - 10);
+    ctx.textAlign = "right";
+    ctx.fillText("SERET UNTUK PUTAR 3D · KLIK = GELOMBANG CAHAYA", w - 12, h - 10);
+    ctx.textAlign = "left";
   }
 
   function initHeroAnimStage() {
@@ -1803,30 +1997,14 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
     function resize() {
       const rect = canvas.getBoundingClientRect();
       canvas.width = Math.max(300, Math.floor(rect.width * dpr));
-      canvas.height = Math.max(200, Math.floor(rect.height * dpr));
+      canvas.height = Math.max(240, Math.floor(rect.height * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     resize();
 
     let mode = "tree"; // "tree" | "brain"
     let paused = false;
-    const strands = Array.from({ length: 18 }, (_, i) => {
-      const frac = (i / 17) * 2 - 1;
-      return {
-        rootX: frac * 0.85 + (Math.random() - 0.5) * 0.14,
-        trunkOff: frac * 0.85,
-        branchX: frac * 0.96,
-        branchY: 0.25 + (1 - Math.abs(frac)) * 0.72 + (Math.random() - 0.5) * 0.12,
-        width: 1.3 + (1 - Math.abs(frac)) * 1.4,
-        phase: i * 0.55,
-        isGold: i % 3 === 0,
-      };
-    });
-    const treeParticles = Array.from({ length: 34 }, (_, i) => ({
-      strandIdx: i % strands.length,
-      p: Math.random(),
-      speed: 0.003 + Math.random() * 0.0045,
-    }));
+    const lokiTree = _buildLokiTree3D();
     const brainPts = _buildBrainPoints(860);
     const brainSparks = Array.from({ length: 14 }, (_, i) => ({
       from: Math.floor(Math.random() * brainPts.length),
@@ -1836,15 +2014,25 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
       glow: 6 + Math.random() * 5,
       color: i % 3 === 0 ? "rgba(251,191,36,0.9)" : (i % 3 === 1 ? "rgba(52,211,153,0.95)" : "rgba(56,189,248,0.95)"),
     }));
-    const brainState = { rotY: 0.3, rotX: 0.12, dragging: false, lx: 0, ly: 0 };
+    const camState = { rotY: 0.25, rotX: 0.08, dragging: false, moved: false, lx: 0, ly: 0, surge: 0 };
 
-    canvas.addEventListener("pointerdown", e => { brainState.dragging = true; brainState.lx = e.clientX; brainState.ly = e.clientY; canvas.style.cursor = "grabbing"; });
-    window.addEventListener("pointerup", () => { brainState.dragging = false; canvas.style.cursor = "grab"; });
+    canvas.addEventListener("pointerdown", e => {
+      camState.dragging = true; camState.moved = false;
+      camState.lx = e.clientX; camState.ly = e.clientY;
+      canvas.style.cursor = "grabbing";
+    });
+    window.addEventListener("pointerup", () => {
+      if (camState.dragging && !camState.moved && mode === "tree") camState.surge = 1.0;
+      camState.dragging = false;
+      canvas.style.cursor = "grab";
+    });
     canvas.addEventListener("pointermove", e => {
-      if (!brainState.dragging || mode !== "brain") return;
-      brainState.rotY += (e.clientX - brainState.lx) * 0.009;
-      brainState.rotX = Math.max(-0.9, Math.min(0.9, brainState.rotX + (e.clientY - brainState.ly) * 0.009));
-      brainState.lx = e.clientX; brainState.ly = e.clientY;
+      if (!camState.dragging) return;
+      const dx = e.clientX - camState.lx, dy = e.clientY - camState.ly;
+      if (Math.abs(dx) + Math.abs(dy) > 3) camState.moved = true;
+      camState.rotY += dx * 0.009;
+      camState.rotX = Math.max(-0.75, Math.min(0.75, camState.rotX + dy * 0.008));
+      camState.lx = e.clientX; camState.ly = e.clientY;
     });
 
     const lbl = document.getElementById("hero-stage-label");
@@ -1853,7 +2041,7 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
     const btnPause = document.getElementById("btn-hero-pause");
     function setMode(m) {
       mode = m;
-      if (lbl) lbl.textContent = m === "tree" ? "🌳 POHON CAHAYA · AKAR → BATANG → DAUN" : "🧠 OTAK NEURAL 3D · SINAPSIS PENGETAHUAN (SERET UNTUK PUTAR)";
+      if (lbl) lbl.textContent = m === "tree" ? "🌳 POHON YGGDRASIL 3D · AKAR → BATANG → DAUN" : "🧠 OTAK NEURAL 3D · SINAPSIS PENGETAHUAN (SERET UNTUK PUTAR)";
       if (btnTree) { btnTree.style.background = m === "tree" ? "#fbbf24" : ""; btnTree.style.color = m === "tree" ? "#111" : ""; }
       if (btnBrain) { btnBrain.style.background = m === "brain" ? "#fbbf24" : ""; btnBrain.style.color = m === "brain" ? "#111" : ""; }
     }
@@ -1870,10 +2058,10 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
       const w = canvas.width / dpr, h = canvas.height / dpr;
       if (!paused) {
         t += 0.018;
-        if (mode === "brain" && !brainState.dragging) brainState.rotY += 0.0045;
+        if (!camState.dragging) camState.rotY += mode === "tree" ? 0.0032 : 0.0045;
       }
-      if (mode === "tree") _drawLokiTreeFrame(ctx, w, h, strands, treeParticles, t);
-      else _drawNeuralBrainFrame(ctx, w, h, brainPts, brainSparks, brainState, t);
+      if (mode === "tree") _drawLokiTreeFrame(ctx, w, h, lokiTree, camState, t);
+      else _drawNeuralBrainFrame(ctx, w, h, brainPts, brainSparks, camState, t);
       _heroRafId = requestAnimationFrame(tick);
     }
     tick();

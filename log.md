@@ -82,3 +82,5 @@ Catatan kronologis (append-only).
 [2026-11-26] JURNAL-BARU 2026-11-26 | level: menengah | 35 kata | dimensi: [skill-karier, mental-sikap, relasi]
 [2026-11-26] JURNAL-EDIT 2026-11-26 | level: menengah | 35 kata | dimensi: [skill-karier, mental-sikap, relasi]
 [2026-11-26] JURNAL-EDIT 2026-11-26 | level: kecil | 35 kata | dimensi: [skill-karier, mental-sikap, relasi]
+
+[2026-11-27] UI UPGRADE: Meng-upgrade animasi Pohon Loki di scripts/template_peta.html dari 2D menjadi mesin 3D Recursive Fractal Yggdrasil (7 pilinan heliks batang timeline, 9 dahan bercabang rekursif 4 tingkat, 10 akar 3D 3 tingkat, ~450 daun bokeh kosmik emerald/emas, additive bloom, konstelasi garis pengetahuan, 42 pulsa cahaya, putar 3D 360° dengan drag, dan gelombang energi emas saat diklik); rebuild lokal & publik serta verifikasi kebocoran.
