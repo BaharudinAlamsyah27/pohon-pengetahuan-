@@ -254,7 +254,8 @@ def fetch_x_fxtwitter(url: str) -> dict | None:
                 with urllib.request.urlopen(req, timeout=10) as resp:
                     raw_img = resp.read(MAX_BYTES)
                     ctype = (resp.headers.get("Content-Type") or "image/jpeg").split(";")[0].strip()
-                ocr_res = extract_text_from_image(raw_img, ctype, api_key=api_key)
+                img_b64 = base64.b64encode(raw_img).decode("ascii")
+                ocr_res = extract_image_text(img_b64, mime_type=ctype, api_key=api_key)
                 if ocr_res.get("ok") and ocr_res.get("teks_asli"):
                     extracted = ocr_res["teks_asli"].strip()
                     is_ai_ocr = True

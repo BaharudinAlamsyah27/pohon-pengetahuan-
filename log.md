@@ -126,3 +126,17 @@ Catatan kronologis (append-only).
 [2026-11-27] TONE AI: Memperhalus gaya bahasa Tanya AI di scripts/mesin_cerdas.py (temperature 0.45) dan api/tanya.js agar mengalir hangat & natural seperti partner berpikir manusia tanpa kehilangan kejujuran sitasi [K-XXXX].
 
 [2026-11-27] 4 LOMPATAN KECERDASAN + IMPOR BORONGAN: Menambahkan Local Vector Embeddings (Gemini gemini-embedding-001 tersimpan di .indeks.db/kartu_vektor) ke Hybrid RAG query_relevant_cards(), mesin analyze_deep_intelligence() (Sintesis Lintas-Cabang, Detektor Pertentangan/Kompas Sikap, Kurator Aksi Adaptif Jurnal↔Pohon) via /api/analisis?jenis=kecerdasan + tombol #7 di tab Analisis, serta fitur Impor Borongan Banyak Link / bookmarks.html di #tangkap.
+
+[2026-11-27] TANGKAP S-0031 | "If you're feeling stuck, please realize that your life is shaped by what you do every day. Your routines. Your" (X) -> daun K-0041 (motivasi-dan-mindset)
+[2026-11-27] TANGKAP S-0032 | "Claiming the gap between software engineer and vibe coder will narrow simply because models advance is silly." (X) -> daun K-0042 (ai/coding-dan-proyek)
+[2026-11-27] TANGKAP S-0033 | "If you build a software startup, an open-source clone of your product will be on GitHub within 3 hours of laun" (X) -> daun K-0043 (bisnis)
+[2026-11-27] TANGKAP S-0034 | "neuroscience shows that your brain is constantly changing. the right daily habits can help you reshape your th" (X) -> daun K-0044 (motivasi-dan-mindset)
+[2026-11-27] TANGKAP S-0035 | "things i stopped using AI for:" (X) -> daun K-0045 (motivasi-dan-mindset)
+[2026-11-27] TANGKAP S-0036 | "I drew the life of a developer curve again. It looks a lot like my own career." (X) -> daun K-0046 (ai/coding-dan-proyek)
+[2026-11-27] TANGKAP S-0037 | "HOW TO INCREASE YOUR AURA:" (X) -> daun K-0047 (motivasi-dan-mindset)
+[2026-11-27] TANGKAP S-0038 | "btw, aku punya koleksi ebook belajar CPNS di Gdrive yang mau belajar juga bisa DM yaa nanti aku kirim linknya" (X) -> daun K-0048 (kesuksesan)
+[2026-11-27] TANGKAP S-0039 | "Socrates was right." (X) -> daun K-0049 (motivasi-dan-mindset)
+
+[2026-11-27] BUGFIX AUTO-OCR FOTO X: Memperbaiki pemanggilan extract_text_from_image -> extract_image_text (dengan encode base64) di scripts/ambil_link.py agar foto lampiran dari X benar-benar terpindai otomatis lewat Gemini Vision / Tesseract OCR.
+
+[2026-11-27] TANGKAP S-0040 | "This is f*cking insane. Andrej Karpathy spent 8 years building AI at OpenAI and Tesla" (X) -> daun K-0050 (ai/prompt-dan-agen)
