@@ -24,8 +24,11 @@ from datetime import date
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 
 ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_GITHUB_REPO = "BaharudinAlamsyah27/pohon-pengetahuan-"
 ALLOWED_STATUS = {"belum-dicoba", "sedang-dicoba", "diterapkan", "ditolak"}
 ALLOWED_JENIS = {"postingan", "artikel", "transkrip-video", "transkrip-podcast", "catatan"}
 CARD_ID_RE = re.compile(r"^K-\d{4,6}$")
@@ -958,6 +961,147 @@ def archive_card(card_id: str, alasan: str = "") -> None:
     rebuild_local_artifacts()
 
 
+def _github_api_request(method: str, endpoint: str, token: str, payload: dict | None = None) -> tuple[int, dict | list | str]:
+    url = f"https://api.github.com{endpoint}"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "pohon-pengetahuan-lokal",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    data = None
+    if payload is not None:
+        headers["Content-Type"] = "application/json"
+        data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    req = Request(url, data=data, headers=headers, method=method)
+    try:
+        with urlopen(req, timeout=15) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+            try:
+                return resp.status, json.loads(raw)
+            except Exception:
+                return resp.status, raw
+    except HTTPError as err:
+        raw = err.read().decode("utf-8", errors="replace") if err.fp else str(err)
+        return err.code, raw
+    except URLError as err:
+        return 0, str(err.reason)
+
+
+def _parse_titipan_issue(issue: dict) -> dict:
+    body = str(issue.get("body") or "")
+    parsed: dict = {}
+    m = re.search(r"<!--\s*POHON_TITIPAN_DATA\s*-->\s*```json\s*(\{[\s\S]*?\})\s*```", body)
+    if m:
+        try:
+            parsed = json.loads(m.group(1))
+        except Exception:
+            parsed = {}
+    title_clean = re.sub(r"^\[Titipan\]\s*", "", str(issue.get("title") or "")).strip()
+    return {
+        "nomor": int(issue.get("number") or 0),
+        "judul": str(parsed.get("judul") or title_clean or "Titipan Tanpa Judul").strip(),
+        "nama": str(parsed.get("nama") or "Anonim").strip(),
+        "url": str(parsed.get("url") or "tidak ada").strip(),
+        "platform": str(parsed.get("platform") or "lainnya").strip(),
+        "bidang": str(parsed.get("bidang") or "").strip(),
+        "teks_asli": str(parsed.get("teks_asli") or body).strip(),
+        "waktu": str(parsed.get("waktu") or issue.get("created_at") or "").strip(),
+        "issue_url": str(issue.get("html_url") or "").strip(),
+    }
+
+
+def list_github_titipan() -> dict:
+    env = mesin_cerdas.load_local_env()
+    token = (env.get("GITHUB_TOKEN") or os.environ.get("GITHUB_TOKEN") or "").strip()
+    repo = (env.get("GITHUB_REPO") or os.environ.get("GITHUB_REPO") or DEFAULT_GITHUB_REPO).strip()
+    if not token:
+        return {"ok": True, "configured": False, "repo": repo, "items": []}
+    code, data = _github_api_request("GET", f"/repos/{repo}/issues?state=open&per_page=30", token)
+    if code != 200 or not isinstance(data, list):
+        return {
+            "ok": False,
+            "configured": True,
+            "repo": repo,
+            "items": [],
+            "error": f"GitHub API HTTP {code}: {str(data)[:160]}",
+        }
+    items = []
+    for iss in data:
+        if "pull_request" in iss:
+            continue
+        title = str(iss.get("title") or "")
+        labels = [str(lb.get("name") or "").lower() for lb in (iss.get("labels") or [])]
+        if title.startswith("[Titipan]") or "titipan" in labels:
+            items.append(_parse_titipan_issue(iss))
+    return {"ok": True, "configured": True, "repo": repo, "items": items}
+
+
+def process_github_titipan(nomor: int, aksi: str) -> dict:
+    env = mesin_cerdas.load_local_env()
+    token = (env.get("GITHUB_TOKEN") or os.environ.get("GITHUB_TOKEN") or "").strip()
+    repo = (env.get("GITHUB_REPO") or os.environ.get("GITHUB_REPO") or DEFAULT_GITHUB_REPO).strip()
+    if not token:
+        raise ValueError("GITHUB_TOKEN belum dipasang di file .env")
+
+    code, issue = _github_api_request("GET", f"/repos/{repo}/issues/{nomor}", token)
+    if code != 200 or not isinstance(issue, dict):
+        raise ValueError(f"Titipan #{nomor} tidak ditemukan (HTTP {code})")
+
+    if aksi == "tolak":
+        _github_api_request("PATCH", f"/repos/{repo}/issues/{nomor}", token, {"state": "closed"})
+        return {"ok": True, "aksi": "tolak", "nomor": nomor}
+
+    item = _parse_titipan_issue(issue)
+    url = item["url"]
+    teks = item["teks_asli"]
+    judul = item["judul"]
+    penulis = item["nama"] if item["nama"] and item["nama"] != "Anonim" else "titipan-web"
+    platform = item["platform"] or "lainnya"
+    jenis = "postingan"
+
+    # Jika pengirim hanya menaruh link, coba tarik isi aslinya otomatis lewat ambil_link.py
+    if url.startswith("http") and (not teks or teks.strip() == url.strip() or len(teks.strip()) < 40):
+        try:
+            fetched = ambil_link.fetch_url(url)
+            if fetched.get("ok") and len(str(fetched.get("teks_asli") or "").strip()) >= 20:
+                teks = str(fetched.get("teks_asli")).strip()
+                if fetched.get("judul"):
+                    judul = str(fetched.get("judul")).strip()
+                if fetched.get("penulis"):
+                    penulis = str(fetched.get("penulis")).strip()
+                if fetched.get("platform"):
+                    platform = str(fetched.get("platform")).strip()
+                if fetched.get("jenis"):
+                    jenis = str(fetched.get("jenis")).strip()
+        except Exception:
+            pass
+
+    if len(teks.strip()) < 5:
+        teks = url if len(url) >= 5 else judul
+
+    out = create_new_source(
+        judul=judul,
+        jenis=jenis,
+        penulis=penulis,
+        platform=platform,
+        url=url or "tidak ada",
+        teks_asli=teks,
+        bidang_pilihan=item["bidang"],
+        tahap_pilihan="semua-usia",
+        buat_draf=True,
+        subcabang_baru="",
+        max_daun=1,
+    )
+
+    ringkas = f"Diterima ke Pohon Pengetahuan: `{out.get('id')}` → `{out.get('kartu_id') or out.get('digabung_ke') or '-'}` ({out.get('bidang')})."
+    _github_api_request("POST", f"/repos/{repo}/issues/{nomor}/comments", token, {"body": ringkas})
+    _github_api_request("PATCH", f"/repos/{repo}/issues/{nomor}", token, {"state": "closed"})
+    out["nomor"] = nomor
+    out["aksi"] = "terima"
+    return out
+
+
 class PohonHandler(BaseHTTPRequestHandler):
     def _send_json(self, code: int, payload: dict) -> None:
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -1089,6 +1233,13 @@ class PohonHandler(BaseHTTPRequestHandler):
                 self._send_json(200, mesin_cerdas.build_weekly_briefing())
             except Exception as exc:
                 self._send_json(500, {"error": f"Gagal menyusun briefing: {exc}"})
+            return
+
+        if path == "/api/titipan":
+            try:
+                self._send_json(200, list_github_titipan())
+            except Exception as exc:
+                self._send_json(500, {"error": f"Gagal memuat Kotak Titipan: {exc}"})
             return
 
         if path.startswith("/api/jurnal/"):
@@ -1233,6 +1384,23 @@ class PohonHandler(BaseHTTPRequestHandler):
                 out = polish_draft_cards(cid)
             except Exception as exc:
                 self._send_json(500, {"error": f"Gagal merapikan draf: {exc}"})
+                return
+            self._send_json(200, out)
+            return
+
+        if parsed.path == "/api/titipan/proses":
+            nomor = int(payload.get("nomor", 0) or 0)
+            aksi = str(payload.get("aksi", "terima")).strip().lower()
+            if nomor <= 0 or aksi not in {"terima", "tolak"}:
+                self._send_json(400, {"error": "Parameter nomor atau aksi tidak valid"})
+                return
+            try:
+                out = process_github_titipan(nomor, aksi)
+            except ValueError as exc:
+                self._send_json(400, {"error": str(exc)})
+                return
+            except Exception as exc:
+                self._send_json(500, {"error": f"Gagal memproses titipan #{nomor}: {exc}"})
                 return
             self._send_json(200, out)
             return

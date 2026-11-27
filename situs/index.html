@@ -1254,6 +1254,11 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
     document.getElementById("nav-analisis").style.display = "none";
     const navJurnal = document.getElementById("nav-jurnal");
     if (navJurnal) navJurnal.style.display = "none";
+    const navTangkap = document.getElementById("nav-tangkap");
+    if (navTangkap) {
+      navTangkap.textContent = "📬 Titip Ilmu";
+      navTangkap.title = "Titip link, artikel, atau catatan ke Kotak Titipan Pohon ini";
+    }
     document.getElementById("f-penerapan").style.display = "none";
     document.getElementById("mode-badge").textContent = "Publik";
   } else {
@@ -1390,7 +1395,7 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
             <button type="button" class="btn-primary" data-go-view="pohon">Buka Peta Pohon →</button>
             <button type="button" class="btn-secondary" data-go-view="tanya">Tanya Isi Catatan</button>
             <button type="button" class="btn-secondary" data-go-view="katalog">Cari Kartu</button>
-            ${IS_LOKAL ? `<button type="button" class="btn-secondary" data-go-view="tangkap">+ Simpan Postingan Baru</button><button type="button" class="btn-secondary" data-go-view="jurnal">Jurnal Harian</button><button type="button" class="btn-secondary" data-go-view="analisis">Bandingkan &amp; Analisis</button>` : `<button type="button" class="btn-secondary" data-go-view="timeline">Jalur Usia</button>`}
+            ${IS_LOKAL ? `<button type="button" class="btn-secondary" data-go-view="tangkap">+ Simpan Postingan Baru</button><button type="button" class="btn-secondary" data-go-view="jurnal">Jurnal Harian</button><button type="button" class="btn-secondary" data-go-view="analisis">Bandingkan &amp; Analisis</button>` : `<button type="button" class="btn-secondary" data-go-view="tangkap">📬 Titip Link / Artikel</button><button type="button" class="btn-secondary" data-go-view="timeline">Jalur Usia</button>`}
           </div>
         </div>
 
@@ -3278,9 +3283,131 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
 
   }
 
-  // ======================== 8. TANGKAP SUMBER & BOOKMARKLET (LOKAL SAJA) ========================
+  // ======================== 8. TANGKAP SUMBER & KOTAK TITIPAN ========================
   function renderTangkap(prefill = null) {
     const sec = document.getElementById("view-tangkap");
+
+    // Mode Publik (Vercel): Form Kotak Titipan super simpel untuk teman/kontributor dari HP/device mana saja
+    if (!HAS_SERVER) {
+      sec.innerHTML = `
+        <div style="max-width:680px;margin:0 auto;display:grid;gap:16px">
+          <div class="panel">
+            <h1 style="margin:0 0 6px">📬 Titip Link, Artikel, atau Catatan</h1>
+            <p style="font-size:13.5px;color:var(--text-2);margin:0 0 16px">
+              Punya bookmark postingan X, video YouTube, artikel web, atau catatan penting? Tempel di bawah dan kirim — pemilik Pohon akan meninjau lalu merapikannya jadi kartu terstruktur di sini.
+            </p>
+            <div style="display:grid;gap:10px">
+              <div class="tangkap-grid-2">
+                <input type="text" id="tp-nama" class="search-input" placeholder="Nama kamu (opsional, mis. Budi)" maxlength="60">
+                <select id="tp-bidang" class="filter-select" aria-label="Usulan topik">
+                  <option value="">Topik: Biar AI yang pilihkan</option>
+                  <option value="ai">AI &amp; Teknologi</option>
+                  <option value="bisnis">Bisnis</option>
+                  <option value="sosmed">Sosmed &amp; Konten</option>
+                  <option value="digital-marketing">Digital Marketing</option>
+                  <option value="keuangan">Keuangan</option>
+                  <option value="kesuksesan">Kesuksesan &amp; Karier</option>
+                  <option value="kesehatan">Kesehatan</option>
+                  <option value="motivasi-dan-mindset">Motivasi &amp; Mindset</option>
+                  <option value="relasi">Relasi</option>
+                  <option value="agama">Agama &amp; Spiritualitas</option>
+                  <option value="berita">Berita &amp; Tren</option>
+                  <option value="lainnya">Lainnya</option>
+                </select>
+              </div>
+              <input type="url" id="tp-url" class="search-input" placeholder="Tempel link (https://x.com/..., YouTube, atau artikel web) — opsional" value="${esc(prefill?.url || "")}">
+              <input type="text" id="tp-judul" class="search-input" placeholder="Judul singkat (opsional)" value="${esc(prefill?.judul || "")}">
+              <textarea id="tp-teks" rows="6" class="search-input" style="width:100%;font-family:inherit;resize:vertical" placeholder="Tempel isi teks, ringkasan, atau catatanmu di sini (opsional jika sudah menempel link)...">${esc(prefill?.teks_asli || "")}</textarea>
+              <input type="text" id="tp-hp" autocomplete="off" tabindex="-1" style="display:none" aria-hidden="true">
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px">
+                <button type="button" class="btn-primary" id="btn-kirim-titip">🚀 Kirim ke Kotak Titipan</button>
+                <span id="tp-out" role="status" aria-live="polite" style="font-size:13px;color:var(--text-2)"></span>
+              </div>
+            </div>
+          </div>
+          <div id="tp-local-backup"></div>
+        </div>
+      `;
+
+      const OFFLINE_Q_KEY = "pohon_antrean_offline_v1";
+      const renderLocalBackup = () => {
+        const box = document.getElementById("tp-local-backup");
+        if (!box) return;
+        let qList = [];
+        try { qList = JSON.parse(localStorage.getItem(OFFLINE_Q_KEY) || "[]"); } catch {}
+        if (!qList.length) { box.innerHTML = ""; return; }
+        box.innerHTML = `
+          <div class="panel" style="padding:12px 14px;background:var(--node-main-bg);color:var(--node-main-text)">
+            <div class="k-card-top" style="margin-bottom:6px">
+              <strong>🎒 Tersimpan di Browser Ini (${qList.length})</strong>
+              <div style="display:flex;gap:6px">
+                <button type="button" class="btn-secondary" id="tp-copy-q" style="min-height:30px;padding:3px 10px;font-size:12px">📋 Salin JSON</button>
+                <button type="button" class="btn-secondary" id="tp-clear-q" style="min-height:30px;padding:3px 10px;font-size:12px">Hapus</button>
+              </div>
+            </div>
+            <ul style="margin:0;padding-left:18px;font-size:12.5px">
+              ${qList.map(it => `<li><strong>${esc(it.judul || it.url || "Catatan")}</strong> — ${esc((it.teks_asli || "").slice(0, 70))}</li>`).join("")}
+            </ul>
+          </div>
+        `;
+        document.getElementById("tp-copy-q")?.addEventListener("click", async () => {
+          try { await navigator.clipboard.writeText(JSON.stringify(qList, null, 2)); alert("Berhasil disalin! Tinggal kirim ke WA pemilik Pohon."); } catch {}
+        });
+        document.getElementById("tp-clear-q")?.addEventListener("click", () => {
+          localStorage.removeItem(OFFLINE_Q_KEY);
+          renderLocalBackup();
+        });
+      };
+      renderLocalBackup();
+
+      document.getElementById("btn-kirim-titip").addEventListener("click", async () => {
+        const btn = document.getElementById("btn-kirim-titip");
+        const out = document.getElementById("tp-out");
+        const payload = {
+          nama: document.getElementById("tp-nama").value.trim(),
+          bidang: document.getElementById("tp-bidang").value,
+          url: document.getElementById("tp-url").value.trim(),
+          judul: document.getElementById("tp-judul").value.trim(),
+          teks_asli: document.getElementById("tp-teks").value.trim(),
+          website_hp: document.getElementById("tp-hp").value.trim(),
+        };
+        if (payload.url.length < 5 && payload.teks_asli.length < 5) {
+          out.textContent = "Isi minimal link atau catatan (minimal 5 karakter).";
+          return;
+        }
+        btn.disabled = true;
+        btn.textContent = "Mengirim...";
+        out.textContent = "Mengirim ke Kotak Titipan...";
+        try {
+          const resp = await fetch("/api/titip", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const d = await resp.json().catch(() => ({}));
+          if (resp.ok && d.ok) {
+            ["tp-url", "tp-judul", "tp-teks"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
+            out.innerHTML = `<strong style="color:var(--accent)">✅ ${esc(d.pesan || "Berhasil dititipkan!")}</strong>`;
+          } else if (resp.status === 503 || resp.status === 404) {
+            let qList = [];
+            try { qList = JSON.parse(localStorage.getItem(OFFLINE_Q_KEY) || "[]"); } catch {}
+            qList.push(payload);
+            try { localStorage.setItem(OFFLINE_Q_KEY, JSON.stringify(qList)); } catch {}
+            renderLocalBackup();
+            out.innerHTML = `⚠️ Kotak Titipan online belum diaktifkan pemilik. Catatanmu diamankan di <strong>Browser Ini</strong> — klik <strong>Salin JSON</strong> untuk kirim ke WA pemilik.`;
+          } else {
+            out.textContent = d.error || "Gagal mengirim titipan.";
+          }
+        } catch {
+          out.textContent = "Gagal terhubung ke jaringan. Coba lagi sebentar.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "🚀 Kirim ke Kotak Titipan";
+        }
+      });
+      return;
+    }
+
     const bmCode = `javascript:(function(){var sel=window.getSelection&&window.getSelection().toString().trim();var h=location.hostname.toLowerCase();var isX=h.includes('x.com')||h.includes('twitter');var tw='';var au=h;var isXArt=false;if(isX){var xArt=document.querySelector('[data-testid="twitterArticleReadView"],[data-testid="longformRichTextComponent"]');if(xArt&&xArt.innerText.trim().length>120){isXArt=true;tw=xArt.innerText.trim();var u0=document.querySelector('[data-testid="User-Name"]');if(u0)au=u0.innerText.replace(/\\n+/g,' ').split('·')[0].trim();}else{var um=location.pathname.match(/^\\/([^\\/]+)\\/(?:status|article)\\//i);var mainUser=um?um[1].toLowerCase():'';var arts=Array.from(document.querySelectorAll('article[data-testid="tweet"]'));var kept=[];for(var i=0;i<arts.length;i++){var a=arts[i];var uEl=a.querySelector('[data-testid="User-Name"]');var uTxt=uEl?uEl.innerText.replace(/\\n+/g,' '):'';var hm=uTxt.match(/@([a-zA-Z0-9_]+)/);var handle=hm?hm[1].toLowerCase():'';if(!mainUser&&handle){mainUser=handle;}if(i===0&&uTxt){au=uTxt.split('·')[0].trim();}if(mainUser&&handle&&handle!==mainUser){if(kept.length>0)break;continue;}var tEl=a.querySelector('[data-testid="tweetText"]');if(tEl&&tEl.innerText.trim()){kept.push(tEl.innerText.trim());}if(kept.length>=12)break;}tw=kept.join('\\n\\n');}}var art=!isX&&document.querySelector('article')?document.querySelector('article').innerText.trim():'';var s=sel||tw||art||document.body.innerText.trim().slice(0,8000);var p=isX?'X':h.includes('facebook')||h.includes('fb.')?'Facebook':h.includes('instagram')?'Instagram':h.includes('threads')?'Threads':h.includes('youtube')||h.includes('youtu.be')?'YouTube':h.includes('linkedin')?'LinkedIn':'web';var fl=(s.split('\\n').find(function(x){return x.trim().length>8;})||document.title).slice(0,110);var jd=/beranda|home|artikel/i.test(document.title)?fl:document.title.slice(0,110);var d={url:location.href,judul:jd,penulis:au,platform:p,jenis:isXArt?'artikel':(p==='YouTube'?'transkrip-video':p==='web'?'artikel':'postingan'),teks_asli:s.slice(0,18000)};window.open('http://127.0.0.1:8765/#tangkap='+encodeURIComponent(JSON.stringify(d)),'_blank');})();`;
 
     sec.innerHTML = `
@@ -3402,6 +3529,14 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
         </div>
 
         <div style="display:flex;flex-direction:column;gap:16px">
+          <aside class="panel" aria-label="Kotak Titipan Masuk dari Web">
+            <div class="k-card-top" style="margin-bottom:8px">
+              <h3 style="margin:0">📬 Kotak Titipan Masuk</h3>
+              <button type="button" class="btn-secondary" id="btn-refresh-titipan" style="min-height:28px;padding:2px 10px;font-size:12px">🔄 Cek</button>
+            </div>
+            <div id="tk-titipan-box" style="font-size:12.5px;color:var(--text-2)">Memeriksa titipan dari web...</div>
+          </aside>
+
           <aside class="panel">
             <h3 style="margin-bottom:8px">Bookmarklet 1-Klik (Semua Sosmed)</h3>
             <p style="font-size:13px;color:var(--text-2);margin:0 0 12px">
@@ -3691,6 +3826,73 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
       });
     }
     renderOfflineQueueBox();
+
+    async function loadTitipanInbox() {
+      const box = document.getElementById("tk-titipan-box");
+      if (!box || !HAS_SERVER) return;
+      box.textContent = "Memeriksa titipan dari web...";
+      try {
+        const resp = await fetch("/api/titipan");
+        const d = await resp.json();
+        if (!d.configured) {
+          box.innerHTML = `<span style="color:var(--text-3)">Belum terhubung. Pasang <code>GITHUB_TOKEN</code> di file <code>.env</code> laptop &amp; Vercel agar kiriman teman masuk otomatis ke sini.</span>`;
+          return;
+        }
+        if (!d.ok) {
+          box.innerHTML = `<span style="color:var(--conflict)">Gagal memuat: ${esc(d.error || "error")}</span>`;
+          return;
+        }
+        const items = d.items || [];
+        if (!items.length) {
+          box.innerHTML = `<span style="color:var(--text-3)">Belum ada titipan baru dari web.</span>`;
+          return;
+        }
+        box.innerHTML = `<div style="display:grid;gap:8px;max-height:300px;overflow:auto">` + items.map(it => `
+          <div style="padding:9px 10px;border-radius:8px;border:1.5px solid var(--border-strong);background:var(--surface-alt)">
+            <div style="font-weight:700;font-size:12.5px;margin-bottom:3px">#${it.nomor} · ${esc(it.judul.slice(0, 60))}</div>
+            <div style="font-size:11.5px;color:var(--text-3);margin-bottom:4px">Dari: <strong>${esc(it.nama)}</strong> · ${esc(it.platform)}${it.url && it.url.startsWith("http") ? ` · <a href="${esc(it.url)}" target="_blank" rel="noopener">buka link ↗</a>` : ""}</div>
+            <div style="font-size:12px;color:var(--text-2);margin-bottom:8px">${esc((it.teks_asli || "").slice(0, 120))}${(it.teks_asli || "").length > 120 ? "..." : ""}</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button type="button" class="btn-primary" data-titip-act="terima" data-titip-no="${it.nomor}" style="min-height:28px;padding:3px 9px;font-size:11.5px">✅ Terima &amp; Masukkan</button>
+              <button type="button" class="btn-secondary" data-titip-act="tolak" data-titip-no="${it.nomor}" style="min-height:28px;padding:3px 9px;font-size:11.5px">❌ Abaikan</button>
+            </div>
+          </div>
+        `).join("") + `</div>`;
+        box.querySelectorAll("[data-titip-act]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const nomor = Number(btn.dataset.titipNo);
+            const aksi = btn.dataset.titipAct;
+            btn.disabled = true;
+            btn.textContent = aksi === "terima" ? "Memproses..." : "Menutup...";
+            try {
+              const r = await fetch("/api/titipan/proses", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nomor, aksi }),
+              });
+              const res = await r.json();
+              if (r.ok && res.ok) {
+                const out = document.getElementById("tk-save-out");
+                if (out && aksi === "terima") {
+                  out.innerHTML = `<strong>✅ Titipan #${nomor} masuk ke Pohon!</strong> (${esc(res.id || "")} → ${esc(res.kartu_id || res.digabung_ke || "")}). <button class="btn-secondary" onclick="location.reload()">Muat Ulang</button>`;
+                }
+                loadTitipanInbox();
+              } else {
+                alert(res.error || "Gagal memproses titipan.");
+                btn.disabled = false;
+              }
+            } catch {
+              alert("Gagal menghubungi server lokal.");
+              btn.disabled = false;
+            }
+          });
+        });
+      } catch {
+        box.textContent = "Gagal memeriksa Kotak Titipan.";
+      }
+    }
+    document.getElementById("btn-refresh-titipan")?.addEventListener("click", loadTitipanInbox);
+    loadTitipanInbox();
 
     document.getElementById("btn-save-src").addEventListener("click", async () => {
       const btnSave = document.getElementById("btn-save-src");
