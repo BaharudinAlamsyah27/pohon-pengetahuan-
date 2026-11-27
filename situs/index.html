@@ -1839,28 +1839,223 @@ window.__POHON_DATA__ = {"mode": "publik", "dibangun": "2026-11-27", "ringkasan"
       phase: Math.random() * 6.28,
     }));
 
-    return { segments, leaves, hubs, paths, pulses, embers, stars };
+    // Elemen Keagungan Alam Semesta: Bintang Berwarna, Galaksi Spiral, Partikel Lubang Hitam, & Bintang Jatuh
+    const starColors = ["224,242,254", "254,249,195", "209,250,229", "233,213,255", "255,255,255"];
+    const deepStars = Array.from({ length: 155 }, (_, i) => ({
+      x: Math.random(),
+      y: Math.random(),
+      sz: 0.55 + Math.random() * 1.55,
+      phase: Math.random() * 6.28,
+      depth: 0.3 + Math.random() * 0.9,
+      col: starColors[i % starColors.length],
+      spike: i < 9,
+    }));
+    // Galaksi Spiral Logaritmik 2 Lengan (Andromeda / Bima Sakti di sisi kanan kosmos)
+    const galaxyStars = Array.from({ length: 140 }, (_, i) => {
+      const arm = i % 2;
+      const t = Math.pow(Math.random(), 0.72);
+      const r = 0.08 + t * 0.92;
+      const ang = arm * Math.PI + t * 3.8 + (Math.random() - 0.5) * (0.48 - t * 0.16);
+      return {
+        r,
+        ang,
+        sz: 0.65 + (1 - t) * 1.55,
+        col: t < 0.25 ? "254,243,199" : (arm === 0 ? "186,230,253" : "216,180,254"),
+        a: 0.28 + (1 - t) * 0.62,
+      };
+    });
+    // Partikel Piringan Akresi Lubang Hitam (Gargantua di sisi kiri kosmos)
+    const bhParticles = Array.from({ length: 58 }, (_, i) => ({
+      ang: (i / 58) * Math.PI * 2 + Math.random() * 0.2,
+      r: 1.28 + Math.random() * 1.45,
+      spd: 0.55 + (1.5 / (1.2 + Math.random() * 1.3)),
+      sz: 0.8 + Math.random() * 1.5,
+      gold: Math.random() < 0.72,
+    }));
+
+    return { segments, leaves, hubs, paths, pulses, embers, stars, deepStars, galaxyStars, bhParticles };
   }
 
   function _drawLokiTreeFrame(ctx, w, h, tree, tState, time) {
     // Latar luar angkasa kosmik dalam
     ctx.globalCompositeOperation = "source-over";
-    const bg = ctx.createRadialGradient(w * 0.5, h * 0.46, 12, w * 0.5, h * 0.5, Math.max(w, h) * 0.72);
-    bg.addColorStop(0, "#091c1a");
-    bg.addColorStop(0.45, "#061015");
-    bg.addColorStop(1, "#030609");
+    const bg = ctx.createRadialGradient(w * 0.5, h * 0.46, 12, w * 0.5, h * 0.5, Math.max(w, h) * 0.78);
+    bg.addColorStop(0, "#08191c");
+    bg.addColorStop(0.45, "#050b14");
+    bg.addColorStop(1, "#020408");
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, w, h);
 
-    // Bintang kosmik tipis berkelip
-    for (let s of tree.stars) {
-      const a = 0.18 + 0.35 * Math.abs(Math.sin(time * 0.9 + s.phase));
-      ctx.fillStyle = `rgba(209,250,229,${a.toFixed(2)})`;
-      ctx.fillRect(s.x * w, s.y * h, s.sz, s.sz);
-    }
-
     const rotY = tState.rotY;
     const rotX = tState.rotX;
+    const parX = Math.sin(rotY) * 18;
+    const parY = Math.sin(rotX) * 10;
+
+    // A. Awan Nebula Kosmik Megah (ungu-indigo kiri & biru-zamrud kanan, bernapas lembut)
+    ctx.globalCompositeOperation = "lighter";
+    const nebBreath = 0.88 + 0.12 * Math.sin(time * 0.45);
+    const neb1 = ctx.createRadialGradient(w * 0.18 - parX * 0.3, h * 0.34, 8, w * 0.18 - parX * 0.3, h * 0.34, w * 0.34);
+    neb1.addColorStop(0, `rgba(99,102,241,${(0.14 * nebBreath).toFixed(3)})`);
+    neb1.addColorStop(0.45, `rgba(139,92,246,${(0.06 * nebBreath).toFixed(3)})`);
+    neb1.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = neb1;
+    ctx.fillRect(0, 0, w, h);
+
+    const neb2 = ctx.createRadialGradient(w * 0.82 - parX * 0.3, h * 0.38, 8, w * 0.82 - parX * 0.3, h * 0.38, w * 0.34);
+    neb2.addColorStop(0, `rgba(14,165,233,${(0.13 * nebBreath).toFixed(3)})`);
+    neb2.addColorStop(0.45, `rgba(16,185,129,${(0.06 * nebBreath).toFixed(3)})`);
+    neb2.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = neb2;
+    ctx.fillRect(0, 0, w, h);
+
+    // B. 155 Bintang Berwarna Multi-Kedalaman + 9 Bintang Berkilau 4-Arah (dengan paralaks 3D)
+    for (let s of tree.deepStars) {
+      const sx = ((s.x * w - parX * s.depth) % w + w) % w;
+      const sy = ((s.y * h - parY * s.depth) % h + h) % h;
+      const tw = 0.28 + 0.72 * Math.abs(Math.sin(time * (0.7 + s.depth * 0.6) + s.phase));
+      ctx.fillStyle = `rgba(${s.col},${(tw * 0.78).toFixed(2)})`;
+      ctx.beginPath();
+      ctx.arc(sx, sy, s.sz * 0.65, 0, Math.PI * 2);
+      ctx.fill();
+      if (s.spike && tw > 0.55) {
+        const spLen = (3.5 + s.sz * 2.8) * tw;
+        ctx.strokeStyle = `rgba(${s.col},${(tw * 0.45).toFixed(2)})`;
+        ctx.lineWidth = 0.75;
+        ctx.beginPath();
+        ctx.moveTo(sx - spLen, sy); ctx.lineTo(sx + spLen, sy);
+        ctx.moveTo(sx, sy - spLen); ctx.lineTo(sx, sy + spLen);
+        ctx.stroke();
+      }
+    }
+
+    // C. Bintang Jatuh (Meteor Kosmik Halus sesekali melintas di langit dalam)
+    for (let m = 0; m < 2; m++) {
+      const cycle = (time * 0.24 + m * 3.7) % 5.5;
+      if (cycle < 0.75) {
+        const prog = cycle / 0.75;
+        const startX = m === 0 ? w * 0.72 : w * 0.34;
+        const startY = m === 0 ? h * 0.08 : h * 0.12;
+        const dx = m === 0 ? w * 0.22 : -w * 0.20;
+        const dy = h * 0.26;
+        const hx = startX + dx * prog;
+        const hy = startY + dy * prog;
+        const tx = hx - dx * 0.22;
+        const ty = hy - dy * 0.22;
+        const fade = Math.sin(prog * Math.PI);
+        const mg = ctx.createLinearGradient(hx, hy, tx, ty);
+        mg.addColorStop(0, `rgba(255,251,235,${(0.85 * fade).toFixed(2)})`);
+        mg.addColorStop(0.4, `rgba(125,211,252,${(0.42 * fade).toFixed(2)})`);
+        mg.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.strokeStyle = mg;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(hx, hy);
+        ctx.lineTo(tx, ty);
+        ctx.stroke();
+      }
+    }
+
+    // D. GALAKSI SPIRAL BERPUTAR (Sisi Kanan Kosmos — keagungan Andromeda/Bima Sakti)
+    const gx = w * 0.835 - parX * 0.55;
+    const gy = h * 0.31 - parY * 0.45;
+    const gRad = Math.min(w, h) * 0.21;
+    const gTilt = -0.36;
+    const cosGT = Math.cos(gTilt), sinGT = Math.sin(gTilt);
+    const gCore = ctx.createRadialGradient(gx, gy, 1, gx, gy, gRad * 0.95);
+    gCore.addColorStop(0, "rgba(255,251,235,0.62)");
+    gCore.addColorStop(0.25, "rgba(186,230,253,0.22)");
+    gCore.addColorStop(0.6, "rgba(167,139,250,0.08)");
+    gCore.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = gCore;
+    ctx.beginPath();
+    ctx.arc(gx, gy, gRad * 0.95, 0, Math.PI * 2);
+    ctx.fill();
+    const gSpin = time * 0.085;
+    for (let gs of tree.galaxyStars) {
+      const a = gs.ang + gSpin;
+      const lx = Math.cos(a) * gs.r * gRad;
+      const ly = Math.sin(a) * gs.r * gRad * 0.40;
+      const px = gx + lx * cosGT - ly * sinGT;
+      const py = gy + lx * sinGT + ly * cosGT;
+      ctx.fillStyle = `rgba(${gs.col},${(gs.a * 0.72).toFixed(2)})`;
+      ctx.beginPath();
+      ctx.arc(px, py, gs.sz * 0.75, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // E. LUBANG HITAM GARGANTUA (Sisi Kiri Kosmos — Event Horizon + Lensing Gravitasi + Piringan Akresi)
+    const bx = w * 0.165 - parX * 0.55;
+    const by = h * 0.30 - parY * 0.45;
+    const bhR = Math.min(w, h) * 0.068;
+    const bhTilt = -0.24;
+
+    ctx.save();
+    ctx.translate(bx, by);
+    ctx.rotate(bhTilt);
+
+    // 1) Aura pembengkokan gravitasi di belakang lubang hitam
+    const bhAura = ctx.createRadialGradient(0, 0, bhR * 0.9, 0, 0, bhR * 3.4);
+    bhAura.addColorStop(0, "rgba(251,191,36,0.45)");
+    bhAura.addColorStop(0.32, "rgba(245,158,11,0.18)");
+    bhAura.addColorStop(0.65, "rgba(124,58,237,0.07)");
+    bhAura.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = bhAura;
+    ctx.beginPath();
+    ctx.arc(0, 0, bhR * 3.4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2) Busur Lensing Gravitasi atas & bawah (cahaya piringan belakang yang dibelokkan gravitasi!)
+    ctx.strokeStyle = "rgba(254,240,138,0.68)";
+    ctx.lineWidth = Math.max(1.6, bhR * 0.16);
+    ctx.beginPath();
+    ctx.arc(0, 0, bhR * 1.18, Math.PI * 1.04, Math.PI * 1.96);
+    ctx.stroke();
+    ctx.strokeStyle = "rgba(245,158,11,0.42)";
+    ctx.lineWidth = Math.max(1.2, bhR * 0.11);
+    ctx.beginPath();
+    ctx.arc(0, 0, bhR * 1.12, 0.08, Math.PI * 0.92);
+    ctx.stroke();
+
+    // 3) Event Horizon (Hitam Mutlak — menelan cahaya di tengah!)
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = "#010205";
+    ctx.beginPath();
+    ctx.arc(0, 0, bhR * 0.98, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 4) Cincin Foton tipis memeluk Event Horizon + Piringan Akresi Depan menyala
+    ctx.globalCompositeOperation = "lighter";
+    ctx.strokeStyle = "rgba(255,251,235,0.75)";
+    ctx.lineWidth = 1.1;
+    ctx.beginPath();
+    ctx.arc(0, 0, bhR * 1.01, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Piringan Akresi Depan (3 lapis plasma emas-oranye melintas di depan Event Horizon)
+    for (let ring = 0; ring < 3; ring++) {
+      const rx = bhR * (2.25 + ring * 0.42);
+      const ry = bhR * (0.34 + ring * 0.08);
+      ctx.strokeStyle = ring === 0
+        ? "rgba(255,251,235,0.78)"
+        : (ring === 1 ? "rgba(251,191,36,0.48)" : "rgba(234,88,12,0.26)");
+      ctx.lineWidth = ring === 0 ? 2.2 : (ring === 1 ? 3.2 : 4.0);
+      ctx.beginPath();
+      ctx.ellipse(0, bhR * 0.04, rx, ry, 0, 0.04, Math.PI - 0.04);
+      ctx.stroke();
+    }
+    // Partikel plasma berputar cepat di piringan akresi
+    for (let bp of tree.bhParticles) {
+      const a = bp.ang + time * bp.spd;
+      const px = Math.cos(a) * bhR * bp.r;
+      const py = Math.sin(a) * bhR * bp.r * 0.24;
+      if (Math.sin(a) < 0 && Math.hypot(px, py) < bhR * 1.02) continue;
+      ctx.fillStyle = bp.gold ? "rgba(254,240,138,0.72)" : "rgba(251,146,60,0.58)";
+      ctx.beginPath();
+      ctx.arc(px, py, bp.sz * 0.65, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+
     const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
     const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
     const scale = Math.min(w, h) * 0.56;
