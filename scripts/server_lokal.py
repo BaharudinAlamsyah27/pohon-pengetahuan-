@@ -22,6 +22,7 @@ import os
 import re
 import socket
 import sys
+import threading
 from datetime import date
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
@@ -1078,20 +1079,42 @@ def list_github_titipan() -> dict:
     return {"ok": True, "configured": True, "repo": repo, "items": items}
 
 
-def process_github_titipan(nomor: int, aksi: str) -> dict:
+def _close_github_issue_async(repo: str, nomor: int, token: str, comment_body: str = "") -> None:
+    def _worker() -> None:
+        try:
+            _github_api_request("PATCH", f"/repos/{repo}/issues/{nomor}", token, {"state": "closed"})
+            if comment_body:
+                _github_api_request("POST", f"/repos/{repo}/issues/{nomor}/comments", token, {"body": comment_body})
+        except Exception:
+            pass
+    threading.Thread(target=_worker, daemon=True).start()
+
+
+def process_github_titipan(nomor: int, aksi: str, item_hint: dict | None = None) -> dict:
     token, repo = _get_github_token_and_repo()
     if not token:
         raise ValueError("GITHUB_TOKEN / pohon_key belum dipasang di file .env")
-
-    code, issue = _github_api_request("GET", f"/repos/{repo}/issues/{nomor}", token)
-    if code != 200 or not isinstance(issue, dict):
-        raise ValueError(f"Titipan #{nomor} tidak ditemukan (HTTP {code})")
 
     if aksi == "tolak":
         _github_api_request("PATCH", f"/repos/{repo}/issues/{nomor}", token, {"state": "closed"})
         return {"ok": True, "aksi": "tolak", "nomor": nomor}
 
-    item = _parse_titipan_issue(issue)
+    if isinstance(item_hint, dict) and item_hint.get("nomor") == nomor and (item_hint.get("url") or item_hint.get("teks_asli")):
+        item = {
+            "nomor": nomor,
+            "judul": str(item_hint.get("judul") or "Titipan").strip(),
+            "nama": str(item_hint.get("nama") or "Anonim").strip(),
+            "url": str(item_hint.get("url") or "tidak ada").strip(),
+            "platform": str(item_hint.get("platform") or "lainnya").strip(),
+            "bidang": str(item_hint.get("bidang") or "").strip(),
+            "teks_asli": str(item_hint.get("teks_asli") or "").strip(),
+        }
+    else:
+        code, issue = _github_api_request("GET", f"/repos/{repo}/issues/{nomor}", token)
+        if code != 200 or not isinstance(issue, dict):
+            raise ValueError(f"Titipan #{nomor} tidak ditemukan (HTTP {code})")
+        item = _parse_titipan_issue(issue)
+
     url = item["url"]
     teks = item["teks_asli"]
     judul = item["judul"]
@@ -1134,8 +1157,7 @@ def process_github_titipan(nomor: int, aksi: str) -> dict:
     )
 
     ringkas = f"Diterima ke Pohon Pengetahuan: `{out.get('id')}` → `{out.get('kartu_id') or out.get('digabung_ke') or '-'}` ({out.get('bidang')})."
-    _github_api_request("POST", f"/repos/{repo}/issues/{nomor}/comments", token, {"body": ringkas})
-    _github_api_request("PATCH", f"/repos/{repo}/issues/{nomor}", token, {"state": "closed"})
+    _close_github_issue_async(repo, nomor, token, ringkas)
     out["nomor"] = nomor
     out["aksi"] = "terima"
     return out
@@ -1302,7 +1324,7 @@ class PohonHandler(BaseHTTPRequestHandler):
         if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar", "/api/baca-pdf", "/api/rapikan-draf", "/api/keputusan", "/api/jurnal", "/api/jurnal/refleksi", "/api/jurnal/kompas", "/api/titipan/proses"):
             self.send_error(404, "Endpoint tidak dikenal")
             return
-        max_len = 16_000_000 if parsed.path == "/api/baca-pdf" else (8_000_000 if parsed.path == "/api/ocr-gambar" else (2_000_000 if parsed.path == "/api/jurnal" else (512_000 if parsed.path in ("/api/simpan-sumber", "/api/ekstrak-matematika") else (32_768 if parsed.path in ("/api/edit-kartu", "/api/jurnal/kompas") else 4096))))
+        max_len = 16_000_000 if parsed.path == "/api/baca-pdf" else (8_000_000 if parsed.path == "/api/ocr-gambar" else (2_000_000 if parsed.path == "/api/jurnal" else (512_000 if parsed.path in ("/api/simpan-sumber", "/api/ekstrak-matematika", "/api/titipan/proses") else (32_768 if parsed.path in ("/api/edit-kartu", "/api/jurnal/kompas") else 4096))))
         try:
             length = int(self.headers.get("Content-Length", "0"))
             if length <= 0 or length > max_len:
@@ -1430,11 +1452,12 @@ class PohonHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/titipan/proses":
             nomor = int(payload.get("nomor", 0) or 0)
             aksi = str(payload.get("aksi", "terima")).strip().lower()
+            item_hint = payload.get("item") if isinstance(payload.get("item"), dict) else None
             if nomor <= 0 or aksi not in {"terima", "tolak"}:
                 self._send_json(400, {"error": "Parameter nomor atau aksi tidak valid"})
                 return
             try:
-                out = process_github_titipan(nomor, aksi)
+                out = process_github_titipan(nomor, aksi, item_hint=item_hint)
             except ValueError as exc:
                 self._send_json(400, {"error": str(exc)})
                 return

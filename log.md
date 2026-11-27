@@ -96,3 +96,7 @@ Catatan kronologis (append-only).
 [2026-11-27] AUDIT & HARDENING KEAMANAN: Menambahkan HTTP security headers di vercel.json (X-Content-Type-Options, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy), rate limiter per-IP + validasi Origin + sanitasi markdown/marker + penyembunyian detail error di api/titip.js & api/tanya.js, serta proteksi anti-SSRF (_is_safe_public_url) di scripts/server_lokal.py.
 
 [2026-11-27] FIX SERVER LOKAL: Menambahkan /api/titipan/proses ke daftar endpoint POST yang diizinkan di scripts/server_lokal.py agar tombol Terima & Abaikan Kotak Titipan berfungsi penuh.
+
+[2026-11-27] TANGKAP S-0024 | "A Anthropic migrou sua API de Python para Rust. Resultado: 70% menos CPU e economia de 20% de tempo." (X) -> daun K-0034 (ai/coding-dan-proyek)
+
+[2026-11-27] OPTIMASI KOTAK TITIPAN: Menghapus item dari UI seketika setelah diterima/diabaikan (anti-cache GitHub), melewati GET GitHub ganda dengan mengirim item_hint, dan menutup GitHub Issue secara asinkron di background thread agar proses lebih cepat.
