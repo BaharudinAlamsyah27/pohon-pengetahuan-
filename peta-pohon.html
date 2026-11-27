@@ -3976,6 +3976,35 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-27", "ringkasan":
               <div id="tk-batch-log" style="font-size:12px;max-height:180px;overflow:auto;display:grid;gap:4px"></div>
             </div>
           </details>
+
+          <details style="margin-top:10px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--surface-alt)">
+            <summary style="cursor:pointer;font-size:13.5px;font-weight:700">📚 Bedah Ebook Tebal (hingga 700 Halaman · Otomatis Per-Bab)</summary>
+            <div style="margin-top:10px;display:grid;gap:8px">
+              <p style="font-size:12.5px;color:var(--text-2);margin:0">
+                Pecah ebook PDF tebal (50–700+ halaman) otomatis per-bab menjadi seri kartu berantai (<code>lanjutan-dari</code>) dalam 1 Sumber utuh. Bisa pilih file PDF (≤50 MB) atau tempel path file di laptop (≤100 MB, 0 beban RAM browser).
+              </p>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <label class="btn-secondary" style="cursor:pointer;font-size:12px">
+                  📖 Pilih File Ebook (.pdf)
+                  <input type="file" id="tk-ebook-file" accept=".pdf,application/pdf" style="display:none">
+                </label>
+                <span id="tk-ebook-fname" style="font-size:12px;color:var(--text-3)">Belum ada file dipilih</span>
+              </div>
+              <input type="text" id="tk-ebook-path" class="search-input" style="font-size:12.5px" placeholder="Atau tempel path file lokal (opsional, mis. C:\Users\ASUS\Downloads\buku-cpns.pdf)">
+              <div class="tangkap-grid-2">
+                <input type="text" id="tk-ebook-judul" class="search-input" placeholder="Judul buku (otomatis jika kosong)">
+                <select id="tk-ebook-max" class="filter-select" aria-label="Target jumlah bab/kartu">
+                  <option value="8">Pecah jadi maks 8 kartu/bab (Ringkas)</option>
+                  <option value="12" selected>Pecah jadi maks 12 kartu/bab (Ideal)</option>
+                  <option value="20">Pecah jadi maks 20 kartu/bab (Mendalam · 500–700 hal)</option>
+                </select>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <button type="button" class="btn-primary" id="btn-bedah-ebook">📚 Bedah Ebook Sekarang</button>
+                <span id="tk-ebook-status" style="font-size:12.5px;color:var(--text-2)"></span>
+              </div>
+            </div>
+          </details>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:16px">
@@ -4475,6 +4504,62 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-27", "ringkasan":
       }
       st.innerHTML = `<strong>Selesai! ${okCnt}/${urls.length} link masuk ke Pohon.</strong> <button class="btn-secondary" onclick="location.reload()">Muat Ulang Pohon</button>`;
       btn.disabled = false;
+    });
+
+    // Handler Bedah Ebook Tebal (hingga 700 halaman)
+    let _ebookFileObj = null;
+    document.getElementById("tk-ebook-file")?.addEventListener("change", (e) => {
+      _ebookFileObj = e.target.files?.[0] || null;
+      const fnEl = document.getElementById("tk-ebook-fname");
+      if (fnEl) fnEl.textContent = _ebookFileObj ? `${_ebookFileObj.name} (${(_ebookFileObj.size / 1048576).toFixed(1)} MB)` : "Belum ada file dipilih";
+    });
+    document.getElementById("btn-bedah-ebook")?.addEventListener("click", async () => {
+      const btn = document.getElementById("btn-bedah-ebook");
+      const st = document.getElementById("tk-ebook-status");
+      const fpath = (document.getElementById("tk-ebook-path")?.value || "").trim();
+      const judul = (document.getElementById("tk-ebook-judul")?.value || "").trim();
+      const maxKartu = Number(document.getElementById("tk-ebook-max")?.value || 12);
+      const bidang = document.getElementById("tk-bidang")?.value || "";
+      if (!fpath && !_ebookFileObj) {
+        if (st) st.textContent = "Pilih file .pdf atau tempel path file ebook lokal terlebih dahulu.";
+        return;
+      }
+      if (_ebookFileObj && !fpath && _ebookFileObj.size > 50 * 1024 * 1024) {
+        if (st) st.textContent = "File >50 MB lebih cepat ditempel lewat kotak path file lokal di atas.";
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = "Membedah Ebook...";
+      if (st) st.textContent = "Membaca seluruh halaman & meringkas per-bab (untuk 500–700 hal butuh ~30–90 detik)...";
+      try {
+        let body = { file_path: fpath, judul, bidang, max_kartu: maxKartu };
+        if (!fpath && _ebookFileObj) {
+          const b64 = await new Promise((resolve, reject) => {
+            const rd = new FileReader();
+            rd.onload = () => resolve(String(rd.result || ""));
+            rd.onerror = () => reject(new Error("Gagal baca file"));
+            rd.readAsDataURL(_ebookFileObj);
+          });
+          body = { file_b64: b64, filename: _ebookFileObj.name, judul, bidang, max_kartu: maxKartu };
+        }
+        const r = await fetch("/api/bedah-ebook", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.ok) {
+          const listStr = (d.kartu_ids || []).length ? `${d.kartu_ids[0]} .. ${d.kartu_ids[d.kartu_ids.length - 1]}` : "-";
+          st.innerHTML = `<strong>✅ Selesai!</strong> Ebook <strong>${esc(d.judul)}</strong> (${d.total_halaman} hal) → <strong>${esc(d.id)}</strong> &amp; <strong>${d.jumlah_kartu} kartu berantai</strong> (${esc(listStr)}). <button class="btn-secondary" onclick="location.reload()">Muat Ulang Pohon</button>`;
+        } else {
+          st.textContent = d.error || "Gagal membedah ebook.";
+        }
+      } catch {
+        st.textContent = "Gagal menghubungi server lokal.";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "📚 Bedah Ebook Sekarang";
+      }
     });
   }
 

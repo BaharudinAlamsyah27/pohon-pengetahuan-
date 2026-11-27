@@ -149,3 +149,5 @@ Catatan kronologis (append-only).
 [2026-11-27] TANGKAP S-0044 | "Never forfeit. Never surrender. Be relentless. Be hyper-competitive. The moment you collapse in your setbacks" (X) -> daun K-0054 (motivasi-dan-mindset)
 
 [2026-11-27] FILTER ANTI-BIAS & KEPUTUSAN AMAN: Menambahkan detektor clickbait/bias otomatis (peringatan_bias + tag cek-bias + guardrail otomatis belum-diverifikasi untuk klaim kesehatan/keuangan medsos tanpa riset) di extract_structured_cards_gemini, bobot kepercayaan (Trust-Weighted RRF: tinggi 1.25x vs rendah 0.55x) di query_relevant_cards(), serta aturan pembeda bukti riset vs opini medsos di call_gemini_rag().
+
+[2026-11-27] BEDAH EBOOK 700 HALAMAN: Memasang pypdf 7.2.0, membuat scripts/bedah_ebook.py (pemecah per-bab/TOC hingga 750 halaman -> seri kartu berantai 2-arah), menambahkan endpoint POST /api/bedah-ebook di scripts/server_lokal.py (mendukung file upload hingga 50 MB & path lokal hingga 100 MB), serta UI Bedah Ebook Tebal di #tangkap.

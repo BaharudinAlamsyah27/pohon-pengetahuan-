@@ -41,6 +41,7 @@ SRC_ID_RE = re.compile(r"^S-\d{4,6}$")
 sys.path.insert(0, str(ROOT / "scripts"))
 import ambil_link  # noqa: E402
 import bangun_pohon  # noqa: E402
+import bedah_ebook  # noqa: E402
 import jurnal_engine  # noqa: E402
 import mesin_cerdas  # noqa: E402
 
@@ -1355,10 +1356,10 @@ class PohonHandler(BaseHTTPRequestHandler):
             self._send_json(403, {"error": "Permintaan lintas-situs ditolak demi keamanan lokal."})
             return
         parsed = urlparse(self.path)
-        if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar", "/api/baca-pdf", "/api/rapikan-draf", "/api/keputusan", "/api/jurnal", "/api/jurnal/refleksi", "/api/jurnal/kompas", "/api/titipan/proses"):
+        if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar", "/api/baca-pdf", "/api/bedah-ebook", "/api/rapikan-draf", "/api/keputusan", "/api/jurnal", "/api/jurnal/refleksi", "/api/jurnal/kompas", "/api/titipan/proses"):
             self.send_error(404, "Endpoint tidak dikenal")
             return
-        max_len = 16_000_000 if parsed.path == "/api/baca-pdf" else (8_000_000 if parsed.path == "/api/ocr-gambar" else (2_000_000 if parsed.path == "/api/jurnal" else (512_000 if parsed.path in ("/api/simpan-sumber", "/api/ekstrak-matematika", "/api/titipan/proses") else (32_768 if parsed.path in ("/api/edit-kartu", "/api/jurnal/kompas") else 4096))))
+        max_len = 72_000_000 if parsed.path == "/api/bedah-ebook" else (16_000_000 if parsed.path == "/api/baca-pdf" else (8_000_000 if parsed.path == "/api/ocr-gambar" else (2_000_000 if parsed.path == "/api/jurnal" else (512_000 if parsed.path in ("/api/simpan-sumber", "/api/ekstrak-matematika", "/api/titipan/proses") else (32_768 if parsed.path in ("/api/edit-kartu", "/api/jurnal/kompas") else 4096)))))
         try:
             length = int(self.headers.get("Content-Length", "0"))
             if length <= 0 or length > max_len:
@@ -1459,6 +1460,49 @@ class PohonHandler(BaseHTTPRequestHandler):
             api_key = (local_env.get("GEMINI_API_KEY") or "").strip()
             res = ambil_link.extract_pdf_text(file_b64, filename=fname, api_key=api_key)
             self._send_json(200 if res.get("ok") else 422, res)
+            return
+
+        if parsed.path == "/api/bedah-ebook":
+            file_b64 = str(payload.get("file_b64", "")).strip()
+            file_path_str = str(payload.get("file_path", "")).strip().strip('"').strip("'")
+            fname = str(payload.get("filename", "ebook.pdf")).strip()[:140]
+            judul_ov = str(payload.get("judul", "")).strip()[:120]
+            penulis_ov = str(payload.get("penulis", "")).strip()[:80]
+            bidang_ov = str(payload.get("bidang", "")).strip()[:60]
+            max_kartu = max(1, min(20, int(payload.get("max_kartu", 12) or 12)))
+            try:
+                if file_path_str:
+                    fp = Path(file_path_str).expanduser()
+                    if not fp.is_file() or fp.suffix.lower() != ".pdf":
+                        self._send_json(400, {"error": "File PDF tidak ditemukan pada path tersebut."})
+                        return
+                    if fp.stat().st_size > 100 * 1024 * 1024:
+                        self._send_json(400, {"error": "Ukuran ebook maksimal 100 MB."})
+                        return
+                    pdf_bytes = fp.read_bytes()
+                    fname = fp.name
+                elif file_b64:
+                    import base64 as _b64
+                    clean_b64 = re.sub(r"^data:[^;]+;base64,", "", file_b64)
+                    pdf_bytes = _b64.b64decode(clean_b64)
+                else:
+                    self._send_json(400, {"error": "Pilih file PDF atau masukkan path file ebook terlebih dahulu."})
+                    return
+                out = bedah_ebook.process_ebook_to_tree(
+                    pdf_bytes=pdf_bytes,
+                    filename=fname,
+                    judul_override=judul_ov,
+                    penulis_override=penulis_ov,
+                    bidang_pilihan=bidang_ov,
+                    max_kartu=max_kartu,
+                )
+            except ValueError as exc:
+                self._send_json(400, {"error": str(exc)})
+                return
+            except Exception as exc:
+                self._send_json(500, {"error": f"Gagal membedah ebook: {exc}"})
+                return
+            self._send_json(200, out)
             return
 
         if parsed.path == "/api/ocr-gambar":

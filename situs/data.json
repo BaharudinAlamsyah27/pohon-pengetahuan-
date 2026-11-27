@@ -2,8 +2,8 @@
   "mode": "publik",
   "dibangun": "2026-11-27",
   "ringkasan": {
-    "total_kartu": 46,
-    "total_sumber": 41,
+    "total_kartu": 47,
+    "total_sumber": 42,
     "total_cabang": 12,
     "penerapan": {}
   },
@@ -329,8 +329,8 @@
       "nama": "Motivasi & Mindset",
       "induk": "",
       "file": "cabang/motivasi-dan-mindset/_cabang.md",
-      "jumlah_kartu_tercatat": 12,
-      "jumlah_sumber_tercatat": 13,
+      "jumlah_kartu_tercatat": 13,
+      "jumlah_sumber_tercatat": 14,
       "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
       "ringkasan": "Jangan habiskan usia 25 hingga 29 tahun untuk mengkhawatirkan hal-hal yang sebenarnya tidak penting; hentikan overthinking dan mulailah bertindak. Cara tercepat membangun kepercayaan diri adalah mengubah dialog batin (self-talk) lewat 3 langkah praktis. Normalisasikan bersikap sangat lugas, langsung pada intinya, dan tegas untuk mendapatkan apa yang Anda inginkan dalam hidup.",
@@ -347,8 +347,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 12,
-      "jumlah_sumber": 13,
+      "jumlah_kartu": 13,
+      "jumlah_sumber": 14,
       "urutan": 7
     }
   ],
@@ -630,6 +630,10 @@
         "S-0006"
       ],
       "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0054"
+        },
         {
           "tipe": "terkait",
           "ke": "K-0053"
@@ -2497,6 +2501,51 @@
       "kutipan": "shorten the distance between thinking and doing",
       "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=0.0).",
       "penulis": "Stijn Noorman (@stijnnoorman)"
+    },
+    {
+      "id": "K-0054",
+      "file": "kartu/K-0054.md",
+      "ide": "Jangan pernah menyerah dan tetaplah gigih bersaing meski menghadapi kemunduran.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "prinsip",
+      "kepercayaan": "sedang",
+      "dasar": "opini-umum",
+      "tag": [
+        "ketekunan",
+        "motivasi",
+        "pantang-menyerah",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "ketahanan-mental",
+        "daya-juang",
+        "mentalitas-pemenang"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0044"
+      ],
+      "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0006"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "produksi",
+      "penjelasan": "1. Merasa putus asa sesaat adalah hal yang wajar, tetapi Anda tidak boleh membiarkan keputusasaan tersebut mendefinisikan kekalahan.\n2. Begitu Anda runtuh karena hambatan, Anda secara sukarela menyerahkan kemenangan kepada pihak lawan.\n3. Pertahankan semangat kompetitif dan jangan pernah mengakui kekalahan kecuali jika itu benar-benar dipaksakan dari luar.",
+      "kutipan": "Never forfeit. Never surrender. Be relentless.",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.0).",
+      "penulis": "Machiavelli Bot (@UnmodernmanBot)"
     }
   ],
   "sumber": [
@@ -3243,6 +3292,24 @@
         "K-0053"
       ],
       "saripati": "(1) Percepat kemajuan dengan memperpendek jarak antara berpikir dan bertindak melalui eksekusi cepat."
+    },
+    {
+      "id": "S-0044",
+      "file": "sumber/S-0044.md",
+      "judul": "Never forfeit. Never surrender. Be relentless. Be hyper-competitive. The moment you collapse in your setbacks",
+      "jenis": "postingan",
+      "penulis": "Machiavelli Bot (@UnmodernmanBot)",
+      "platform": "X",
+      "url": "https://x.com/UnmodernmanBot/status/2125899867180392730?a=D1AqFkyyl7pm8eUmgvg&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0054"
+      ],
+      "saripati": "(1) Jangan pernah menyerah dan tetaplah gigih bersaing meski menghadapi kemunduran."
     }
   ]
 }
