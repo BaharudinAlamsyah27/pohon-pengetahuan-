@@ -102,3 +102,5 @@ Catatan kronologis (append-only).
 [2026-11-27] OPTIMASI KOTAK TITIPAN: Menghapus item dari UI seketika setelah diterima/diabaikan (anti-cache GitHub), melewati GET GitHub ganda dengan mengirim item_hint, dan menutup GitHub Issue secara asinkron di background thread agar proses lebih cepat.
 
 [2026-11-27] PUBLIKASI KARTU: Mengubah publik: ya pada K-0004, K-0023, K-0027, K-0030, K-0031, K-0032, K-0033, K-0034 atas permintaan pengguna, serta mengatur default kartu baru di scripts/server_lokal.py menjadi publik: ya (sementara jurnal/, persona.md, teks asli sumber/, dan penerapan-catatan tetap mutlak pribadi); rebuild lokal & publik serta verifikasi kebocoran.
+
+[2026-11-27] UI UPDATE: Memperbarui tautan tombol Portofolio Utama di scripts/template_peta.html menjadi https://baharudin-alamsyah.vercel.app/ dan membangun ulang versi lokal & publik.
