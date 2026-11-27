@@ -4,8 +4,8 @@ import argparse, html, re, sys
 from pathlib import Path
 
 TEKS = {".html", ".json", ".js", ".css", ".md", ".txt", ".xml"}
-TERLARANG = {"persona.md", "log.md", "agents.md"}
-FIELD_PRIBADI = ("penerapan-catatan", "terakhir-ditinjau", "penerapan:")
+TERLARANG = {"persona.md", "log.md", "agents.md", "_kompas_sikap.md"}
+FIELD_PRIBADI = ("penerapan-catatan", "terakhir-ditinjau", "penerapan:", "prestasi_ringkas:", "jurnal_engine")
 
 def kata(t):
     return re.findall(r"\w+", html.unescape(re.sub(r"<[^>]+>", " ", t)).lower())
@@ -43,6 +43,7 @@ def main():
     ap.add_argument("--situs", default="situs")
     ap.add_argument("--persona", default="persona.md")
     ap.add_argument("--sumber", default="sumber")
+    ap.add_argument("--jurnal", default="jurnal")
     a = ap.parse_args()
     situs = Path(a.situs)
     if not situs.is_dir():
@@ -51,7 +52,7 @@ def main():
     berkas = [p for p in situs.rglob("*") if p.is_file()]
     for p in berkas:
         bagian = {x.lower() for x in p.relative_to(situs).parts}
-        if p.name.lower() in TERLARANG or "sumber" in bagian or ".git" in bagian:
+        if p.name.lower() in TERLARANG or "sumber" in bagian or "jurnal" in bagian or ".git" in bagian:
             gagal.append(f"Berkas terlarang di situs: {p}")
     isi = {p: p.read_text(encoding="utf-8", errors="ignore")
            for p in berkas if p.suffix.lower() in TEKS}
@@ -88,6 +89,20 @@ def main():
                     cuplikan = " ".join(w[mulai:mulai + 12])
                     pesan = f"{panjang} kata identik dengan {sp.name} di {p}: '{cuplikan}...'"
                     (gagal if panjang >= 25 else periksa).append(pesan)
+
+    jd = Path(a.jurnal)
+    if jd.is_dir():
+        for jp in sorted(jd.rglob("*.md")):
+            if jp.name.startswith("_") and jp.name.lower() != "_kompas_sikap.md":
+                continue
+            w_j = kata(tubuh(jp.read_text(encoding="utf-8", errors="ignore")))
+            if len(w_j) < 6:
+                continue
+            jset = shingles(w_j, 6)
+            for p, w in kata_situs.items():
+                hit = jset & shingles(w, 6)
+                if hit:
+                    gagal.append(f"Isi jurnal pribadi ({jp.name}) bocor di {p}: '{sorted(hit)[0]}'")
 
     for g in gagal:
         print("GAGAL  :", g)
