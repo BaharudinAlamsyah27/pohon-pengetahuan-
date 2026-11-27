@@ -1164,15 +1164,38 @@ def process_github_titipan(nomor: int, aksi: str, item_hint: dict | None = None)
 
 
 class PohonHandler(BaseHTTPRequestHandler):
+    def _is_valid_local_host(self) -> bool:
+        host = (self.headers.get("Host") or "").strip().lower()
+        return bool(re.match(r"^(127\.0\.0\.1|localhost)(:\d+)?$", host))
+
+    def _is_valid_local_origin(self) -> bool:
+        sfs = (self.headers.get("Sec-Fetch-Site") or "").strip().lower()
+        if sfs and sfs not in ("same-origin", "same-site", "none"):
+            return False
+        origin = (self.headers.get("Origin") or "").strip().lower()
+        if origin and not re.match(r"^https?://(127\.0\.0\.1|localhost)(:\d+)?$", origin):
+            return False
+        return True
+
+    def _send_security_headers(self) -> None:
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-Frame-Options", "DENY")
+        self.send_header("Referrer-Policy", "no-referrer")
+
     def _send_json(self, code: int, payload: dict) -> None:
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         self.send_response(code)
+        self._send_security_headers()
+        self.send_header("Cache-Control", "no-store")
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
 
     def do_GET(self) -> None:
+        if not self._is_valid_local_host():
+            self.send_error(403, "Host tidak diizinkan")
+            return
         parsed = urlparse(self.path)
         path = parsed.path
 
@@ -1320,6 +1343,9 @@ class PohonHandler(BaseHTTPRequestHandler):
         self.send_error(404, "Tidak ditemukan")
 
     def do_POST(self) -> None:
+        if not self._is_valid_local_host() or not self._is_valid_local_origin():
+            self._send_json(403, {"error": "Permintaan lintas-situs ditolak demi keamanan lokal."})
+            return
         parsed = urlparse(self.path)
         if parsed.path not in ("/api/penerapan", "/api/status-lokal", "/api/ambil-link", "/api/simpan-sumber", "/api/arsipkan-kartu", "/api/edit-kartu", "/api/tanya", "/api/tanya-feedback", "/api/ekstrak-matematika", "/api/ocr-gambar", "/api/baca-pdf", "/api/rapikan-draf", "/api/keputusan", "/api/jurnal", "/api/jurnal/refleksi", "/api/jurnal/kompas", "/api/titipan/proses"):
             self.send_error(404, "Endpoint tidak dikenal")

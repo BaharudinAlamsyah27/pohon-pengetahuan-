@@ -104,3 +104,5 @@ Catatan kronologis (append-only).
 [2026-11-27] PUBLIKASI KARTU: Mengubah publik: ya pada K-0004, K-0023, K-0027, K-0030, K-0031, K-0032, K-0033, K-0034 atas permintaan pengguna, serta mengatur default kartu baru di scripts/server_lokal.py menjadi publik: ya (sementara jurnal/, persona.md, teks asli sumber/, dan penerapan-catatan tetap mutlak pribadi); rebuild lokal & publik serta verifikasi kebocoran.
 
 [2026-11-27] UI UPDATE: Memperbarui tautan tombol Portofolio Utama di scripts/template_peta.html menjadi https://baharudin-alamsyah.vercel.app/ dan membangun ulang versi lokal & publik.
+
+[2026-11-27] HARDENING KEAMANAN TINGKAT TINGGI (DEFENSE-IN-DEPTH): Menambahkan Content-Security-Policy (CSP) ketat & COOP/CORP di vercel.json, anti-Prompt-Injection & validasi Content-Type di api/tanya.js, blokir SSRF edge di api/titip.js, _SafeRedirectHandler anti-SSRF redirect (IPv4+IPv6 fail-closed) di scripts/ambil_link.py, anti-CSRF & anti-DNS-Rebinding (Host/Origin/Sec-Fetch-Site) di scripts/server_lokal.py, serta validasi ketat https?:// (anti-javascript: XSS) pada tautan di scripts/bangun_pohon.py & scripts/template_peta.html.

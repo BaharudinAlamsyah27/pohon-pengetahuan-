@@ -59,21 +59,48 @@ def validate_public_url(url: str) -> tuple[bool, str]:
     parsed = urllib.parse.urlparse(url.strip())
     if parsed.scheme not in ("http", "https"):
         return False, "URL harus diawali http:// atau https://"
-    host = parsed.hostname
+    host = (parsed.hostname or "").lower().strip()
     if not host:
         return False, "Host URL tidak valid"
+    if host in ("localhost", "127.0.0.1", "::1") or host.endswith(".local") or host.endswith(".internal"):
+        return False, "Akses ke alamat jaringan lokal/privat diblokir demi keamanan"
     try:
-        ip = ipaddress.ip_address(socket.gethostbyname(host))
-        if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved:
-            return False, "Akses ke alamat jaringan lokal/privat diblokir demi keamanan"
+        infos = socket.getaddrinfo(host, None)
+        if not infos:
+            return False, "Host tidak dapat diresolusi"
+        for info in infos:
+            ip = ipaddress.ip_address(info[4][0])
+            if (
+                ip.is_private
+                or ip.is_loopback
+                or ip.is_link_local
+                or ip.is_multicast
+                or ip.is_reserved
+                or ip.is_unspecified
+            ):
+                return False, "Akses ke alamat jaringan lokal/privat diblokir demi keamanan"
     except Exception:
-        pass
+        return False, "Host URL tidak dapat diverifikasi keamanannya"
     return True, ""
 
 
+class _SafeRedirectHandler(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        ok, err = validate_public_url(newurl)
+        if not ok:
+            raise urllib.error.URLError(f"Redirect diblokir: {err}")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_SAFE_OPENER = urllib.request.build_opener(_SafeRedirectHandler())
+
+
 def http_get_text(url: str) -> str:
+    ok, err = validate_public_url(url)
+    if not ok:
+        raise ValueError(err)
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept-Language": "id,en;q=0.9"})
-    with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
+    with _SAFE_OPENER.open(req, timeout=TIMEOUT) as resp:
         raw = resp.read(MAX_BYTES)
         charset = resp.headers.get_content_charset() or "utf-8"
         return raw.decode(charset, errors="replace")

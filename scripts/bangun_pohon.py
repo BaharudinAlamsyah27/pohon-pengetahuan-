@@ -769,9 +769,10 @@ def render_static_public_pages(dataset: dict, situs_dir: Path) -> None:
             s = src_map.get(sid)
             if not s:
                 continue
+            raw_url = str(s.get("url") or "").strip()
             link = (
-                f' · <a href="{html.escape(s["url"])}" target="_blank" rel="noopener noreferrer">Buka sumber asli ↗</a>'
-                if s.get("url") and s["url"] != "tidak ada" else ""
+                f' · <a href="{html.escape(raw_url)}" target="_blank" rel="noopener noreferrer">Buka sumber asli ↗</a>'
+                if re.match(r"^https?://", raw_url, re.I) else ""
             )
             srcs_html += f'<li><strong>{html.escape(s["judul"])}</strong> ({html.escape(s["penulis"])}, {html.escape(s["platform"])}){link}</li>'
 

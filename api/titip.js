@@ -107,9 +107,18 @@ module.exports = async function handler(req, res) {
     res.status(429).json({ error: "Terlalu banyak kiriman dalam waktu singkat. Coba lagi 10 menit lagi." });
     return;
   }
+  const ct = String(req?.headers?.["content-type"] || "").toLowerCase();
+  if (ct && !ct.includes("application/json")) {
+    res.status(415).json({ error: "Content-Type harus application/json." });
+    return;
+  }
 
   let body = req.body;
   if (typeof body === "string") {
+    if (body.length > 32768) {
+      res.status(413).json({ error: "Ukuran kiriman terlalu besar." });
+      return;
+    }
     try {
       body = JSON.parse(body);
     } catch {
@@ -139,8 +148,19 @@ module.exports = async function handler(req, res) {
   if (url) {
     try {
       const parsedUrl = new URL(url);
+      const h = parsedUrl.hostname.toLowerCase();
       if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
         res.status(400).json({ error: "Link harus diawali http:// atau https://" });
+        return;
+      }
+      if (
+        h === "localhost" ||
+        h === "::1" ||
+        h.endsWith(".local") ||
+        h.endsWith(".internal") ||
+        /^(127\.|10\.|192\.168\.|169\.254\.|0\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h)
+      ) {
+        res.status(400).json({ error: "Link alamat jaringan lokal/privat tidak diizinkan." });
         return;
       }
     } catch {
