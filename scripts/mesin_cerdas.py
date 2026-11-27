@@ -2348,6 +2348,226 @@ def analyze_deep_intelligence() -> dict:
     }
 
 
+def run_math_ml_lab() -> dict:
+    """
+    Laboratorium 4 Pilar Matematika & Machine Learning (100% Python stdlib, 0 dependensi):
+      1. Aljabar Linear     : Matriks TF-IDF/Vektor + Power Iteration PCA (2 eigenvector teratas -> peta 2D).
+      2. Probabilitas       : Bayesian Beta-Binomial per cabang + Shannon Entropy keragaman topik.
+      3. Kalkulus           : Turunan analitik (gradien dL/dw) Binary Cross-Entropy + L2 Regularization.
+      4. Optimasi & RL      : Gradient Descent (80 epoch, kurva loss) + UCB1 Multi-Armed Bandit eksplorasi cabang.
+    """
+    cards_all, _, _ = load_active()
+    cards = {
+        cid: c for cid, c in cards_all.items()
+        if c.get("cabang") != "kliping-hiburan" and c.get("bidang") != "kliping-hiburan"
+    }
+    if not cards:
+        return {"ok": True, "total_kartu": 0}
+
+    cids = sorted(cards.keys())
+    n_cards = len(cids)
+    persona_txt = (ROOT / "persona.md").read_text(encoding="utf-8", errors="ignore").lower() if (ROOT / "persona.md").is_file() else ""
+    persona_toks = set(tokenize(persona_txt))
+
+    # --- PILAR 1: ALJABAR LINEAR (Matriks Fitur + Power Iteration PCA 2D) ---
+    tfidf = build_tfidf(cards)
+    vocab_freq: Counter = Counter()
+    for vec in tfidf.values():
+        for term in vec:
+            vocab_freq[term] += 1
+    top_terms = [t for t, _ in vocab_freq.most_common(48)]
+    dim = max(2, len(top_terms))
+    # Matriks X (N x D), dipusatkan ke mean 0
+    X_raw: list[list[float]] = []
+    for cid in cids:
+        v = tfidf.get(cid, {})
+        X_raw.append([v.get(t, 0.0) for t in top_terms] if top_terms else [0.0, 0.0])
+    means = [sum(X_raw[i][j] for i in range(n_cards)) / n_cards for j in range(dim)]
+    X = [[X_raw[i][j] - means[j] for j in range(dim)] for i in range(n_cards)]
+
+    def _mat_t_vec(mat: list[list[float]], u: list[float]) -> list[float]:
+        # Hitung (X^T X) u secara efisien tanpa membentuk matriks kovarians besar
+        xu = [sum(row[j] * u[j] for j in range(dim)) for row in mat]
+        return [sum(mat[i][j] * xu[i] for i in range(n_cards)) for j in range(dim)]
+
+    def _power_eig(mat: list[list[float]], ortho_to: list[float] | None = None, iters: int = 24) -> list[float]:
+        u = [math.sin((j + 1) * 1.7 + (2.3 if ortho_to else 0.0)) for j in range(dim)]
+        for _ in range(iters):
+            w = _mat_t_vec(mat, u)
+            if ortho_to is not None:
+                proj = sum(w[j] * ortho_to[j] for j in range(dim))
+                w = [w[j] - proj * ortho_to[j] for j in range(dim)]
+            norm = math.sqrt(sum(val * val for val in w))
+            if norm < 1e-9:
+                break
+            u = [val / norm for val in w]
+        return u
+
+    pc1 = _power_eig(X, None)
+    pc2 = _power_eig(X, pc1)
+    pca_points = []
+    xs, ys = [], []
+    for idx, cid in enumerate(cids):
+        px = sum(X[idx][j] * pc1[j] for j in range(dim))
+        py = sum(X[idx][j] * pc2[j] for j in range(dim))
+        xs.append(px)
+        ys.append(py)
+        pca_points.append({"id": cid, "cabang": cards[cid]["cabang"], "ide": cards[cid]["ide"][:75], "x": px, "y": py})
+    # Normalisasi koordinat PCA ke [-1, 1] untuk visualisasi SVG bersih
+    max_x = max((abs(v) for v in xs), default=1.0) or 1.0
+    max_y = max((abs(v) for v in ys), default=1.0) or 1.0
+    for pt in pca_points:
+        pt["x"] = round(pt["x"] / max_x, 3)
+        pt["y"] = round(pt["y"] / max_y, 3)
+
+    # --- PILAR 2: PROBABILITAS & STATISTIKA (Bayesian Beta-Binomial + Shannon Entropy) ---
+    branch_counts: Counter = Counter()
+    branch_stats: dict[str, dict] = defaultdict(lambda: {"n": 0, "sukses": 0.0, "gagal": 0.0})
+    for c in cards.values():
+        b = c.get("bidang") or (c.get("cabang") or "lainnya").split("/")[0]
+        branch_counts[b] += 1
+        branch_stats[b]["n"] += 1
+        st = c.get("penerapan", "belum-dicoba")
+        if st == "diterapkan":
+            branch_stats[b]["sukses"] += 1.0
+        elif st == "sedang-dicoba":
+            branch_stats[b]["sukses"] += 0.6
+        elif st == "ditolak":
+            branch_stats[b]["gagal"] += 1.0
+        elif c.get("kepercayaan") == "tinggi":
+            branch_stats[b]["sukses"] += 0.35
+
+    entropy = 0.0
+    for cnt in branch_counts.values():
+        p = cnt / n_cards
+        if p > 0:
+            entropy -= p * math.log2(p)
+    max_entropy = math.log2(len(branch_counts)) if len(branch_counts) > 1 else 1.0
+    diversity_pct = round((entropy / max_entropy) * 100, 1)
+
+    # --- PILAR 3 & 4: KALKULUS (Gradien Log-Loss) + OPTIMASI (Gradient Descent 80 Epoch) ---
+    # Model Neural/Logistik 5 fitur untuk memprediksi Probabilitas Dampak Tinggi P(berguna | fitur)
+    feat_names = ["Kepercayaan Bukti", "Kepadatan Relasi", "Berbasis Riset/Pengalaman", "Struktur & Kedalaman", "Kecocokan Persona"]
+    trust_map = {"tinggi": 1.0, "sedang": 0.65, "belum-diverifikasi": 0.35, "rendah": 0.15}
+    dasar_map = {"riset": 1.0, "pengalaman-pribadi": 0.72, "opini-umum": 0.35, "tidak-jelas": 0.2}
+
+    F_mat: list[list[float]] = []
+    Y_lab: list[float] = []
+    for cid in cids:
+        c = cards[cid]
+        f1 = trust_map.get(c.get("kepercayaan", "sedang"), 0.5)
+        f2 = min(1.0, len(c.get("relasi") or []) / 4.0)
+        f3 = dasar_map.get(c.get("dasar", "tidak-jelas"), 0.3)
+        f4 = min(1.0, len((c.get("penjelasan") or "").split()) / 85.0)
+        c_toks = set(tokenize(f"{c.get('ide','')} {c.get('penjelasan','')} {' '.join(c.get('tag') or [])}"))
+        f5 = min(1.0, len(c_toks & persona_toks) / 5.0) if persona_toks else 0.5
+        F_mat.append([f1, f2, f3, f4, f5])
+        st = c.get("penerapan", "belum-dicoba")
+        # Label target: sinyal nyata pengguna (diterapkan=1, sedang-dicoba=0.85, ditolak=0.05) atau proxy kualitas
+        if st == "diterapkan":
+            y = 1.0
+        elif st == "sedang-dicoba":
+            y = 0.85
+        elif st == "ditolak":
+            y = 0.05
+        else:
+            y = 0.85 if (f1 >= 0.65 and (f2 >= 0.25 or f5 >= 0.4)) else (0.25 if f1 <= 0.35 else 0.55)
+        Y_lab.append(y)
+
+    weights = [0.1, 0.1, 0.1, 0.1, 0.1]
+    bias = 0.0
+    lr = 0.45
+    reg_lambda = 0.015
+    loss_curve: list[float] = []
+
+    def _sigmoid(z: float) -> float:
+        z = max(-20.0, min(20.0, z))
+        return 1.0 / (1.0 + math.exp(-z))
+
+    for ep in range(80):
+        grad_w = [0.0] * 5
+        grad_b = 0.0
+        total_loss = 0.0
+        for row, y in zip(F_mat, Y_lab):
+            z = bias + sum(w * x for w, x in zip(weights, row))
+            yhat = _sigmoid(z)
+            eps = 1e-7
+            total_loss += -(y * math.log(yhat + eps) + (1.0 - y) * math.log(1.0 - yhat + eps))
+            err = yhat - y  # Turunan analitik dL/dz (Kalkulus)
+            grad_b += err
+            for k in range(5):
+                grad_w[k] += err * row[k]
+        avg_loss = (total_loss / n_cards) + 0.5 * reg_lambda * sum(w * w for w in weights)
+        if ep % 4 == 0 or ep == 79:
+            loss_curve.append(round(avg_loss, 4))
+        # Langkah Optimasi Gradient Descent: w <- w - lr * (dL/dw + lambda * w)
+        bias -= lr * (grad_b / n_cards)
+        for k in range(5):
+            weights[k] -= lr * ((grad_w[k] / n_cards) + reg_lambda * weights[k])
+
+    # Skor prediksi akhir untuk tiap kartu
+    predictions = []
+    for idx, cid in enumerate(cids):
+        z = bias + sum(w * x for w, x in zip(weights, F_mat[idx]))
+        prob = _sigmoid(z)
+        predictions.append({
+            "id": cid,
+            "cabang": cards[cid]["cabang"],
+            "ide": cards[cid]["ide"][:110],
+            "probabilitas": round(prob * 100, 1),
+            "penerapan": cards[cid].get("penerapan", "belum-dicoba"),
+        })
+    predictions.sort(key=lambda x: -x["probabilitas"])
+
+    # --- REINFORCEMENT LEARNING: UCB1 MULTI-ARMED BANDIT (Eksplorasi vs Eksploitasi Cabang) ---
+    total_pulls = sum(st["n"] for st in branch_stats.values()) + 1
+    rl_bandit = []
+    for b, st in branch_stats.items():
+        # Bayesian Beta(alpha, beta) posterior mean
+        alpha = 1.5 + st["sukses"]
+        beta = 1.5 + st["gagal"]
+        bayes_mean = alpha / (alpha + beta)
+        # UCB1 Exploration Bonus: semakin jarang dicoba -> bonus eksplorasi semakin besar!
+        ucb_bonus = 0.65 * math.sqrt(math.log(total_pulls + 1) / (st["n"] + 0.5))
+        rl_bandit.append({
+            "cabang": b,
+            "jumlah_kartu": st["n"],
+            "prob_bayes": round(bayes_mean * 100, 1),
+            "bonus_eksplorasi": round(ucb_bonus * 100, 1),
+            "skor_ucb": round((bayes_mean + ucb_bonus) * 100, 1),
+        })
+    rl_bandit.sort(key=lambda x: -x["skor_ucb"])
+
+    return {
+        "ok": True,
+        "total_kartu": n_cards,
+        "aljabar_linear": {
+            "dimensi_matriks": f"{n_cards} × {dim}",
+            "titik_pca": pca_points,
+        },
+        "probabilitas": {
+            "entropi_shannon": round(entropy, 3),
+            "keragaman_persen": diversity_pct,
+            "jumlah_bidang": len(branch_counts),
+        },
+        "kalkulus_optimasi": {
+            "epoch": 80,
+            "loss_awal": loss_curve[0] if loss_curve else 0.0,
+            "loss_akhir": loss_curve[-1] if loss_curve else 0.0,
+            "kurva_loss": loss_curve,
+            "bobot_terlatih": [
+                {"fitur": feat_names[k], "bobot": round(weights[k], 3)}
+                for k in range(5)
+            ],
+            "top_prediksi": predictions[:6],
+        },
+        "reinforcement_learning": {
+            "algoritma": "UCB1 Multi-Armed Bandit + Bayesian Beta-Binomial",
+            "rekomendasi_cabang": rl_bandit[:8],
+        },
+    }
+
+
 SOCIAL_NOISE_TOKENS = {
     "like", "follow", "retweet", "repost", "subscribe", "share", "comment", "komentar",
     "link", "bio", "dm", "giveaway", "thread", "bookmark", "save", "simpan", "halo",

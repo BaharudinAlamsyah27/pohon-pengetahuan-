@@ -140,3 +140,10 @@ Catatan kronologis (append-only).
 [2026-11-27] BUGFIX AUTO-OCR FOTO X: Memperbaiki pemanggilan extract_text_from_image -> extract_image_text (dengan encode base64) di scripts/ambil_link.py agar foto lampiran dari X benar-benar terpindai otomatis lewat Gemini Vision / Tesseract OCR.
 
 [2026-11-27] TANGKAP S-0040 | "This is f*cking insane. Andrej Karpathy spent 8 years building AI at OpenAI and Tesla" (X) -> daun K-0050 (ai/prompt-dan-agen)
+[2026-11-27] TANGKAP S-0041 | "The deep work routine that changed my life (1 hour every morning)" (X) -> daun K-0051 (motivasi-dan-mindset)
+[2026-11-27] TANGKAP S-0042 | "𝗠𝗖𝗣 𝘃𝘀 𝗔𝗣𝗜" (X) -> daun K-0052 (ai/prompt-dan-agen)
+
+[2026-11-27] LAB MATEMATIKA & ML (4 PILAR): Menambahkan run_math_ml_lab() di scripts/mesin_cerdas.py (Aljabar Linear Power Iteration PCA 2D, Probabilitas Bayesian Beta-Binomial & Shannon Entropy, Kalkulus Binary Cross-Entropy + Optimasi Gradient Descent 80 epoch, serta Reinforcement Learning UCB1 Multi-Armed Bandit), endpoint /api/analisis?jenis=lab_ml, dan visualisasi interaktif SVG di tab Analisis.
+
+[2026-11-27] TANGKAP S-0043 | "The fastest way to make progress is to shorten the distance between thinking and doing. Stop spending weeks pr" (X) -> daun K-0053 (motivasi-dan-mindset)
+[2026-11-27] TANGKAP S-0044 | "Never forfeit. Never surrender. Be relentless. Be hyper-competitive. The moment you collapse in your setbacks" (X) -> daun K-0054 (motivasi-dan-mindset)

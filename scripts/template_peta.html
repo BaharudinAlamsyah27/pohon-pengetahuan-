@@ -4501,6 +4501,7 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
           <button type="button" class="btn-primary" id="btn-an-keputusan" title="Analisis dilema lewat lensa CEO, COO, & CFO berbasis kartu & persona">🎯 5. Konsultasi Keputusan (CEO·COO·CFO)</button>
           <button type="button" class="btn-secondary" id="btn-an-briefing" title="Ringkasan 7 hari terakhir + 1 eksperimen prioritas minggu ini">☀️ 6. Briefing Mingguan</button>
           <button type="button" class="btn-primary" id="btn-an-kecerdasan" title="Indeks Vector Makna + Pola Emas Lintas-Cabang + Deteksi Pertentangan + Aksi Adaptif Jurnal">🧠 7. Kecerdasan Lintas-Cabang &amp; Aksi</button>
+          <button type="button" class="btn-secondary" id="btn-an-labml" title="Laboratorium 4 Pilar Matematika & ML: Aljabar Linear PCA, Probabilitas Bayes, Kalkulus Gradient Descent, & RL Bandit">🧪 8. Lab Matematika &amp; ML (4 Pilar)</button>
         </div>
       </div>
       <div id="an-out" role="status" aria-live="polite"></div>
@@ -4770,6 +4771,94 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
              </div>`
           : "";
         outEl.innerHTML = sintesisHtml + bridgesHtml + aksiHtml;
+        outEl.querySelectorAll("[data-open-card]").forEach(el => el.addEventListener("click", () => openCardPage(el.dataset.openCard)));
+      } catch {
+        outEl.innerHTML = `<div class="panel">Gagal menghubungi server lokal.</div>`;
+      }
+    });
+
+    document.getElementById("btn-an-labml")?.addEventListener("click", async () => {
+      if (!HAS_SERVER) { outEl.innerHTML = `<div class="panel">Jalankan <code>1-Buka-Aplikasi-Lokal.bat</code> untuk membuka Lab Matematika &amp; ML.</div>`; return; }
+      outEl.innerHTML = `<div class="panel">🧪 Melatih model 4 Pilar Matematika (Aljabar Linear PCA · Probabilitas Bayes · Kalkulus Gradient Descent 80 Epoch · RL Bandit UCB1)...</div>`;
+      try {
+        const resp = await fetch("/api/analisis?jenis=lab_ml");
+        const d = await resp.json();
+        if (!resp.ok || !d.ok) { outEl.innerHTML = `<div class="panel">${esc(d.error || "Gagal memproses.")}</div>`; return; }
+        const ko = d.kalkulus_optimasi || {};
+        const curve = ko.kurva_loss || [];
+        const maxL = Math.max(...curve, 0.01), minL = Math.min(...curve, 0);
+        const spanL = (maxL - minL) || 0.01;
+        const polyPts = curve.map((v, i) => {
+          const x = 14 + (i / Math.max(1, curve.length - 1)) * 272;
+          const y = 78 - ((v - minL) / spanL) * 62;
+          return `${x.toFixed(1)},${y.toFixed(1)}`;
+        }).join(" ");
+
+        const pcaPts = (d.aljabar_linear?.titik_pca || []);
+        const branchPalette = {};
+        const colors = ["#10B981", "#F59E0B", "#3B82F6", "#EC4899", "#8B5CF6", "#14B8A6", "#EF4444", "#06B6D4"];
+        let cIdx = 0;
+        const pcaDots = pcaPts.map(pt => {
+          const b = (pt.cabang || "lainnya").split("/")[0];
+          if (!branchPalette[b]) branchPalette[b] = colors[(cIdx++) % colors.length];
+          const sx = 150 + pt.x * 124;
+          const sy = 95 - pt.y * 74;
+          return `<circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="4.8" fill="${branchPalette[b]}" stroke="#1E2421" stroke-width="1" style="cursor:pointer" data-open-card="${esc(pt.id)}"><title>${esc(pt.id)} (${esc(pt.cabang)}): ${esc(pt.ide)}</title></circle>`;
+        }).join("");
+
+        outEl.innerHTML = `
+          <div style="display:grid;gap:14px">
+            <div class="panel" style="border:2px solid var(--border-strong)">
+              <div class="k-card-top" style="margin-bottom:8px">
+                <h3 style="margin:0">🧪 Laboratorium 4 Pilar Matematika &amp; Machine Learning</h3>
+                <span class="badge">${d.total_kartu} kartu · Matriks ${esc(d.aljabar_linear?.dimensi_matriks || "")}</span>
+              </div>
+              <p style="font-size:13px;color:var(--text-2);margin:0">
+                100% dihitung langsung dari koleksimu: <strong>Aljabar Linear</strong> (Power Iteration PCA 2D) · <strong>Probabilitas &amp; Statistika</strong> (Bayesian Beta-Binomial &amp; Entropi Shannon <strong>${d.probabilitas?.entropi_shannon} bit</strong> / keragaman <strong>${d.probabilitas?.keragaman_persen}%</strong>) · <strong>Kalkulus &amp; Optimasi</strong> (Gradient Descent 80 epoch: loss turun <strong>${ko.loss_awal} → ${ko.loss_akhir}</strong>) · <strong>Reinforcement Learning</strong> (UCB1 Bandit).
+              </p>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px">
+              <div class="panel">
+                <h3 style="margin-bottom:6px">📐 1. Aljabar Linear — Peta Vektor PCA 2D</h3>
+                <p style="font-size:12px;color:var(--text-3);margin:0 0 8px">2 Eigenvector teratas dari matriks TF-IDF kartumu. Arahkan kursor / klik titik untuk buka kartu:</p>
+                <svg viewBox="0 0 300 190" style="width:100%;height:auto;background:var(--surface-alt);border-radius:8px;border:1px solid var(--border)">
+                  <line x1="150" y1="10" x2="150" y2="180" stroke="var(--border)" stroke-dasharray="3,3"/>
+                  <line x1="10" y1="95" x2="290" y2="95" stroke="var(--border)" stroke-dasharray="3,3"/>
+                  ${pcaDots}
+                </svg>
+              </div>
+
+              <div class="panel">
+                <h3 style="margin-bottom:6px">📉 2. Kalkulus &amp; Optimasi — Kurva Gradient Descent</h3>
+                <p style="font-size:12px;color:var(--text-3);margin:0 0 8px">Turunan Binary Cross-Entropy + L2 (80 epoch): Loss <strong>${ko.loss_awal} → ${ko.loss_akhir}</strong></p>
+                <svg viewBox="0 0 300 92" style="width:100%;height:auto;background:var(--surface-alt);border-radius:8px;border:1px solid var(--border);margin-bottom:8px">
+                  <polyline fill="none" stroke="#10B981" stroke-width="2.6" points="${polyPts}"/>
+                </svg>
+                <div style="display:grid;gap:4px;font-size:12px">
+                  ${(ko.bobot_terlatih || []).map(w => `<div style="display:flex;justify-content:space-between"><span>${esc(w.fitur)}</span><strong>w = ${w.bobot > 0 ? "+" : ""}${w.bobot}</strong></div>`).join("")}
+                </div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px">
+              <div class="panel">
+                <h3 style="margin-bottom:8px">🎯 3. Prediksi Model ML — Top Kartu Paling Berdampak</h3>
+                <ul class="rel-list">
+                  ${(ko.top_prediksi || []).map(p => `<li><button type="button" class="rel-item" data-open-card="${esc(p.id)}"><span><strong>${esc(p.id)}</strong> (${esc(p.cabang)}) — ${esc(p.ide)}</span><span class="badge">P = ${p.probabilitas}%</span></button></li>`).join("")}
+                </ul>
+              </div>
+
+              <div class="panel">
+                <h3 style="margin-bottom:8px">🎰 4. Probabilitas Bayes &amp; RL Bandit (UCB1)</h3>
+                <p style="font-size:12px;color:var(--text-3);margin:0 0 8px">Cabang teratas disarankan dieksplorasi/diperdalam berikutnya (keseimbangan <em>reward</em> + bonus eksplorasi):</p>
+                <ul class="rel-list">
+                  ${(d.reinforcement_learning?.rekomendasi_cabang || []).map(r => `<li style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:12.5px"><span><strong>${esc(r.cabang)}</strong> (${r.jumlah_kartu} kartu)</span><span>Bayes ${r.prob_bayes}% · <strong>UCB ${r.skor_ucb}</strong></span></li>`).join("")}
+                </ul>
+              </div>
+            </div>
+          </div>
+        `;
         outEl.querySelectorAll("[data-open-card]").forEach(el => el.addEventListener("click", () => openCardPage(el.dataset.openCard)));
       } catch {
         outEl.innerHTML = `<div class="panel">Gagal menghubungi server lokal.</div>`;
