@@ -2,9 +2,9 @@
   "mode": "publik",
   "dibangun": "2026-11-27",
   "ringkasan": {
-    "total_kartu": 27,
-    "total_sumber": 22,
-    "total_cabang": 11,
+    "total_kartu": 32,
+    "total_sumber": 27,
+    "total_cabang": 12,
     "penerapan": {}
   },
   "urutan_indeks": [
@@ -31,8 +31,8 @@
     "50+"
   ],
   "akar": [
-    "K-0003",
     "K-0015",
+    "K-0003",
     "K-0016",
     "K-0019",
     "K-0005",
@@ -45,8 +45,8 @@
       "nama": "AI",
       "induk": "",
       "file": "cabang/ai/_cabang.md",
-      "jumlah_kartu_tercatat": 14,
-      "jumlah_sumber_tercatat": 9,
+      "jumlah_kartu_tercatat": 17,
+      "jumlah_sumber_tercatat": 12,
       "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "2 sumber berbeda (draf awal)",
       "ringkasan": "Paket 30 skill SEO open-source dan 4 server MCP aktif untuk Claude Code serta Cursor guna mengotomasi audit teknis, programmatic SEO, dan ekstraksi transkrip video. Lima pustaka skill desain frontend (Anti UI Slop, ThinkUI, Taste Skill, Emil Design Engineering, dan Vercel Web Design Guidelines) untuk menghilangkan tampilan web kaku khas AI. Trik 3 langkah mendapatkan promo resmi Black Friday Google AI Pro ($99/tahun, 5TB + model tingkat lanjut) dengan menghapus langganan pihak ketiga Jio lalu memakai batu loncatan paket bulanan.",
@@ -69,8 +69,8 @@
         "Prompt & Agen AI → `cabang/ai/prompt-dan-agen/_cabang.md` (0 kartu)",
         "Perbandingan Model & Alat AI → `cabang/ai/perbandingan-model/_cabang.md` (0 kartu)"
       ],
-      "jumlah_kartu": 14,
-      "jumlah_sumber": 9,
+      "jumlah_kartu": 17,
+      "jumlah_sumber": 12,
       "urutan": 0
     },
     {
@@ -78,8 +78,8 @@
       "nama": "Coding & Proyek AI",
       "induk": "ai",
       "file": "cabang/ai/coding-dan-proyek/_cabang.md",
-      "jumlah_kartu_tercatat": 6,
-      "jumlah_sumber_tercatat": 4,
+      "jumlah_kartu_tercatat": 9,
+      "jumlah_sumber_tercatat": 7,
       "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
       "ringkasan": "Lima pustaka skill desain frontend (Anti UI Slop, ThinkUI, Taste Skill, Emil Design Engineering, dan Vercel Web Design Guidelines) untuk menghilangkan tampilan web kaku khas AI. Gunakan file instruksi sistem (seperti GEMINI.md di Gemini atau Codex) agar agen AI bertindak sebagai asisten teknis saat menyiapkan simulator Android MuMu dan skrip konfigurasi. Perkakas resmi google-colab-cli memungkinkan developer menyalakan runtime CPU, GPU, dan TPU Google Colab serta menjalankan kode lokal langsung dari terminal.",
@@ -96,8 +96,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 6,
-      "jumlah_sumber": 4,
+      "jumlah_kartu": 9,
+      "jumlah_sumber": 7,
       "urutan": 0
     },
     {
@@ -270,6 +270,30 @@
       "jumlah_kartu": 3,
       "jumlah_sumber": 2,
       "urutan": 4
+    },
+    {
+      "slug": "kesuksesan",
+      "nama": "Kesuksesan",
+      "induk": "",
+      "file": "cabang/kesuksesan/_cabang.md",
+      "jumlah_kartu_tercatat": 2,
+      "jumlah_sumber_tercatat": 2,
+      "diperbarui": "2026-11-27",
+      "catatan_sudut_pandang": "belum ada sumber",
+      "ringkasan": "Mengikuti rasa ingin tahu intelektual yang tulus jauh lebih baik untuk fondasi karier daripada mengejar apa yang sedang menghasilkan uang saat ini. Menjadi insinyur perangkat lunak generik bukan lagi strategi karier yang baik karena era spesialisasi telah tiba.",
+      "poin_kunci": [
+        "Mengikuti rasa ingin tahu intelektual yang tulus jauh lebih baik untuk fondasi karier daripada mengejar apa yang sedang menghasilkan uang saat ini. (K-0036)",
+        "Menjadi insinyur perangkat lunak generik bukan lagi strategi karier yang baik karena era spesialisasi telah tiba. (K-0037)"
+      ],
+      "pertentangan": [],
+      "lanjutan_timeline": [
+        "Sebelumnya: -",
+        "Berikutnya: -"
+      ],
+      "sub_cabang": [],
+      "jumlah_kartu": 2,
+      "jumlah_sumber": 2,
+      "urutan": 5
     },
     {
       "slug": "kesehatan",
@@ -909,6 +933,10 @@
       ],
       "relasi": [
         {
+          "tipe": "terkait",
+          "ke": "K-0039"
+        },
+        {
           "tipe": "lanjutan-dari",
           "ke": "K-0008"
         },
@@ -1547,7 +1575,12 @@
       "sumber": [
         "S-0024"
       ],
-      "relasi": [],
+      "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0035"
+        }
+      ],
       "dibuat": "2026-11-27",
       "status": "aktif",
       "bintang": 0,
@@ -1558,6 +1591,222 @@
       "kutipan": "Anthropic migrou sua API de Python para Rust",
       "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.84).",
       "penulis": "Ricardo Pupo Larguesa (@rlarguesa)"
+    },
+    {
+      "id": "K-0035",
+      "file": "kartu/K-0035.md",
+      "ide": "Migrasi API Anthropic dari Python ke Rust mengatasi tantangan verifikasi sistem produksi yang kompleks.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "semua-usia",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "rust",
+        "python",
+        "anthropic",
+        "api",
+        "x"
+      ],
+      "konsep": [
+        "migrasi-sistem",
+        "verifikasi-kode",
+        "otomasi-ai",
+        "optimasi-performa"
+      ],
+      "kondisi_berlaku": "pengembangan sistem skala besar dengan trafik tinggi",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0025"
+      ],
+      "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0034"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "monetisasi",
+      "penjelasan": "1. Anthropic menghadapi tantangan migrasi API pesan dari Python ke Rust karena sistem produksi terus berubah, respons AI yang non-deterministik, serta privasi data pelanggan yang tidak bisa dibaca secara langsung.\n2. Untuk membangun kepercayaan, mereka menggunakan API produksi itu sendiri sebagai verifikator untuk menguji versi Rust pada lalu lintas nyata.\n3. Agen AI dikerahkan secara otomatis untuk menemukan dan memperbaiki perbedaan antara versi Python dan Rust.\n4. Hasilnya, layanan dapat dikirimkan ke produksi dengan penggunaan CPU 70% lebih sedikit per permintaan dan pemotongan waktu respons median sekitar 20% tanpa menghentikan layanan.",
+      "kutipan": "migrated our Messages API from Python to Rust",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=1.0).",
+      "penulis": "Umesh Kumar Yadav (@Umesh__digital)"
+    },
+    {
+      "id": "K-0036",
+      "file": "kartu/K-0036.md",
+      "ide": "Mengikuti rasa ingin tahu intelektual yang tulus jauh lebih baik untuk fondasi karier daripada mengejar apa yang sedang menghasilkan uang saat ini.",
+      "bidang": "kesuksesan",
+      "cabang": "kesuksesan",
+      "tahap": "semua-usia",
+      "jenis": "prinsip",
+      "kepercayaan": "sedang",
+      "dasar": "opini-umum",
+      "tag": [
+        "karier",
+        "curiosity",
+        "naval-ravikant",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "rasa-ingin-tahu",
+        "fondasi-karier",
+        "pengembangan-diri"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0026"
+      ],
+      "relasi": [],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "kesuksesan",
+      "tahap_kerja": "riset",
+      "penjelasan": "1. Naval Ravikant menyatakan bahwa dasar karier yang kuat dibangun atas dasar ketertarikan intelektual yang murni.\n2. Pendekatan ini lebih unggul dibandingkan sekadar mengikuti tren pasar yang sedang menguntungkan.",
+      "kutipan": "Following your genuine intellectual curiosity",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=0.45).",
+      "penulis": "Reads with Ravi (@readswithravi)"
+    },
+    {
+      "id": "K-0037",
+      "file": "kartu/K-0037.md",
+      "ide": "Menjadi insinyur perangkat lunak generik bukan lagi strategi karier yang baik karena era spesialisasi telah tiba.",
+      "bidang": "kesuksesan",
+      "cabang": "kesuksesan",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "belum-diverifikasi",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "software-engineer",
+        "karier",
+        "teknologi",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "spesialisasi-karier",
+        "pengembangan-perangkat-lunak",
+        "strategi-profesional"
+      ],
+      "kondisi_berlaku": "insinyur perangkat lunak",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0027"
+      ],
+      "relasi": [],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "kesuksesan",
+      "tahap_kerja": "skrip",
+      "penjelasan": "1. Hanya mengetahui cara membangun API REST dan aplikasi React tidak lagi mencukupi untuk bertahan di masa depan.\n2. Cara pertama untuk tetap relevan adalah menggabungkan keahlian teknik dengan domain lain seperti bisnis, keuangan, atau pemasaran.\n3. Cara kedua adalah mendalami teknologi secara ekstrem seperti kernel Linux, sistem terdistribusi, teknik inferensi, basis data, atau infrastruktur.",
+      "kutipan": "being a generic software engineer is becoming a terrible career strategy",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.45).",
+      "penulis": "Sambhav Gandhi (@Sambhav_Gandhi)"
+    },
+    {
+      "id": "K-0038",
+      "file": "kartu/K-0038.md",
+      "ide": "Pemrogram secara alami mengotomatiskan pekerjaan mereka sendiri karena sifat efisiensi yang melekat.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "pemrogram",
+        "rsi",
+        "otomatisasi",
+        "kode",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "otomatisasi",
+        "pemrograman",
+        "efisiensi",
+        "pengembangan-diri"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0028"
+      ],
+      "relasi": [],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "monetisasi",
+      "penjelasan": "1. Fenomena RSI (Recursive Self-Improvement/otomatisasi berkelanjutan) terjadi karena para pemrogram memiliki kecenderungan mengotomatiskan tugas mereka.\n2. Bahkan ketika diminta untuk tidak melakukan otomatisasi, mereka akan tetap melakukannya.\n3. Perilaku ini didorong oleh sifat dasar efisiensi atau rasa malas yang produktif dalam dunia pemrograman.",
+      "kutipan": "Programmers are lazy and automate their own jobs.",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.9, grounding=0.04).",
+      "penulis": "kache (@yacineMTB)"
+    },
+    {
+      "id": "K-0039",
+      "file": "kartu/K-0039.md",
+      "ide": "Langkah strategis masuk ke industri AI melalui jalur teknik inferensi meliputi penguasaan GPU, penerapan praktik proyek nyata, dan penawaran langsung ke perusahaan.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "25-30",
+      "jenis": "nasihat",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "inferensi-ai",
+        "cuda",
+        "vllm",
+        "optimasigpu",
+        "x"
+      ],
+      "konsep": [
+        "teknik-inferensi",
+        "pengembangan-ai",
+        "optimasi-gpu",
+        "pengembangan-karier"
+      ],
+      "kondisi_berlaku": "Memiliki kemampuan belajar yang kuat dan minat berkarier di bidang teknik AI",
+      "model_ekstrak": "gemini-3.5-flash-lite (map-reduce 2 segmen)",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0029"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0015"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [
+        "gpt"
+      ],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "riset",
+      "penjelasan": "1. Pilih spesialisasi seperti pemrograman CUDA, kuantisasi, atau optimasi model, lalu pahami dasarnya melalui panduan resmi dan pembuatan mini GPT.\n2. Kuasai alat seperti PyTorch, Triton, vLLM, dan TensorRT-LLM untuk membangun layanan inferensi.\n3. Buat 3 hingga 5 proyek untuk menekan biaya inferensi serta jalankan benchmark performa secara konsisten.\n4. Identifikasi masalah dari 50 target perusahaan, buat solusinya, lalu hubungi pendiri atau pimpinan teknik secara langsung untuk menawarkan diri.",
+      "kutipan": "学 AI 推理工程，可以从下面的步骤来。",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite (map-reduce 2 segmen), prompt v2.1, keyakinan=0.95, grounding=1.0).",
+      "penulis": "美研芒格君 (@Kay2289123)"
     }
   ],
   "sumber": [
@@ -1962,6 +2211,96 @@
         "K-0034"
       ],
       "saripati": "(1) Migrasi API Anthropic dari Python ke Rust menghasilkan penurunan penggunaan CPU sebesar 70% dan penghematan waktu 20%."
+    },
+    {
+      "id": "S-0025",
+      "file": "sumber/S-0025.md",
+      "judul": "Mozilla created Rust",
+      "jenis": "postingan",
+      "penulis": "Umesh Kumar Yadav (@Umesh__digital)",
+      "platform": "X",
+      "url": "https://x.com/Umesh__digital/status/2125981406216229237?a=8a5DWRXoqdUx8ca86ns&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0035"
+      ],
+      "saripati": "(1) Migrasi API Anthropic dari Python ke Rust mengatasi tantangan verifikasi sistem produksi yang kompleks."
+    },
+    {
+      "id": "S-0026",
+      "file": "sumber/S-0026.md",
+      "judul": "Naval Ravikant said it right:",
+      "jenis": "postingan",
+      "penulis": "Reads with Ravi (@readswithravi)",
+      "platform": "X",
+      "url": "https://x.com/readswithravi/status/2126114280529436979?a=9c10OdGgPrAqRWmFEXg&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "kesuksesan"
+      ],
+      "kartu": [
+        "K-0036"
+      ],
+      "saripati": "(1) Mengikuti rasa ingin tahu intelektual yang tulus jauh lebih baik untuk fondasi karier daripada mengejar apa yang sedang menghasilkan uang saat ini."
+    },
+    {
+      "id": "S-0027",
+      "file": "sumber/S-0027.md",
+      "judul": "Hate to say this, but being a generic software engineer is becoming a terrible career strategy.",
+      "jenis": "postingan",
+      "penulis": "Sambhav Gandhi (@Sambhav_Gandhi)",
+      "platform": "X",
+      "url": "https://x.com/Sambhav_Gandhi/status/2125933085971870048?a=YULP7tECxaHij2wSB4M&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "kesuksesan"
+      ],
+      "kartu": [
+        "K-0037"
+      ],
+      "saripati": "(1) Menjadi insinyur perangkat lunak generik bukan lagi strategi karier yang baik karena era spesialisasi telah tiba."
+    },
+    {
+      "id": "S-0028",
+      "file": "sumber/S-0028.md",
+      "judul": "RSI is obviously happening. Programmers are lazy and automate their own jobs. That's what they do. Even if you",
+      "jenis": "postingan",
+      "penulis": "kache (@yacineMTB)",
+      "platform": "X",
+      "url": "https://x.com/yacineMTB/status/2125878996797636652?a=CR1n_HY7pb4Yd_nffW0&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0038"
+      ],
+      "saripati": "(1) Pemrogram secara alami mengotomatiskan pekerjaan mereka sendiri karena sifat efisiensi yang melekat."
+    },
+    {
+      "id": "S-0029",
+      "file": "sumber/S-0029.md",
+      "judul": "如果你有很强烈的学习能力，想进 AI 行业，做高薪方向，该学什么？",
+      "jenis": "postingan",
+      "penulis": "美研芒格君 (@Kay2289123)",
+      "platform": "X",
+      "url": "https://x.com/Kay2289123/status/2125915733100245346?a=LBolUxqHKRcuH8aBjdM&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0039"
+      ],
+      "saripati": "(1) Langkah strategis masuk ke industri AI melalui jalur teknik inferensi meliputi penguasaan GPU, penerapan praktik proyek nyata, dan penawaran langsung ke perusahaan."
     }
   ]
 }

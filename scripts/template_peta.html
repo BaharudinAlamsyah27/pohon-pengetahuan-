@@ -1890,6 +1890,119 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
     ctx.fillStyle = coreGlow;
     ctx.fillRect(0, 0, w, h);
 
+    // 0. MESIN CINCIN INFINITY / OUROBOROS 3D (membelit di belakang & depan Pohon Yggdrasil)
+    const ouroSpin = time * 0.18;
+    const cosO = Math.cos(ouroSpin), sinO = Math.sin(ouroSpin);
+    function ouroPoint3D(u, strandOffset = 0) {
+      const sU = Math.sin(u), cU = Math.cos(u);
+      const denom = 1 + sU * sU;
+      // Kurva Lemniscate Infinity (∞) 3D dengan ketebalan pilinan halus
+      const braid = strandOffset ? Math.sin(u * 6 + time * 2.2 + strandOffset * 2.1) * 0.032 : 0;
+      const lx0 = (1.16 * cU) / denom;
+      const ly0 = (0.48 * sU * cU) / denom + braid + 0.03;
+      const lz0 = 0.78 * sU + (strandOffset ? Math.cos(u * 6 + time * 2.2 + strandOffset * 2.1) * 0.032 : 0);
+      // Presesi perlahan mengelilingi sumbu Y pohon
+      const rx = lx0 * cosO - lz0 * sinO;
+      const rz = lx0 * sinO + lz0 * cosO;
+      return proj3(rx, ly0, rz, 0);
+    }
+    function haloPoint3D(u) {
+      const r = 0.94;
+      const x0 = Math.cos(u) * r;
+      const z0 = Math.sin(u) * r;
+      const y0 = Math.sin(u + time * 0.35) * 0.24 + 0.06;
+      return proj3(x0, y0, z0, 0);
+    }
+    function drawOuroborosPass(isFront) {
+      const steps = 96;
+      const depthAlphaM = isFront ? 1.0 : 0.42;
+
+      // A. Pita Utama Infinity / Ouroboros (3 untaian cahaya berpilin: emas + zamrud)
+      for (let st = 0; st < 3; st++) {
+        const isGoldStrand = st !== 1;
+        for (let i = 0; i < steps; i++) {
+          const u1 = (i / steps) * Math.PI * 2;
+          const u2 = ((i + 1) / steps) * Math.PI * 2;
+          const p1 = ouroPoint3D(u1, st);
+          const p2 = ouroPoint3D(u2, st);
+          const midZ = (p1.z + p2.z) * 0.5;
+          if (isFront ? midZ < 0 : midZ >= 0) continue;
+          const shimmer = 0.65 + 0.35 * Math.sin(u1 * 4 - time * 3.0 + st);
+          const a = Math.min(0.92, (st === 0 ? 0.52 : 0.34) * depthAlphaM * shimmer * surgeBoost);
+
+          // Outer plasma glow
+          ctx.strokeStyle = isGoldStrand
+            ? `rgba(251,191,36,${(a * 0.42).toFixed(2)})`
+            : `rgba(16,185,129,${(a * 0.45).toFixed(2)})`;
+          ctx.lineWidth = (st === 0 ? 5.2 : 3.2) * p1.p;
+          ctx.beginPath();
+          ctx.moveTo(p1.sx, p1.sy);
+          ctx.lineTo(p2.sx, p2.sy);
+          ctx.stroke();
+
+          // Inner sharp filament
+          ctx.strokeStyle = isGoldStrand
+            ? `rgba(254,243,199,${a.toFixed(2)})`
+            : `rgba(167,243,208,${a.toFixed(2)})`;
+          ctx.lineWidth = (st === 0 ? 1.45 : 0.85) * p1.p;
+          ctx.beginPath();
+          ctx.moveTo(p1.sx, p1.sy);
+          ctx.lineTo(p2.sx, p2.sy);
+          ctx.stroke();
+        }
+      }
+
+      // B. Cincin Orbit Sacred Timeline tipis yang menyilang lembut
+      const hSteps = 64;
+      for (let i = 0; i < hSteps; i++) {
+        const u1 = (i / hSteps) * Math.PI * 2;
+        const u2 = ((i + 1) / hSteps) * Math.PI * 2;
+        const p1 = haloPoint3D(u1);
+        const p2 = haloPoint3D(u2);
+        const midZ = (p1.z + p2.z) * 0.5;
+        if (isFront ? midZ < 0 : midZ >= 0) continue;
+        const a = Math.min(0.65, 0.24 * depthAlphaM * surgeBoost);
+        ctx.strokeStyle = `rgba(253,224,71,${a.toFixed(2)})`;
+        ctx.lineWidth = 1.1 * p1.p;
+        ctx.beginPath();
+        ctx.moveTo(p1.sx, p1.sy);
+        ctx.lineTo(p2.sx, p2.sy);
+        ctx.stroke();
+      }
+
+      // C. Dua Komet Ouroboros (Kepala Mengejar Ekor di sepanjang kurva ∞)
+      const headSpeed = time * (1.15 + tState.surge * 1.6);
+      for (let k = 0; k < 2; k++) {
+        const headU = headSpeed + k * Math.PI;
+        const isGoldHead = k === 0;
+        const tailLen = 20;
+        for (let t = tailLen; t >= 0; t--) {
+          const frac = 1 - t / tailLen;
+          const u = headU - t * 0.055;
+          const pt = ouroPoint3D(u, 0);
+          if (isFront ? pt.z < 0 : pt.z >= 0) continue;
+          const r = (t === 0 ? 8.5 : 1.4 + frac * 4.5) * pt.p * (1 + tState.surge * 0.35);
+          const alpha = (t === 0 ? 0.98 : frac * 0.65) * depthAlphaM;
+          const g = ctx.createRadialGradient(pt.sx, pt.sy, 0, pt.sx, pt.sy, r * 2.1);
+          if (isGoldHead) {
+            g.addColorStop(0, `rgba(255,255,240,${alpha.toFixed(2)})`);
+            g.addColorStop(0.38, `rgba(251,191,36,${(alpha * 0.85).toFixed(2)})`);
+          } else {
+            g.addColorStop(0, `rgba(236,253,245,${alpha.toFixed(2)})`);
+            g.addColorStop(0.38, `rgba(52,211,153,${(alpha * 0.85).toFixed(2)})`);
+          }
+          g.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(pt.sx, pt.sy, r * 2.1, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    // Gambar sisi BELAKANG cincin Ouroboros (di belakang batang pohon)
+    drawOuroborosPass(false);
+
     // 1. Gambar seluruh Akar, Batang Berpilin, dan Cabang/Ranting Fraktal 3D
     ctx.lineCap = "round";
     for (let seg of tree.segments) {
@@ -1963,6 +2076,8 @@ window.__POHON_DATA__ = __POHON_DATA_PLACEHOLDER__;
 
     // 4. Impuls Cahaya Mengalir Naik Persis Mengikuti Cabang Asli (Akar -> Batang -> Daun)
     const speedM = 1 + tState.surge * 2.5;
+    // Gambar sisi DEPAN cincin Infinity / Ouroboros (melintas di depan batang pohon!)
+    drawOuroborosPass(true);
     for (let pl of tree.pulses) {
       pl.p += pl.speed * speedM;
       if (pl.p >= 1) {

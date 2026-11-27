@@ -106,3 +106,11 @@ Catatan kronologis (append-only).
 [2026-11-27] UI UPDATE: Memperbarui tautan tombol Portofolio Utama di scripts/template_peta.html menjadi https://baharudin-alamsyah.vercel.app/ dan membangun ulang versi lokal & publik.
 
 [2026-11-27] HARDENING KEAMANAN TINGKAT TINGGI (DEFENSE-IN-DEPTH): Menambahkan Content-Security-Policy (CSP) ketat & COOP/CORP di vercel.json, anti-Prompt-Injection & validasi Content-Type di api/tanya.js, blokir SSRF edge di api/titip.js, _SafeRedirectHandler anti-SSRF redirect (IPv4+IPv6 fail-closed) di scripts/ambil_link.py, anti-CSRF & anti-DNS-Rebinding (Host/Origin/Sec-Fetch-Site) di scripts/server_lokal.py, serta validasi ketat https?:// (anti-javascript: XSS) pada tautan di scripts/bangun_pohon.py & scripts/template_peta.html.
+
+[2026-11-27] TANGKAP S-0025 | "Mozilla created Rust" (X) -> daun K-0035 (ai/coding-dan-proyek)
+[2026-11-27] TANGKAP S-0026 | "Naval Ravikant said it right:" (X) -> daun K-0036 (kesuksesan)
+[2026-11-27] TANGKAP S-0027 | "Hate to say this, but being a generic software engineer is becoming a terrible career strategy." (X) -> daun K-0037 (kesuksesan)
+[2026-11-27] TANGKAP S-0028 | "RSI is obviously happening. Programmers are lazy and automate their own jobs. That's what they do. Even if you" (X) -> daun K-0038 (ai/coding-dan-proyek)
+[2026-11-27] TANGKAP S-0029 | "如果你有很强烈的学习能力，想进 AI 行业，做高薪方向，该学什么？" (X) -> daun K-0039 (ai/coding-dan-proyek)
+
+[2026-11-27] UI UPGRADE: Menambahkan cincin 3D Infinity / Ouroboros (kurva Lemniscate ∞ berpilin 3 untaian emas-zamrud + cincin orbit Sacred Timeline + 2 komet Ouroboros saling mengejar dengan depth-sorting depan/belakang pohon 3D) mengelilingi Pohon Loki di scripts/template_peta.html.
