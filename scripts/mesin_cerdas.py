@@ -1176,6 +1176,7 @@ def extract_structured_cards_gemini(
         '      "ide": "1-2 kalimat klaim inti dalam Bahasa Indonesia",\n'
         '      "penjelasan": "2-4 kalimat bukti & penjelasan setia sumber dalam Bahasa Indonesia",\n'
         '      "kondisi_berlaku": "syarat berlaku singkat jika disebut (mis. pemula/modal kecil/usia 20-an) atau umum",\n'
+        '      "peringatan_bias": "kosong jika netral & berbukti jelas; isi 1 kalimat peringatan singkat jika ada tanda clickbait viral, klaim absolut/sensasional tanpa jurnal, generalisasi kesehatan multifaktor, atau promosi terselubung",\n'
         '      "keyakinan": 0.0 sampai 1.0 (seberapa yakin cabang & ekstraksi ini tepat),\n'
         '      "kutipan": "kutipan singkat <=12 kata yang PERSIS ada di teks asli",\n'
         '      "cabang": "salah satu slug cabang di atas",\n'
@@ -1236,8 +1237,15 @@ def extract_structured_cards_gemini(
                 trust = str(rc.get("kepercayaan") or "belum-diverifikasi").strip()
                 if trust not in ALLOWED_TRUST_KARTU:
                     trust = "belum-diverifikasi"
-                if platform.lower() in ("x", "threads", "instagram", "tiktok", "facebook") and trust == "tinggi":
-                    trust = "sedang"
+                if platform.lower() in ("x", "threads", "instagram", "tiktok", "facebook"):
+                    if trust == "tinggi":
+                        trust = "sedang"
+                    # Guardrail ketat: klaim kesehatan/keuangan dari medsos tanpa dasar riset wajib belum-diverifikasi
+                    if cab.split("/")[0] in ("kesehatan", "keuangan") and dasar != "riset" and trust == "sedang":
+                        trust = "belum-diverifikasi"
+                peringatan_bias = str(rc.get("peringatan_bias") or "").strip()[:220]
+                if peringatan_bias and trust == "sedang":
+                    trust = "belum-diverifikasi"
                 konsep = normalize_concepts(rc.get("konsep") or [])
                 kondisi = str(rc.get("kondisi_berlaku") or "umum").strip().replace('"', "'")[:120]
                 try:
@@ -1250,7 +1258,9 @@ def extract_structured_cards_gemini(
                     for t in (rc.get("tag") or [])
                     if str(t).strip()
                 ]
-                tags = [t for t in dict.fromkeys(tags) if len(t) >= 2][:4]
+                if peringatan_bias and "cek-bias" not in tags:
+                    tags.append("cek-bias")
+                tags = [t for t in dict.fromkeys(tags) if len(t) >= 2][:5]
                 rels = []
                 for r in (rc.get("relasi") or []):
                     if isinstance(r, dict):
@@ -1267,6 +1277,7 @@ def extract_structured_cards_gemini(
                     "jenis": jenis,
                     "dasar": dasar,
                     "kepercayaan": trust,
+                    "peringatan_bias": peringatan_bias,
                     "konsep": konsep,
                     "kondisi_berlaku": kondisi,
                     "keyakinan": round(keyakinan, 2),
@@ -1449,6 +1460,12 @@ def query_relevant_cards(query: str, cards: dict[str, dict], limit: int = 80, us
         hits = sum(1 for t in toks if re.search(rf"\b{re.escape(t)}\b", blob))
         if hits:
             rrf_scores[cid] += 0.02 * hits
+
+    # 5) Bobot Kepercayaan (Anti-Bias): kartu berbukti riset/tinggi mengungguli klaim viral/rendah
+    trust_weight = {"tinggi": 1.25, "sedang": 1.0, "belum-diverifikasi": 0.78, "rendah": 0.55}
+    for cid, c in cards.items():
+        if rrf_scores[cid] > 0:
+            rrf_scores[cid] *= trust_weight.get(c.get("kepercayaan", "sedang"), 0.9)
 
     ranked = [cid for cid, sc in sorted(rrf_scores.items(), key=lambda x: (-x[1], x[0])) if sc > 0]
     return [cards[cid] for cid in ranked[:limit]]
@@ -2007,7 +2024,8 @@ def call_gemini_rag(question: str, rel_cards: list[dict], api_key: str, preferre
         "JANGAN kaku seperti laporan robot dan JANGAN memulai dengan kalimat klise seperti 'Berdasarkan kartu wawasan yang diberikan'. "
         "Mulai langsung dengan jawaban inti yang jelas, lalu rangkai poin-poin pendukung secara natural dengan menyisipkan ID kartu seperti [K-0001] di dalam kalimat. "
         "ATURAN FAKTA MUTLAK: Semua klaim wajib bersumber HANYA dari KARTU WAWASAN di bawah (jangan mengarang); jika bukti di kartu belum cukup, katakan jujur dengan ramah. "
-        "Singgung catatan kepercayaan/pertentangan secara halus bila relevan."
+        "ANTI-BIAS & KEPUTUSAN AMAN: Bedakan secara eksplisit antara kartu berdasar riset (kepercayaan tinggi) vs klaim/opini medsos (rendah/belum-diverifikasi). "
+        "Khusus topik kesehatan atau keuangan, ingatkan bahwa banyak faktor individual yang memengaruhi dan jangan jadikan 1 postingan viral sebagai dasar keputusan besar tanpa verifikasi ahli."
     )
     user_prompt = f"KARTU WAWASAN:\n\n" + "\n\n---\n\n".join(context_items) + f"\n\nPERTANYAAN PENGGUNA:\n{question}"
     return call_free_llm_cascade(

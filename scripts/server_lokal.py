@@ -642,7 +642,11 @@ def create_new_source(
                 rel_list = list(pt.get("relasi") or [])
                 has_conflict_prop = any(r.get("tipe") == "bertentangan-dengan" for r in rel_list)
                 conflict_note = " | [usulan pertentangan otomatis — perlu konfirmasi pengguna]" if has_conflict_prop else ""
-                agent_note = f"[inferensi AI] 1-call terstruktur ({model_ekstrak}, prompt {versi_prompt}, keyakinan={keyakinan_ai}, grounding={grounding_sc}){conflict_note}."
+                bias_warn = str(pt.get("peringatan_bias") or "").strip()
+                if bias_warn:
+                    ragu_warnings.append(f"{cid} (bias: {bias_warn[:55]})")
+                bias_note = f"\n[peringatan-bias] {bias_warn}" if bias_warn else ""
+                agent_note = f"[inferensi AI] 1-call terstruktur ({model_ekstrak}, prompt {versi_prompt}, keyakinan={keyakinan_ai}, grounding={grounding_sc}){conflict_note}.{bias_note}"
             else:
                 raw_ide = pt["ide"].strip().strip("[]")
                 raw_penj = pt["penjelasan"]
