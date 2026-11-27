@@ -1133,13 +1133,19 @@ def extract_structured_cards_gemini(
 
     max_c = max(1, min(5, max_cards))
     card_count_rule = (
-        "Ekstrak teks sumber menjadi TEPAT 1 kartu utuh: buat 1 kalimat judul 'ide' utama yang kuat, lalu susun seluruh poin/langkah turunannya secara rapi (1., 2., 3., ...) di dalam 'penjelasan'."
+        "Ekstrak teks sumber menjadi TEPAT 1 kartu utuh dalam Bahasa Indonesia yang jernih & tertata: buat 1 kalimat judul 'ide' utama yang kuat, lalu susun seluruh poin/langkah turunannya secara rapi (1., 2., 3., ...) di dalam 'penjelasan'."
         if max_c == 1
-        else f"Ekstrak teks sumber menjadi 1 hingga {max_c} kartu wawasan atomik dalam Bahasa Indonesia yang alami dan setia pada sumber."
+        else f"Ekstrak teks sumber menjadi 1 hingga {max_c} kartu wawasan atomik dalam Bahasa Indonesia yang jernih, alami, dan setia pada sumber."
     )
     prompt = (
-        f"Kamu adalah analis Pohon Pengetahuan. {card_count_rule}\n"
+        f"Kamu adalah analis & editor Pohon Pengetahuan. {card_count_rule}\n"
         "JANGAN mengarang di luar isi sumber. Satu sumber BOLEH menghasilkan kartu di cabang berbeda jika topiknya berbeda.\n\n"
+        "ATURAN BAHASA & TERJEMAHAN EDITORIAL (WAJIB):\n"
+        "- Tulis 'ide' dan 'penjelasan' dalam Bahasa Indonesia yang mengalir alami, baku-santai, dan mudah dipindai (gaya editor buku non-fiksi).\n"
+        "- DILARANG menerjemahkan mentah kata-per-kata (word-for-word) yang terasa kaku atau rancu.\n"
+        "- Ubah idiom/ungkapan asing (Inggris, Portugis, dll.) ke padanan makna alami Bahasa Indonesia tanpa mengubah fakta.\n"
+        "- Pertahankan istilah teknis universal (API, prompt, framework, Rust, SaaS, SEO, queueing theory, dopamine, self-talk, dll.) bila lebih tepat & tidak rancu.\n"
+        "- Khusus field 'kutipan', biarkan PERSIS dalam bahasa asli sumber (<=12 kata) sebagai bukti otentik.\n\n"
         "DAFTAR CABANG YANG DIIZINKAN:\n"
         "- kesehatan (tidur/sleep, olahraga, nutrisi, otak, brain fog, biologi, medis)\n"
         "- keuangan (tabungan, gaji, investasi, saham, utang, dana darurat)\n"

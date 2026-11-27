@@ -120,3 +120,5 @@ Catatan kronologis (append-only).
 [2026-11-27] UI UPGRADE: Menghubungkan Lubang Hitam -> Akar Pohon -> Mahkota Daun -> Galaksi Spiral melalui Siklus Alkimia Kosmik (2 sungai partikel Bezier emas & zamrud-biru) + reaksi berantai interaktif saat mengklik Lubang Hitam, Pohon, atau Galaksi di scripts/template_peta.html.
 
 [2026-11-27] TANGKAP S-0030 | "If you're under 30 and broke, I'm begging you:" (X) -> daun K-0040 (ai/coding-dan-proyek)
+
+[2026-11-27] UPGRADE TERJEMAHAN EDITORIAL: Menambahkan aturan terjemahan editorial Bahasa Indonesia baku-alami (anti terjemahan kaku kata-per-kata, jaga istilah teknis universal, adaptasi idiom asing, sambil mempertahankan kutipan & Teks Asli utuh dalam bahasa asli) pada extract_structured_cards_gemini di scripts/mesin_cerdas.py.
