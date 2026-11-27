@@ -28,3 +28,23 @@ S-0021 | 2026-11-26 | postingan | dr. Adam Prabata (@AdamPrabata) | "Terlalu ser
 S-0022 | 2026-11-26 | postingan | alexei (@alexeixbt) | "science shows that complaining or talking about your problems the wrong way can actually m" | bidang: motivasi-dan-mindset | 1 kartu
 S-0023 | 2026-11-27 | postingan | Vox (@Voxyz_ai) | "Jalankan Waktu, Energi & Sumber Daya di Bawah Kapasitas 80% (Teori Antrean)" | bidang: motivasi-dan-mindset | 1 kartu
 S-0024 | 2026-11-27 | postingan | Ricardo Pupo Larguesa (@rlarguesa) | "A Anthropic migrou sua API de Python para Rust. Resultado: 70% menos CPU e economia de 20% de tempo." | bidang: ai | 1 kartu
+S-0025 | 2026-11-27 | postingan | Umesh Kumar Yadav (@Umesh__digital) | "Mozilla created Rust" | bidang: ai | 1 kartu
+S-0026 | 2026-11-27 | postingan | Reads with Ravi (@readswithravi) | "Naval Ravikant said it right:" | bidang: kesuksesan | 1 kartu
+S-0027 | 2026-11-27 | postingan | Sambhav Gandhi (@Sambhav_Gandhi) | "Hate to say this, but being a generic software engineer is becoming a terrible career strategy." | bidang: kesuksesan | 1 kartu
+S-0028 | 2026-11-27 | postingan | kache (@yacineMTB) | "RSI is obviously happening. Programmers are lazy and automate their own jobs. That's what they do. Even if you" | bidang: ai | 1 kartu
+S-0029 | 2026-11-27 | postingan | 美研芒格君 (@Kay2289123) | "如果你有很强烈的学习能力，想进 AI 行业，做高薪方向，该学什么？" | bidang: ai | 1 kartu
+S-0030 | 2026-11-27 | postingan | Unnati (@Unnati_builds24) | "If you're under 30 and broke, I'm begging you:" | bidang: ai | 1 kartu
+S-0031 | 2026-11-27 | postingan | Stijn Noorman (@stijnnoorman) | "If you're feeling stuck, please realize that your life is shaped by what you do every day. Your routines. Your" | bidang: motivasi-dan-mindset | 1 kartu
+S-0032 | 2026-11-27 | postingan | John Crickett (@johncrickett) | "Claiming the gap between software engineer and vibe coder will narrow simply because models advance is silly." | bidang: ai | 1 kartu
+S-0033 | 2026-11-27 | postingan | Jun Song (@jun_song) | "If you build a software startup, an open-source clone of your product will be on GitHub within 3 hours of laun" | bidang: bisnis | 1 kartu
+S-0034 | 2026-11-27 | postingan | alexei (@alexeixbt) | "neuroscience shows that your brain is constantly changing. the right daily habits can help you reshape your th" | bidang: motivasi-dan-mindset | 1 kartu
+S-0035 | 2026-11-27 | postingan | neural nets. (@cneuralnetwork) | "things i stopped using AI for:" | bidang: motivasi-dan-mindset | 1 kartu
+S-0036 | 2026-11-27 | postingan | Brij Pandey (@LearnWithBrij) | "I drew the life of a developer curve again. It looks a lot like my own career." | bidang: ai | 1 kartu
+S-0037 | 2026-11-27 | postingan | Dear Son. (@DearS_o_n) | "HOW TO INCREASE YOUR AURA:" | bidang: motivasi-dan-mindset | 1 kartu
+S-0038 | 2026-11-27 | postingan | Taa (@Tataanepzf) | "btw, aku punya koleksi ebook belajar CPNS di Gdrive yang mau belajar juga bisa DM yaa nanti aku kirim linknya" | bidang: kesuksesan | 1 kartu
+S-0039 | 2026-11-27 | postingan | Superman (@thesupermannx) | "Socrates was right." | bidang: motivasi-dan-mindset | 1 kartu
+S-0040 | 2026-11-27 | postingan | kichiro (@0xkichiro) | "This is f*cking insane. Andrej Karpathy spent 8 years building AI at OpenAI and Tesla" | bidang: ai | 1 kartu
+S-0041 | 2026-11-27 | artikel | DAN KOE (@thedankoe) | "The deep work routine that changed my life (1 hour every morning)" | bidang: motivasi-dan-mindset | 1 kartu
+S-0042 | 2026-11-27 | postingan | 𝗿𝗮𝗺𝗮𝗸𝗿𝘂𝘀𝗵𝗻𝗮— 𝗲/𝗮𝗰𝗰 (@techwith_ram) | "𝗠𝗖𝗣 𝘃𝘀 𝗔𝗣𝗜" | bidang: ai | 1 kartu
+S-0043 | 2026-11-27 | postingan | Stijn Noorman (@stijnnoorman) | "The fastest way to make progress is to shorten the distance between thinking and doing. Stop spending weeks pr" | bidang: motivasi-dan-mindset | 1 kartu
+S-0044 | 2026-11-27 | postingan | Machiavelli Bot (@UnmodernmanBot) | "Never forfeit. Never surrender. Be relentless. Be hyper-competitive. The moment you collapse in your setbacks" | bidang: motivasi-dan-mindset | 1 kartu

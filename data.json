@@ -2,11 +2,11 @@
   "mode": "lokal",
   "dibangun": "2026-11-27",
   "ringkasan": {
-    "total_kartu": 27,
-    "total_sumber": 24,
+    "total_kartu": 47,
+    "total_sumber": 44,
     "total_cabang": 19,
     "penerapan": {
-      "belum-dicoba": 27,
+      "belum-dicoba": 47,
       "sedang-dicoba": 0,
       "diterapkan": 0,
       "ditolak": 0
@@ -38,11 +38,11 @@
   "akar": [
     "K-0003",
     "K-0015",
+    "K-0027",
+    "K-0007",
     "K-0016",
     "K-0019",
-    "K-0005",
-    "K-0007",
-    "K-0018"
+    "K-0033"
   ],
   "cabang": [
     {
@@ -50,8 +50,8 @@
       "nama": "AI",
       "induk": "",
       "file": "cabang/ai/_cabang.md",
-      "jumlah_kartu_tercatat": 14,
-      "jumlah_sumber_tercatat": 9,
+      "jumlah_kartu_tercatat": 22,
+      "jumlah_sumber_tercatat": 17,
       "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "2 sumber berbeda (draf awal)",
       "ringkasan": "Bab dominan untuk penguasaan AI secara praktis: mulai dari video & clipping AI, penulisan artikel/copywriting, coding & pembangunan proyek, perancangan prompt & agen, hingga perbandingan model dan alat terbaik untuk tiap kebutuhan.",
@@ -71,8 +71,8 @@
         "Prompt & Agen AI → `cabang/ai/prompt-dan-agen/_cabang.md` (0 kartu)",
         "Perbandingan Model & Alat AI → `cabang/ai/perbandingan-model/_cabang.md` (0 kartu)"
       ],
-      "jumlah_kartu": 14,
-      "jumlah_sumber": 9,
+      "jumlah_kartu": 22,
+      "jumlah_sumber": 17,
       "urutan": 0
     },
     {
@@ -80,17 +80,17 @@
       "nama": "Coding & Proyek AI",
       "induk": "ai",
       "file": "cabang/ai/coding-dan-proyek/_cabang.md",
-      "jumlah_kartu_tercatat": 6,
-      "jumlah_sumber_tercatat": 4,
+      "jumlah_kartu_tercatat": 12,
+      "jumlah_sumber_tercatat": 10,
       "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
-      "ringkasan": "Cabang ini membahas alur pengembangan perangkat lunak modern menggunakan agen dan perkakas AI canggih untuk mengoptimalkan produktivitas teknis. Fokus utamanya mencakup peningkatan estetika antarmuka web buatan AI agar terbebas dari kesan kaku menggunakan pustaka skill desain khusus, pemanfaatan file instruksi sistem agar agen AI berfungsi optimal sebagai asisten teknis, serta integrasi komputasi awan melalui utilitas terminal untuk menjalankan skrip lokal di runtime jarak jauh secara otomatis. Selain itu, cabang ini mengeksplorasi efisiensi performa backend melalui migrasi bahasa pemrograman.",
+      "ringkasan": "Cabang ini membahas optimalisasi pengembangan perangkat lunak modern menggunakan agen dan perkakas AI untuk meningkatkan produktivitas serta kualitas teknis. Fokus utamanya meliputi penggunaan pustaka skill desain khusus untuk mengatasi tampilan antarmuka web buatan AI yang kaku, pemanfaatan file instruksi sistem agar agen AI berfungsi efektif sebagai asisten teknis, serta integrasi komputasi awan melalui utilitas terminal untuk mengeksekusi kode lokal pada runtime jarak jauh secara otomatis. Selain itu, cabang ini mengeksplorasi peningkatan performa backend melalui migrasi bahasa pemrograman dan strategi masuk ke industri AI.",
       "poin_kunci": [
-        "Penerapan lima pustaka skill desain frontend untuk mengatasi tampilan antarmuka web buatan AI yang kaku [[K-0005]]",
-        "Penggunaan file instruksi sistem spesifik untuk memandu agen AI bertindak sebagai asisten teknis [[K-0012]]",
-        "Pemanfaatan perkakas terminal google-colab-cli untuk mengelola runtime CPU, GPU, dan TPU secara langsung [[K-0015]]",
-        "Eksekusi tugas otomatis melalui Ephemeral Job Runner untuk menjalankan skrip dan mengambil hasil secara instan [[K-0016]]",
-        "Peningkatan efisiensi performa backend melalui migrasi API dari Python ke Rust [[K-0034]]"
+        "Penerapan lima pustaka skill desain frontend menghilangkan kesan antarmuka web yang kaku dan khas buatan AI [[K-0005]].",
+        "File instruksi sistem seperti GEMINI.md mengoptimalkan peran agen AI sebagai asisten teknis dalam konfigurasi [[K-0012]].",
+        "Perkakas google-colab-cli memungkinkan eksekusi kode dan manajemen runtime Google Colab langsung dari terminal [[K-0015]] [[K-0016]].",
+        "Migrasi API Anthropic dari Python ke Rust berhasil memangkas penggunaan CPU sebesar 70% dan meningkatkan efisiensi waktu [[K-0034]].",
+        "Penguasaan GPU dan penerapan proyek nyata menjadi langkah strategis untuk memasuki industri AI melalui jalur teknik inferensi [[K-0039]]."
       ],
       "pertentangan": [],
       "lanjutan_timeline": [
@@ -98,8 +98,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 6,
-      "jumlah_sumber": 4,
+      "jumlah_kartu": 12,
+      "jumlah_sumber": 10,
       "urutan": 0
     },
     {
@@ -128,20 +128,26 @@
       "nama": "Prompt & Agen AI",
       "induk": "ai",
       "file": "cabang/ai/prompt-dan-agen/_cabang.md",
-      "jumlah_kartu_tercatat": 3,
-      "jumlah_sumber_tercatat": 2,
-      "diperbarui": "2026-11-22",
+      "jumlah_kartu_tercatat": 5,
+      "jumlah_sumber_tercatat": 4,
+      "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
-      "ringkasan": "Perancangan prompt, context engineering, SKILL.md, MCP, sistem multi-agen, dan strategi penghematan token.",
-      "poin_kunci": [],
+      "ringkasan": "Cabang 'ai/prompt-dan-agen' berfokus pada evolusi pemanfaatan kecerdasan buatan dari sekadar perancangan prompt statis menuju penerapan sistem agen otonom yang kompleks dan efisien. Tema besar ini mencakup rekayasa konteks, pengelolaan dokumen panduan keterampilan (SKILL.md), serta integrasi Model Context Protocol (MCP) yang memungkinkan agen mengambil keputusan pemilihan alat secara dinamis saat runtime [[K-0052]]. Peningkatan kapabilitas ini didorong oleh penambahan lapisan struktural seperti harness, loop, dan graph yang mentransformasi model AI menjadi agen fungsional [[K-0050]]. Dalam praktiknya, teknologi ini diimplementasikan melalui otomatisasi alat pengembangan seperti server MCP dan skill SEO open-source [[K-0003]], serta penerapan agen GTM otonom 24/7 yang mampu menjalankan fungsi bisnis strategis seperti pencarian dan penjangkauan klien secara mandiri [[K-0014]], bahkan mendorong pertumbuhan perusahaan SaaS hingga jutaan dolar tanpa staf sales manusia [[K-0013]].",
+      "poin_kunci": [
+        "Penerapan paket skill open-source dan server MCP mengotomasi tugas teknis seperti audit dan ekstraksi transkrip [[K-0003]].",
+        "Otomasi agen AI terbukti mampu menggerakkan pertumbuhan bisnis SaaS hingga $2 juta ARR tanpa staf sales manusia [[K-0013]].",
+        "Agen GTM otonom 24/7 menjalankan proses pencarian dan penjangkauan klien secara mandiri [[K-0014]].",
+        "Lapisan harness, loop, dan graph adalah kunci transisi model AI menjadi agen otonom fungsional [[K-0050]].",
+        "Model Context Protocol (MCP) mengalihkan pemilihan alat ke keputusan runtime agen AI [[K-0052]]."
+      ],
       "pertentangan": [],
       "lanjutan_timeline": [
         "Sebelumnya: -",
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 3,
-      "jumlah_sumber": 2,
+      "jumlah_kartu": 5,
+      "jumlah_sumber": 4,
       "urutan": 0
     },
     {
@@ -191,9 +197,9 @@
       "nama": "Bisnis",
       "induk": "",
       "file": "cabang/bisnis/_cabang.md",
-      "jumlah_kartu_tercatat": 1,
-      "jumlah_sumber_tercatat": 1,
-      "diperbarui": "2026-11-22",
+      "jumlah_kartu_tercatat": 2,
+      "jumlah_sumber_tercatat": 2,
+      "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
       "ringkasan": "Bab dominan untuk strategi bisnis, validasi ide, produk digital, operasional efisien, dan pembangunan sumber pendapatan di luar pekerjaan utama.",
       "poin_kunci": [],
@@ -203,8 +209,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 1,
-      "jumlah_sumber": 1,
+      "jumlah_kartu": 2,
+      "jumlah_sumber": 2,
       "urutan": 1
     },
     {
@@ -306,9 +312,9 @@
       "nama": "Kesuksesan",
       "induk": "",
       "file": "cabang/kesuksesan/_cabang.md",
-      "jumlah_kartu_tercatat": 0,
-      "jumlah_sumber_tercatat": 0,
-      "diperbarui": "2026-11-22",
+      "jumlah_kartu_tercatat": 3,
+      "jumlah_sumber_tercatat": 3,
+      "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
       "ringkasan": "Belum ada kartu pada cabang ini. Sub-cabang timeline tahap hidup (sebelum-20, 20-25, 25-30, 30-40, 40-50, 50+, semua-usia) akan dibuat otomatis saat sumber pertama masuk.",
       "poin_kunci": [],
@@ -318,8 +324,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 0,
-      "jumlah_sumber": 0,
+      "jumlah_kartu": 3,
+      "jumlah_sumber": 3,
       "urutan": 5
     },
     {
@@ -348,20 +354,26 @@
       "nama": "Motivasi & Mindset",
       "induk": "",
       "file": "cabang/motivasi-dan-mindset/_cabang.md",
-      "jumlah_kartu_tercatat": 5,
-      "jumlah_sumber_tercatat": 6,
+      "jumlah_kartu_tercatat": 13,
+      "jumlah_sumber_tercatat": 14,
       "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
-      "ringkasan": "Belum ada kartu pada cabang ini.",
-      "poin_kunci": [],
+      "ringkasan": "Cabang motivasi dan mindset menekankan pentingnya tindakan nyata, ketegasan mental, dan pengelolaan energi yang strategis untuk membentuk arah hidup jangka panjang [[K-0006, K-0033, K-0041]]. Fondasi utamanya mencakup penghentian overthinking, eliminasi kebiasaan mengeluh, serta investasi fokus harian secara konsisten [[K-0006, K-0032, K-0051]]. Kepercayaan diri dan karisma personal dibangun melalui transformasi dialog batin, komunikasi lugas, serta penerapan batasan diri yang tegas [[K-0027, K-0030, K-0047]]. Selain itu, pembentukan identitas baru berbasis neurosains serta kemandirian berpikir tanpa ketergantungan berlebihan pada kecerdasan buatan sangat krusial untuk menjaga keotentikan dan mencegah penurunan kognitif [[K-0044, K-0045, K-0049]].",
+      "poin_kunci": [
+        "Hentikan keraguan berlebihan dan mulailah bertindak nyata untuk membentuk arah hidup jangka panjang [[K-0006, K-0041]].",
+        "Hilangkan kebiasaan mengeluh tanpa solusi untuk memutus siklus kecemasan [[K-0032]].",
+        "Bangun kepercayaan diri dan ketegasan melalui transformasi dialog batin serta komunikasi langsung [[K-0027, K-0030]].",
+        "Gunakan pengelolaan energi strategis di bawah kapasitas penuh untuk mencegah kelelahan dan menangkap peluang [[K-0033]].",
+        "Pertahankan kemandirian berpikir demi menghindari ketergantungan negatif pada kecerdasan buatan [[K-0045, K-0049]]."
+      ],
       "pertentangan": [],
       "lanjutan_timeline": [
         "Sebelumnya: -",
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 5,
-      "jumlah_sumber": 6,
+      "jumlah_kartu": 13,
+      "jumlah_sumber": 14,
       "urutan": 7
     },
     {
@@ -607,6 +619,10 @@
       "relasi": [
         {
           "tipe": "terkait",
+          "ke": "K-0052"
+        },
+        {
+          "tipe": "terkait",
           "ke": "K-0012"
         },
         {
@@ -770,6 +786,14 @@
       ],
       "relasi": [
         {
+          "tipe": "memperkuat",
+          "ke": "K-0054"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0053"
+        },
+        {
           "tipe": "terkait",
           "ke": "K-0007"
         }
@@ -815,6 +839,10 @@
         "S-0007"
       ],
       "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0047"
+        },
         {
           "tipe": "terkait",
           "ke": "K-0023"
@@ -1114,6 +1142,10 @@
         "S-0014"
       ],
       "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0039"
+        },
         {
           "tipe": "lanjutan-dari",
           "ke": "K-0008"
@@ -1567,6 +1599,14 @@
       "relasi": [
         {
           "tipe": "terkait",
+          "ke": "K-0047"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0044"
+        },
+        {
+          "tipe": "terkait",
           "ke": "K-0032"
         },
         {
@@ -1779,6 +1819,14 @@
       ],
       "relasi": [
         {
+          "tipe": "terkait",
+          "ke": "K-0051"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0041"
+        },
+        {
           "tipe": "memperkuat",
           "ke": "K-0023"
         }
@@ -1827,7 +1875,12 @@
       "sumber": [
         "S-0024"
       ],
-      "relasi": [],
+      "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0035"
+        }
+      ],
       "dibuat": "2026-11-27",
       "status": "aktif",
       "publik": true,
@@ -1843,6 +1896,1029 @@
       "kutipan": "Anthropic migrou sua API de Python para Rust",
       "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.84).",
       "penulis": "Ricardo Pupo Larguesa (@rlarguesa)"
+    },
+    {
+      "id": "K-0035",
+      "file": "kartu/K-0035.md",
+      "ide": "Migrasi API Anthropic dari Python ke Rust mengatasi tantangan verifikasi sistem produksi yang kompleks.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "semua-usia",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "rust",
+        "python",
+        "anthropic",
+        "api",
+        "x"
+      ],
+      "konsep": [
+        "migrasi-sistem",
+        "verifikasi-kode",
+        "otomasi-ai",
+        "optimasi-performa"
+      ],
+      "kondisi_berlaku": "pengembangan sistem skala besar dengan trafik tinggi",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0025"
+      ],
+      "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0034"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "monetisasi",
+      "penjelasan": "1. Anthropic menghadapi tantangan migrasi API pesan dari Python ke Rust karena sistem produksi terus berubah, respons AI yang non-deterministik, serta privasi data pelanggan yang tidak bisa dibaca secara langsung.\n2. Untuk membangun kepercayaan, mereka menggunakan API produksi itu sendiri sebagai verifikator untuk menguji versi Rust pada lalu lintas nyata.\n3. Agen AI dikerahkan secara otomatis untuk menemukan dan memperbaiki perbedaan antara versi Python dan Rust.\n4. Hasilnya, layanan dapat dikirimkan ke produksi dengan penggunaan CPU 70% lebih sedikit per permintaan dan pemotongan waktu respons median sekitar 20% tanpa menghentikan layanan.",
+      "kutipan": "migrated our Messages API from Python to Rust",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=1.0).",
+      "penulis": "Umesh Kumar Yadav (@Umesh__digital)"
+    },
+    {
+      "id": "K-0036",
+      "file": "kartu/K-0036.md",
+      "ide": "Mengikuti rasa ingin tahu intelektual yang tulus jauh lebih baik untuk fondasi karier daripada mengejar apa yang sedang menghasilkan uang saat ini.",
+      "bidang": "kesuksesan",
+      "cabang": "kesuksesan",
+      "tahap": "semua-usia",
+      "jenis": "prinsip",
+      "kepercayaan": "sedang",
+      "dasar": "opini-umum",
+      "tag": [
+        "karier",
+        "curiosity",
+        "naval-ravikant",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "rasa-ingin-tahu",
+        "fondasi-karier",
+        "pengembangan-diri"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0026"
+      ],
+      "relasi": [],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "kesuksesan",
+      "tahap_kerja": "riset",
+      "penjelasan": "1. Naval Ravikant menyatakan bahwa dasar karier yang kuat dibangun atas dasar ketertarikan intelektual yang murni.\n2. Pendekatan ini lebih unggul dibandingkan sekadar mengikuti tren pasar yang sedang menguntungkan.",
+      "kutipan": "Following your genuine intellectual curiosity",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=0.45).",
+      "penulis": "Reads with Ravi (@readswithravi)"
+    },
+    {
+      "id": "K-0037",
+      "file": "kartu/K-0037.md",
+      "ide": "Menjadi insinyur perangkat lunak generik bukan lagi strategi karier yang baik karena era spesialisasi telah tiba.",
+      "bidang": "kesuksesan",
+      "cabang": "kesuksesan",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "belum-diverifikasi",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "software-engineer",
+        "karier",
+        "teknologi",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "spesialisasi-karier",
+        "pengembangan-perangkat-lunak",
+        "strategi-profesional"
+      ],
+      "kondisi_berlaku": "insinyur perangkat lunak",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0027"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0046"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0042"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "kesuksesan",
+      "tahap_kerja": "skrip",
+      "penjelasan": "1. Hanya mengetahui cara membangun API REST dan aplikasi React tidak lagi mencukupi untuk bertahan di masa depan.\n2. Cara pertama untuk tetap relevan adalah menggabungkan keahlian teknik dengan domain lain seperti bisnis, keuangan, atau pemasaran.\n3. Cara kedua adalah mendalami teknologi secara ekstrem seperti kernel Linux, sistem terdistribusi, teknik inferensi, basis data, atau infrastruktur.",
+      "kutipan": "being a generic software engineer is becoming a terrible career strategy",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.45).",
+      "penulis": "Sambhav Gandhi (@Sambhav_Gandhi)"
+    },
+    {
+      "id": "K-0038",
+      "file": "kartu/K-0038.md",
+      "ide": "Pemrogram secara alami mengotomatiskan pekerjaan mereka sendiri karena sifat efisiensi yang melekat.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "pemrogram",
+        "rsi",
+        "otomatisasi",
+        "kode",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "otomatisasi",
+        "pemrograman",
+        "efisiensi",
+        "pengembangan-diri"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0028"
+      ],
+      "relasi": [],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "monetisasi",
+      "penjelasan": "1. Fenomena RSI (Recursive Self-Improvement/otomatisasi berkelanjutan) terjadi karena para pemrogram memiliki kecenderungan mengotomatiskan tugas mereka.\n2. Bahkan ketika diminta untuk tidak melakukan otomatisasi, mereka akan tetap melakukannya.\n3. Perilaku ini didorong oleh sifat dasar efisiensi atau rasa malas yang produktif dalam dunia pemrograman.",
+      "kutipan": "Programmers are lazy and automate their own jobs.",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.9, grounding=0.04).",
+      "penulis": "kache (@yacineMTB)"
+    },
+    {
+      "id": "K-0039",
+      "file": "kartu/K-0039.md",
+      "ide": "Langkah strategis masuk ke industri AI melalui jalur teknik inferensi meliputi penguasaan GPU, penerapan praktik proyek nyata, dan penawaran langsung ke perusahaan.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "25-30",
+      "jenis": "nasihat",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "inferensi-ai",
+        "cuda",
+        "vllm",
+        "optimasigpu",
+        "x"
+      ],
+      "konsep": [
+        "teknik-inferensi",
+        "pengembangan-ai",
+        "optimasi-gpu",
+        "pengembangan-karier"
+      ],
+      "kondisi_berlaku": "Memiliki kemampuan belajar yang kuat dan minat berkarier di bidang teknik AI",
+      "model_ekstrak": "gemini-3.5-flash-lite (map-reduce 2 segmen)",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0029"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0040"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0015"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [
+        "gpt"
+      ],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "riset",
+      "penjelasan": "1. Pilih spesialisasi seperti pemrograman CUDA, kuantisasi, atau optimasi model, lalu pahami dasarnya melalui panduan resmi dan pembuatan mini GPT.\n2. Kuasai alat seperti PyTorch, Triton, vLLM, dan TensorRT-LLM untuk membangun layanan inferensi.\n3. Buat 3 hingga 5 proyek untuk menekan biaya inferensi serta jalankan benchmark performa secara konsisten.\n4. Identifikasi masalah dari 50 target perusahaan, buat solusinya, lalu hubungi pendiri atau pimpinan teknik secara langsung untuk menawarkan diri.",
+      "kutipan": "学 AI 推理工程，可以从下面的步骤来。",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite (map-reduce 2 segmen), prompt v2.1, keyakinan=0.95, grounding=1.0).",
+      "penulis": "美研芒格君 (@Kay2289123)"
+    },
+    {
+      "id": "K-0040",
+      "file": "kartu/K-0040.md",
+      "ide": "Langkah strategis masuk ke industri AI melalui jalur teknik inferensi meliputi penguasaan GPU, penerapan praktik proyek nyata, dan penawaran langsung ke perusahaan.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "sebelum-20",
+      "jenis": "nasihat",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "ai-inference",
+        "gpu",
+        "pytorch",
+        "startup-ai",
+        "x"
+      ],
+      "konsep": [
+        "teknik-inferensi",
+        "infrastruktur-ai",
+        "optimasi-model",
+        "pengembangan-karier"
+      ],
+      "kondisi_berlaku": "di bawah 30 tahun dan tidak punya uang",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0030"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0039"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "skrip",
+      "penjelasan": "1. Pilih satu bidang spesifik seperti pemrograman GPU, CUDA, optimasi model, kuantisasi, atau inferensi terdistribusi dan kuasai dasar-dasarnya.\n2. Pelajari perkakas esensial seperti PyTorch, Triton, vLLM, TensorRT-LLM, dan inference serving.\n3. Bangun 3-5 proyek nyata untuk mengoptimalkan LLM, mengurangi biaya inferensi, meningkatkan latensi, atau membangun sistem penyajian berthroughput tinggi serta lakukan benchmark.\n4. Buat daftar 50 startup AI, penyedia cloud GPU, serta perusahaan inferensi, pelajari hambatan infrastruktur mereka, lalu hubungi pendiri atau pimpinan teknik secara langsung untuk magang atau bekerja.\n5. Setelah memahami infrastruktur produksi AI secara mendalam selama 12-18 bulan, bangun startup inferensi, konsultan optimasi, atau perusahaan infrastruktur GPU milik sendiri.",
+      "kutipan": "Learn AI inference engineering",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=0.95).",
+      "penulis": "Unnati (@Unnati_builds24)"
+    },
+    {
+      "id": "K-0041",
+      "file": "kartu/K-0041.md",
+      "ide": "Ubah kebiasaan dan tindakan kecil sehari-hari secara konsisten untuk mentransformasi arah hidup Anda dalam jangka panjang.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "prinsip",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "kebiasaan",
+        "produktivitas",
+        "rutinitas",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "kebiasaan-harian",
+        "efek-akumulasi",
+        "perubahan-hidup",
+        "tindakan-kecil"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0031"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0033"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "monetisasi",
+      "penjelasan": "1. Rasa terjebak dalam hidup biasanya berakar dari rutinitas, keputusan, dan kebiasaan harian yang berjalan otomatis.\n2. Tindakan kecil yang tampak sepele akan mengalami efek akumulasi (compounding) seiring berjalannya waktu.\n3. Cara paling efektif untuk mengubah hidup secara keseluruhan adalah dengan mulai memperbaiki dan mengubah tindakan harian Anda.",
+      "kutipan": "If you want to change your life, change your daily actions.",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=0.45).",
+      "penulis": "Stijn Noorman (@stijnnoorman)"
+    },
+    {
+      "id": "K-0042",
+      "file": "kartu/K-0042.md",
+      "ide": "Kemajuan model AI tidak otomatis memperkecil kesenjangan keahlian antara insinyur perangkat lunak profesional dan perakit kode amatir.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "software-engineer",
+        "vibe-coder",
+        "ai-coding",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "keahlian-teknis",
+        "pengembangan-perangkat-lunak",
+        "keterampilan-dasar"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0032"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0037"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "produksi",
+      "penjelasan": "1. Alat canggih seperti mobil balap F1 tidak serta-merta membuat seseorang menjadi ahli tanpa penguasaan keterampilan dasar yang memadai.\n2. Tanpa keahlian yang tepat, teknologi yang lebih kuat justru hanya akan mempercepat terjadinya kegagalan atau kesalahan fatal.\n3. Perbedaan mendasar terletak pada kapabilitas pengemudi atau pembuatnya, bukan sekadar pada kecanggihan perangkat yang digunakan.",
+      "kutipan": "The F1 car wouldn’t make me a better driver.",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.37).",
+      "penulis": "John Crickett (@johncrickett)"
+    },
+    {
+      "id": "K-0043",
+      "file": "kartu/K-0043.md",
+      "ide": "Mendirikan perusahaan rintisan di era sekarang jauh lebih sulit karena berbagai risiko struktural dan persaingan yang ketat.",
+      "bidang": "bisnis",
+      "cabang": "bisnis",
+      "tahap": "semua-usia",
+      "jenis": "opini",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "startup",
+        "bisnis",
+        "risiko",
+        "x"
+      ],
+      "konsep": [
+        "risiko-bisnis",
+        "persaingan-pasar",
+        "strategi-startup"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0033"
+      ],
+      "relasi": [],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "bisnis",
+      "tahap_kerja": "produksi",
+      "penjelasan": "1. Perangkat lunak baru akan langsung disalin di GitHub dalam hitungan jam setelah diluncurkan.\n2. Bisnis perangkat keras mustahil mengalahkan pemain besar dalam hal biaya akibat keterbatasan daya tawar rantai pasok.\n3. Industri komoditas awan baru sangat rentan hancur seketika akibat perubahan regulasi tunggal.\n4. Berbagai tantangan berat ini mendasari saran untuk menghindari pembangunan bisnis rintisan di bidang kecerdasan buatan.",
+      "kutipan": "It's harder than ever to start a new business right now.",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.59).",
+      "penulis": "Jun Song (@jun_song)"
+    },
+    {
+      "id": "K-0044",
+      "file": "kartu/K-0044.md",
+      "ide": "Membangun identitas baru secara neurosains dapat dilakukan melalui enam kebiasaan harian seperti visualisasi, mengenali batasan diri, dan mengatur sistem saraf.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "prinsip",
+      "kepercayaan": "sedang",
+      "dasar": "riset",
+      "tag": [
+        "neurosains",
+        "kebiasaan",
+        "mindset",
+        "produktivitas",
+        "x"
+      ],
+      "konsep": [
+        "neuroplastisitas",
+        "kebiasaan-harian",
+        "pengembangan-diri",
+        "self-talk",
+        "pengaturan-emosi"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0034"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0027"
+        },
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0028"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "riset",
+      "penjelasan": "1. Visualisasikan diri masa depan selama dua menit sebelum tidur untuk mengaktifkan jaringan saraf yang sama seperti pengalaman nyata.\n2. Catat momen keraguan diri untuk mengenali pola keyakinan lama yang tersembunyi.\n3. Ubah satu keyakinan terbatas setiap hari dengan pemikiran konstruktif yang didukung tindakan nyata.\n4. Rasakan rasa syukur secara mendalam dengan merenungkan alasan dan emosi di baliknya, bukan sekadar mengucapkannya.\n5. Berikan bukti perubahan pada otak melalui tindakan kecil seperti menepati janji pada diri sendiri atau menghadapi hal yang dihindari.\n6. Atur sistem saraf dengan berjalan kaki, bernapas perlahan, atau sejenak tanpa ponsel untuk meredakan stres harian.",
+      "kutipan": "neuroscience shows that your brain is constantly changing.",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=1.0).",
+      "penulis": "alexei (@alexeixbt)"
+    },
+    {
+      "id": "K-0045",
+      "file": "kartu/K-0045.md",
+      "ide": "Batasi penggunaan AI pada hal-hal mendasar agar kemampuan berpikir mandiri, pemahaman mendalam, dan keotentikan diri tidak tumpul.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "nasihat",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "ai",
+        "produktivitas",
+        "mindset",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "berpikir-kritis",
+        "pengembangan-diri",
+        "kecerdasan-buatan"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0035"
+      ],
+      "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0049"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "riset",
+      "penjelasan": "1. Berhenti mengandalkan AI untuk memahami makalah riset sepenuhnya tanpa membaca sendiri.\n2. Hindari menggunakan AI untuk menciptakan opini pribadi atau menulis pesan personal kepada orang lain.\n3. Jangan biarkan AI mengambil setiap keputusan kecil dalam hidup serta memotong proses praktik langsung saat mempelajari konsep baru.",
+      "kutipan": "things i stopped using AI for",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=0.45).",
+      "penulis": "neural nets. (@cneuralnetwork)"
+    },
+    {
+      "id": "K-0046",
+      "file": "kartu/K-0046.md",
+      "ide": "Kurva karier pengembang perangkat lunak kini bergeser dari penguasaan bahasa pemrograman tradisional menuju era rekayasa agen AI dan harness engineering.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "25-30",
+      "jenis": "opini",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "ai-coding",
+        "karier-dev",
+        "agen-ai",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "kurva-karier",
+        "rekayasa-agen",
+        "harness-engineering",
+        "pengembangan-perangkat-lunak"
+      ],
+      "kondisi_berlaku": "pengembang perangkat lunak dan praktisi teknologi",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0036"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0050"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0037"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [
+        "claude",
+        "cursor",
+        "chatgpt"
+      ],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "skrip",
+      "penjelasan": "1. Perjalanan awal pengembang melibatkan pendakian panjang menguasai matematika, Linux, bahasa pemrograman, framework, hingga infrastruktur cloud seperti Kubernetes demi merasa tidak tergantikan.\n2. Kedatangan model AI generatif dan alat bantu seperti Claude, ChatGPT, serta Cursor membuat penulisan kode dasar tidak lagi menjadi hal yang langka atau sulit.\n3. Jalur pendakian kedua menuntut penguasaan keahlian baru seperti rekayasa prompt, RAG, agen AI, dan harness engineering yang mencakup pengelolaan alat, memori, dan pagar pengaman.\n4. Pengalaman dari pendakian pertama tetap krusial karena pemahaman tentang sistem terdistribusi dan infrastruktur sangat membantu dalam merancang dan mengevaluasi agen AI yang handal.",
+      "kutipan": "The second climb goes faster for people who did the first one.",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.45).",
+      "penulis": "Brij Pandey (@LearnWithBrij)"
+    },
+    {
+      "id": "K-0047",
+      "file": "kartu/K-0047.md",
+      "ide": "Membangun aura dan karisma personal dapat dilakukan melalui sembilan kebiasaan komunikasi non-verbal dan batasan diri yang tegas.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "nasihat",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "aura",
+        "karisma",
+        "psikologi-sosial",
+        "kebiasaan",
+        "x"
+      ],
+      "konsep": [
+        "karisma",
+        "komunikasi-non-verbal",
+        "kepercayaan-diri",
+        "pencitraan-diri"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0037"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0007"
+        },
+        {
+          "tipe": "terkait",
+          "ke": "K-0027"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "produksi",
+      "penjelasan": "1. Fokus menunjukkan hasil nyata alih-alih mengumbar rencana.\n2. Lakukan senyum tertutup yang lebih misterius.\n3. Gunakan anggukan kepala sebagai pengganti kata ya.\n4. Kurangi terlalu banyak membicarakan diri sendiri.\n5. Jaga ketersediaan waktu agar tidak selalu mudah diakses.\n6. Tunjukkan ketegasan lewat jabat tangan yang kuat.\n7. Berbicaralah dengan tenang dan penuh perhitungan.\n8. Kenakan pakaian yang bersih serta mencerminkan rasa percaya diri.\n9. Latihlah kenyamanan dalam menghadapi keheningan.",
+      "kutipan": "HOW TO INCREASE YOUR AURA",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.59).",
+      "penulis": "Dear Son. (@DearS_o_n)"
+    },
+    {
+      "id": "K-0048",
+      "file": "kartu/K-0048.md",
+      "ide": "Koleksi e-book belajar CPNS gratis tersedia melalui tautan Google Drive bagi siapa saja yang mengirim pesan langsung (DM).",
+      "bidang": "kesuksesan",
+      "cabang": "kesuksesan",
+      "tahap": "sebelum-20",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "cpns",
+        "ebook",
+        "gdrive",
+        "x"
+      ],
+      "konsep": [
+        "belajar-cpns",
+        "sumber-belajar",
+        "berbagi-gratis"
+      ],
+      "kondisi_berlaku": "pencari materi CPNS",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0038"
+      ],
+      "relasi": [],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "kesuksesan",
+      "tahap_kerja": "produksi",
+      "penjelasan": "1. Pengguna membagikan koleksi e-book persiapan tes CPNS secara cuma-cuma.\n2. Peminat dapat memperoleh tautan unduhan Google Drive dengan mengirimkan pesan langsung kepada pemilik akun.",
+      "kutipan": "koleksi ebook belajar CPNS di Gdrive yang mau belajar juga bisa DM",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.73).",
+      "penulis": "Taa (@Tataanepzf)"
+    },
+    {
+      "id": "K-0049",
+      "file": "kartu/K-0049.md",
+      "ide": "Ketergantungan pada kecerdasan buatan memicu kondisi 'cognitive surrender' di mana manusia menelan mentah-mentah jawaban salah dari AI sekaligus merasa terlalu percaya diri.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "riset",
+      "tag": [
+        "ai",
+        "psikologi",
+        "produktivitas",
+        "berpikir-kritis",
+        "x"
+      ],
+      "konsep": [
+        "ketergantungan-ai",
+        "pemikiran-kritis",
+        "bias-kognitif",
+        "psikologi-manusia"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0039"
+      ],
+      "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0045"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "riset",
+      "penjelasan": "1. Riset terbaru dari Wharton School menunjukkan bahwa akses ke AI menciptakan 'System 3', yaitu kognisi buatan di luar otak manusia.\n2. Saat AI memberikan jawaban keliru yang disampaikan dengan penuh keyakinan, akurasi penalaran manusia anjlok drastis di bawah kelompok yang tidak memakai AI sama sekali.\n3. Fenomena ini berbeda dari kalkulator karena pengguna justru menyerahkan kendali penuh pemikiran, mengabaikan keraguan diri, dan mengalami lonjakan rasa percaya diri yang semu.",
+      "kutipan": "Cognitive Surrender",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=1.0).",
+      "penulis": "Superman (@thesupermannx)"
+    },
+    {
+      "id": "K-0050",
+      "file": "kartu/K-0050.md",
+      "ide": "Lapisan tambahan seperti harness, loop, dan graph menjadi kunci transisi dari model AI biasa menjadi agen otonom yang benar-benar fungsional.",
+      "bidang": "ai",
+      "cabang": "ai/prompt-dan-agen",
+      "tahap": "semua-usia",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "karpathy",
+        "harness",
+        "loop",
+        "graph",
+        "x"
+      ],
+      "konsep": [
+        "otomasi-ai",
+        "arsitektur-sistem",
+        "rekayasa-perangkat-lunak"
+      ],
+      "kondisi_berlaku": "pengembang dan praktisi AI",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0040"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0046"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "prompt-dan-agen",
+      "tahap_kerja": "skrip",
+      "penjelasan": "1. Andrej Karpathy merangkum pengalamannya selama bertahun-tahun di OpenAI dan Tesla dalam materi komprehensif mengenai alur kerja LLM.\n2. Konsep dasar pengembangan AI modern bergeser dari sekadar prompt dan agen menuju penerapan harness, loop, serta graph.\n3. Penggunaan model dan prompt yang sama dapat menghasilkan performa yang jauh berbeda tergantung pada arsitektur lapisan tambahan yang digunakan.",
+      "kutipan": "Harness, loop and graph could be the missing layers",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=1.0).",
+      "penulis": "kichiro (@0xkichiro)"
+    },
+    {
+      "id": "K-0051",
+      "file": "kartu/K-0051.md",
+      "ide": "Menginvestasikan 1 jam fokus penuh setiap pagi untuk membangun impian pribadi selama setahun dapat menghasilkan kemajuan masif dalam hidup.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "prinsip",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "pagi",
+        "rutinitas",
+        "pengembangan-diri",
+        "x"
+      ],
+      "konsep": [
+        "deep-work",
+        "produktivitas",
+        "fokus",
+        "kebiasaan"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite (map-reduce 4 segmen)",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0041"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0033"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "riset",
+      "penjelasan": "1. Manfaatkan waktu pertama kali di pagi hari saat pikiran masih jernih dan minim gangguan untuk fokus pada satu hal terpenting yang membawa Anda menuju kehidupan ideal.\n2. Konsistensi meluangkan 1 jam setiap hari selama 6 hingga 12 bulan setara dengan ratusan jam investasi berharga untuk masa depan Anda.\n3. Pendekatan kerja mendalam (deep work) ini terbukti efektif membangun audiens besar dan bisnis digital tanpa harus menghabiskan belasan jam sehari untuk kerja kasar.",
+      "kutipan": "1 hour every morning",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite (map-reduce 4 segmen), prompt v2.1, keyakinan=0.95, grounding=1.0).",
+      "penulis": "DAN KOE (@thedankoe)"
+    },
+    {
+      "id": "K-0052",
+      "file": "kartu/K-0052.md",
+      "ide": "Model Context Protocol (MCP) mengalihkan kendali pemilihan alat dari kode statis ke keputusan runtime agen AI.",
+      "bidang": "ai",
+      "cabang": "ai/prompt-dan-agen",
+      "tahap": "semua-usia",
+      "jenis": "fakta",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "mcp",
+        "api",
+        "agen-ai",
+        "claude-cursor",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "model-context-protocol",
+        "pemilihan-alat-ai",
+        "runtime",
+        "integrasi-api"
+      ],
+      "kondisi_berlaku": "pengembangan aplikasi berbasis agen AI",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0042"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0003"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [
+        "claude",
+        "cursor",
+        "mcp"
+      ],
+      "tugas": "prompt-dan-agen",
+      "tahap_kerja": "produksi",
+      "penjelasan": "1. API bekerja sebagai kontrak tetap yang diprogram manual oleh pengembang, sementara server MCP memaparkan data dan alat agar model AI dapat memilihnya secara dinamis saat berjalan.\n2. Sebagian besar server MCP bertindak sebagai lapisan tipis di atas API yang sudah ada untuk menjembatani sistem.\n3. Pertukaran utamanya adalah kendali; karena model memutuskan saat runtime, pengelolaan log, izin akses, dan peninjauan menjadi jauh lebih krusial.",
+      "kutipan": "MCP flips who makes that decision",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.45).",
+      "penulis": "𝗿𝗮𝗺𝗮𝗸𝗿𝘂𝘀𝗵𝗻𝗮— 𝗲/𝗮𝗰𝗰 (@techwith_ram)"
+    },
+    {
+      "id": "K-0053",
+      "file": "kartu/K-0053.md",
+      "ide": "Percepat kemajuan dengan memperpendek jarak antara berpikir dan bertindak melalui eksekusi cepat.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "prinsip",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "tindakan",
+        "eksekusi",
+        "kemajuan",
+        "persiapan",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "eksekusi-cepat",
+        "tindakan-nyata",
+        "umpan-balik",
+        "produktivitas"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0043"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0006"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "riset",
+      "penjelasan": "1. Hentikan kebiasaan menghabiskan waktu berminggu-minggu untuk persiapan hal yang bisa diuji hari ini.\n2. Segera ambil tindakan nyata tanpa menunda-nunda.\n3. Dapatkan umpan balik langsung dari lapangan untuk melakukan perbaikan.\n4. Sadari bahwa sebagian besar jawaban yang Anda cari baru akan ditemukan setelah Anda mulai mengeksekusinya.",
+      "kutipan": "shorten the distance between thinking and doing",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=0.0).",
+      "penulis": "Stijn Noorman (@stijnnoorman)"
+    },
+    {
+      "id": "K-0054",
+      "file": "kartu/K-0054.md",
+      "ide": "Jangan pernah menyerah dan tetaplah gigih bersaing meski menghadapi kemunduran.",
+      "bidang": "motivasi-dan-mindset",
+      "cabang": "motivasi-dan-mindset",
+      "tahap": "semua-usia",
+      "jenis": "prinsip",
+      "kepercayaan": "sedang",
+      "dasar": "opini-umum",
+      "tag": [
+        "ketekunan",
+        "motivasi",
+        "pantang-menyerah",
+        "x",
+        "cek-kesetiaan"
+      ],
+      "konsep": [
+        "ketahanan-mental",
+        "daya-juang",
+        "mentalitas-pemenang"
+      ],
+      "kondisi_berlaku": "umum",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0044"
+      ],
+      "relasi": [
+        {
+          "tipe": "memperkuat",
+          "ke": "K-0006"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "publik": true,
+      "penerapan": "belum-dicoba",
+      "penerapan_catatan": "",
+      "terakhir_ditinjau": "2026-11-27",
+      "bintang": 0,
+      "catatan_khusus": "",
+      "alat": [],
+      "tugas": "motivasi-dan-mindset",
+      "tahap_kerja": "produksi",
+      "penjelasan": "1. Merasa putus asa sesaat adalah hal yang wajar, tetapi Anda tidak boleh membiarkan keputusasaan tersebut mendefinisikan kekalahan.\n2. Begitu Anda runtuh karena hambatan, Anda secara sukarela menyerahkan kemenangan kepada pihak lawan.\n3. Pertahankan semangat kompetitif dan jangan pernah mengakui kekalahan kecuali jika itu benar-benar dipaksakan dari luar.",
+      "kutipan": "Never forfeit. Never surrender. Be relentless.",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=0.95, grounding=0.0).",
+      "penulis": "Machiavelli Bot (@UnmodernmanBot)"
     }
   ],
   "sumber": [
@@ -2291,6 +3367,366 @@
         "K-0034"
       ],
       "saripati": "(1) Migrasi API Anthropic dari Python ke Rust menghasilkan penurunan penggunaan CPU sebesar 70% dan penghematan waktu 20%."
+    },
+    {
+      "id": "S-0025",
+      "file": "sumber/S-0025.md",
+      "judul": "Mozilla created Rust",
+      "jenis": "postingan",
+      "penulis": "Umesh Kumar Yadav (@Umesh__digital)",
+      "platform": "X",
+      "url": "https://x.com/Umesh__digital/status/2125981406216229237?a=8a5DWRXoqdUx8ca86ns&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0035"
+      ],
+      "saripati": "(1) Migrasi API Anthropic dari Python ke Rust mengatasi tantangan verifikasi sistem produksi yang kompleks."
+    },
+    {
+      "id": "S-0026",
+      "file": "sumber/S-0026.md",
+      "judul": "Naval Ravikant said it right:",
+      "jenis": "postingan",
+      "penulis": "Reads with Ravi (@readswithravi)",
+      "platform": "X",
+      "url": "https://x.com/readswithravi/status/2126114280529436979?a=9c10OdGgPrAqRWmFEXg&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "kesuksesan"
+      ],
+      "kartu": [
+        "K-0036"
+      ],
+      "saripati": "(1) Mengikuti rasa ingin tahu intelektual yang tulus jauh lebih baik untuk fondasi karier daripada mengejar apa yang sedang menghasilkan uang saat ini."
+    },
+    {
+      "id": "S-0027",
+      "file": "sumber/S-0027.md",
+      "judul": "Hate to say this, but being a generic software engineer is becoming a terrible career strategy.",
+      "jenis": "postingan",
+      "penulis": "Sambhav Gandhi (@Sambhav_Gandhi)",
+      "platform": "X",
+      "url": "https://x.com/Sambhav_Gandhi/status/2125933085971870048?a=YULP7tECxaHij2wSB4M&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "kesuksesan"
+      ],
+      "kartu": [
+        "K-0037"
+      ],
+      "saripati": "(1) Menjadi insinyur perangkat lunak generik bukan lagi strategi karier yang baik karena era spesialisasi telah tiba."
+    },
+    {
+      "id": "S-0028",
+      "file": "sumber/S-0028.md",
+      "judul": "RSI is obviously happening. Programmers are lazy and automate their own jobs. That's what they do. Even if you",
+      "jenis": "postingan",
+      "penulis": "kache (@yacineMTB)",
+      "platform": "X",
+      "url": "https://x.com/yacineMTB/status/2125878996797636652?a=CR1n_HY7pb4Yd_nffW0&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0038"
+      ],
+      "saripati": "(1) Pemrogram secara alami mengotomatiskan pekerjaan mereka sendiri karena sifat efisiensi yang melekat."
+    },
+    {
+      "id": "S-0029",
+      "file": "sumber/S-0029.md",
+      "judul": "如果你有很强烈的学习能力，想进 AI 行业，做高薪方向，该学什么？",
+      "jenis": "postingan",
+      "penulis": "美研芒格君 (@Kay2289123)",
+      "platform": "X",
+      "url": "https://x.com/Kay2289123/status/2125915733100245346?a=LBolUxqHKRcuH8aBjdM&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0039"
+      ],
+      "saripati": "(1) Langkah strategis masuk ke industri AI melalui jalur teknik inferensi meliputi penguasaan GPU, penerapan praktik proyek nyata, dan penawaran langsung ke perusahaan."
+    },
+    {
+      "id": "S-0030",
+      "file": "sumber/S-0030.md",
+      "judul": "If you're under 30 and broke, I'm begging you:",
+      "jenis": "postingan",
+      "penulis": "Unnati (@Unnati_builds24)",
+      "platform": "X",
+      "url": "https://x.com/Unnati_builds24/status/2125720221524865048?a=fRiRc0XEk4h92s7Klj4&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0040"
+      ],
+      "saripati": "(1) Langkah strategis masuk ke industri AI melalui jalur teknik inferensi meliputi penguasaan GPU, penerapan praktik proyek nyata, dan penawaran langsung ke perusahaan."
+    },
+    {
+      "id": "S-0031",
+      "file": "sumber/S-0031.md",
+      "judul": "If you're feeling stuck, please realize that your life is shaped by what you do every day. Your routines. Your",
+      "jenis": "postingan",
+      "penulis": "Stijn Noorman (@stijnnoorman)",
+      "platform": "X",
+      "url": "https://x.com/stijnnoorman/status/2125937890555224313?a=f7cSTmg-qh53wj1nP94&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0041"
+      ],
+      "saripati": "(1) Ubah kebiasaan dan tindakan kecil sehari-hari secara konsisten untuk mentransformasi arah hidup Anda dalam jangka panjang."
+    },
+    {
+      "id": "S-0032",
+      "file": "sumber/S-0032.md",
+      "judul": "Claiming the gap between software engineer and vibe coder will narrow simply because models advance is silly.",
+      "jenis": "postingan",
+      "penulis": "John Crickett (@johncrickett)",
+      "platform": "X",
+      "url": "https://x.com/johncrickett/status/2125992225519878442?a=CtxvMYYdjFICekZtZRM&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0042"
+      ],
+      "saripati": "(1) Kemajuan model AI tidak otomatis memperkecil kesenjangan keahlian antara insinyur perangkat lunak profesional dan perakit kode amatir."
+    },
+    {
+      "id": "S-0033",
+      "file": "sumber/S-0033.md",
+      "judul": "If you build a software startup, an open-source clone of your product will be on GitHub within 3 hours of laun",
+      "jenis": "postingan",
+      "penulis": "Jun Song (@jun_song)",
+      "platform": "X",
+      "url": "https://x.com/jun_song/status/2126115611684286960?a=yXB2kP6rBKcrolmorNg&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "bisnis"
+      ],
+      "kartu": [
+        "K-0043"
+      ],
+      "saripati": "(1) Mendirikan perusahaan rintisan di era sekarang jauh lebih sulit karena berbagai risiko struktural dan persaingan yang ketat."
+    },
+    {
+      "id": "S-0034",
+      "file": "sumber/S-0034.md",
+      "judul": "neuroscience shows that your brain is constantly changing. the right daily habits can help you reshape your th",
+      "jenis": "postingan",
+      "penulis": "alexei (@alexeixbt)",
+      "platform": "X",
+      "url": "https://x.com/alexeixbt/status/2125968190572216662?a=7eXSLZ8zHNeF22tQSYo&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0044"
+      ],
+      "saripati": "(1) Membangun identitas baru secara neurosains dapat dilakukan melalui enam kebiasaan harian seperti visualisasi, mengenali batasan diri, dan mengatur sistem saraf."
+    },
+    {
+      "id": "S-0035",
+      "file": "sumber/S-0035.md",
+      "judul": "things i stopped using AI for:",
+      "jenis": "postingan",
+      "penulis": "neural nets. (@cneuralnetwork)",
+      "platform": "X",
+      "url": "https://x.com/cneuralnetwork/status/2125854571209895993?a=WpguUbpEyAUciv5Qaik&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0045"
+      ],
+      "saripati": "(1) Batasi penggunaan AI pada hal-hal mendasar agar kemampuan berpikir mandiri, pemahaman mendalam, dan keotentikan diri tidak tumpul."
+    },
+    {
+      "id": "S-0036",
+      "file": "sumber/S-0036.md",
+      "judul": "I drew the life of a developer curve again. It looks a lot like my own career.",
+      "jenis": "postingan",
+      "penulis": "Brij Pandey (@LearnWithBrij)",
+      "platform": "X",
+      "url": "https://x.com/LearnWithBrij/status/2126021241421418741?a=aVYTYYXCC0wQCk0-7Nw&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0046"
+      ],
+      "saripati": "(1) Kurva karier pengembang perangkat lunak kini bergeser dari penguasaan bahasa pemrograman tradisional menuju era rekayasa agen AI dan harness engineering."
+    },
+    {
+      "id": "S-0037",
+      "file": "sumber/S-0037.md",
+      "judul": "HOW TO INCREASE YOUR AURA:",
+      "jenis": "postingan",
+      "penulis": "Dear Son. (@DearS_o_n)",
+      "platform": "X",
+      "url": "https://x.com/DearS_o_n/status/2126016644699107367?a=IH5Tj78Tds4cyBwQjp4&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0047"
+      ],
+      "saripati": "(1) Membangun aura dan karisma personal dapat dilakukan melalui sembilan kebiasaan komunikasi non-verbal dan batasan diri yang tegas."
+    },
+    {
+      "id": "S-0038",
+      "file": "sumber/S-0038.md",
+      "judul": "btw, aku punya koleksi ebook belajar CPNS di Gdrive yang mau belajar juga bisa DM yaa nanti aku kirim linknya",
+      "jenis": "postingan",
+      "penulis": "Taa (@Tataanepzf)",
+      "platform": "X",
+      "url": "https://x.com/Tataanepzf/status/2125930500531605530?a=rLqaSKm9lUYU7TByrOc&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "kesuksesan"
+      ],
+      "kartu": [
+        "K-0048"
+      ],
+      "saripati": "(1) Koleksi e-book belajar CPNS gratis tersedia melalui tautan Google Drive bagi siapa saja yang mengirim pesan langsung (DM)."
+    },
+    {
+      "id": "S-0039",
+      "file": "sumber/S-0039.md",
+      "judul": "Socrates was right.",
+      "jenis": "postingan",
+      "penulis": "Superman (@thesupermannx)",
+      "platform": "X",
+      "url": "https://x.com/thesupermannx/status/2125940535114473590?a=vYRuaIS4xPNNRUtCP_A&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0049"
+      ],
+      "saripati": "(1) Ketergantungan pada kecerdasan buatan memicu kondisi 'cognitive surrender' di mana manusia menelan mentah-mentah jawaban salah dari AI sekaligus merasa terlalu percaya diri."
+    },
+    {
+      "id": "S-0040",
+      "file": "sumber/S-0040.md",
+      "judul": "This is f*cking insane. Andrej Karpathy spent 8 years building AI at OpenAI and Tesla",
+      "jenis": "postingan",
+      "penulis": "kichiro (@0xkichiro)",
+      "platform": "X",
+      "url": "https://x.com/0xkichiro/status/2125992934978040150?a=Q1adoFf4hEVc-njFHKY&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0050"
+      ],
+      "saripati": "(1) Lapisan tambahan seperti harness, loop, dan graph menjadi kunci transisi dari model AI biasa menjadi agen otonom yang benar-benar fungsional."
+    },
+    {
+      "id": "S-0041",
+      "file": "sumber/S-0041.md",
+      "judul": "The deep work routine that changed my life (1 hour every morning)",
+      "jenis": "artikel",
+      "penulis": "DAN KOE (@thedankoe)",
+      "platform": "X",
+      "url": "https://x.com/thedankoe/status/2125643815122002300?a=cwRnHwGGGmOItYuNbX0&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0051"
+      ],
+      "saripati": "(1) Menginvestasikan 1 jam fokus penuh setiap pagi untuk membangun impian pribadi selama setahun dapat menghasilkan kemajuan masif dalam hidup."
+    },
+    {
+      "id": "S-0042",
+      "file": "sumber/S-0042.md",
+      "judul": "𝗠𝗖𝗣 𝘃𝘀 𝗔𝗣𝗜",
+      "jenis": "postingan",
+      "penulis": "𝗿𝗮𝗺𝗮𝗸𝗿𝘂𝘀𝗵𝗻𝗮— 𝗲/𝗮𝗰𝗰 (@techwith_ram)",
+      "platform": "X",
+      "url": "https://x.com/techwith_ram/status/2125794172615676403?s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0052"
+      ],
+      "saripati": "(1) Model Context Protocol (MCP) mengalihkan kendali pemilihan alat dari kode statis ke keputusan runtime agen AI."
+    },
+    {
+      "id": "S-0043",
+      "file": "sumber/S-0043.md",
+      "judul": "The fastest way to make progress is to shorten the distance between thinking and doing. Stop spending weeks pr",
+      "jenis": "postingan",
+      "penulis": "Stijn Noorman (@stijnnoorman)",
+      "platform": "X",
+      "url": "https://x.com/stijnnoorman/status/2125998021041061968?s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0053"
+      ],
+      "saripati": "(1) Percepat kemajuan dengan memperpendek jarak antara berpikir dan bertindak melalui eksekusi cepat."
+    },
+    {
+      "id": "S-0044",
+      "file": "sumber/S-0044.md",
+      "judul": "Never forfeit. Never surrender. Be relentless. Be hyper-competitive. The moment you collapse in your setbacks",
+      "jenis": "postingan",
+      "penulis": "Machiavelli Bot (@UnmodernmanBot)",
+      "platform": "X",
+      "url": "https://x.com/UnmodernmanBot/status/2125899867180392730?a=D1AqFkyyl7pm8eUmgvg&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "motivasi-dan-mindset"
+      ],
+      "kartu": [
+        "K-0054"
+      ],
+      "saripati": "(1) Jangan pernah menyerah dan tetaplah gigih bersaing meski menghadapi kemunduran."
     }
   ]
 }

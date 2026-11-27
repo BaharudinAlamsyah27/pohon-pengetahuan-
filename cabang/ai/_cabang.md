@@ -2,8 +2,8 @@
 cabang: ai
 nama: AI
 induk: ""
-jumlah-kartu: 14
-jumlah-sumber: 9
+jumlah-kartu: 22
+jumlah-sumber: 17
 diperbarui: 2026-11-27
 catatan-sudut-pandang: "2 sumber berbeda (draf awal)"
 ---
