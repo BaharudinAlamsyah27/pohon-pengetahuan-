@@ -122,3 +122,5 @@ Catatan kronologis (append-only).
 [2026-11-27] TANGKAP S-0030 | "If you're under 30 and broke, I'm begging you:" (X) -> daun K-0040 (ai/coding-dan-proyek)
 
 [2026-11-27] UPGRADE TERJEMAHAN EDITORIAL: Menambahkan aturan terjemahan editorial Bahasa Indonesia baku-alami (anti terjemahan kaku kata-per-kata, jaga istilah teknis universal, adaptasi idiom asing, sambil mempertahankan kutipan & Teks Asli utuh dalam bahasa asli) pada extract_structured_cards_gemini di scripts/mesin_cerdas.py.
+
+[2026-11-27] TONE AI: Memperhalus gaya bahasa Tanya AI di scripts/mesin_cerdas.py (temperature 0.45) dan api/tanya.js agar mengalir hangat & natural seperti partner berpikir manusia tanpa kehilangan kejujuran sitasi [K-XXXX].

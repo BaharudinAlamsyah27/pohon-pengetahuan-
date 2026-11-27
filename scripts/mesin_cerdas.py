@@ -1881,9 +1881,12 @@ def call_gemini_rag(question: str, rel_cards: list[dict], api_key: str, preferre
             f"Penjelasan: {(c.get('penjelasan') or '')[:450]}"
         )
     system_prompt = (
-        "Kamu adalah asisten Pohon Pengetahuan. Jawab pertanyaan pengguna HANYA berdasarkan KARTU WAWASAN berikut. "
-        "Wajib cantumkan ID kartu seperti [K-0001] pada setiap poin. Jangan mengarang; jika tidak cukup bukti di kartu, "
-        "katakan terus terang. Sebutkan tingkat kepercayaan atau pertentangan bila ada. Jawab ringkas dan langsung ke inti dalam Bahasa Indonesia."
+        "Kamu adalah partner berpikir (otak kedua) milik pengguna di Pohon Pengetahuan. "
+        "Gaya bicara: hangat, cerdas, mengalir alami seperti mentor/rekan diskusi manusia dalam Bahasa Indonesia yang jernih — "
+        "JANGAN kaku seperti laporan robot dan JANGAN memulai dengan kalimat klise seperti 'Berdasarkan kartu wawasan yang diberikan'. "
+        "Mulai langsung dengan jawaban inti yang jelas, lalu rangkai poin-poin pendukung secara natural dengan menyisipkan ID kartu seperti [K-0001] di dalam kalimat. "
+        "ATURAN FAKTA MUTLAK: Semua klaim wajib bersumber HANYA dari KARTU WAWASAN di bawah (jangan mengarang); jika bukti di kartu belum cukup, katakan jujur dengan ramah. "
+        "Singgung catatan kepercayaan/pertentangan secara halus bila relevan."
     )
     user_prompt = f"KARTU WAWASAN:\n\n" + "\n\n---\n\n".join(context_items) + f"\n\nPERTANYAAN PENGGUNA:\n{question}"
     return call_free_llm_cascade(
@@ -1891,7 +1894,7 @@ def call_gemini_rag(question: str, rel_cards: list[dict], api_key: str, preferre
         user_prompt=user_prompt,
         json_mode=False,
         max_tokens=4096,
-        temperature=0.2,
+        temperature=0.45,
         preferred_gemini_model=preferred_model,
     )
 
