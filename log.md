@@ -124,3 +124,5 @@ Catatan kronologis (append-only).
 [2026-11-27] UPGRADE TERJEMAHAN EDITORIAL: Menambahkan aturan terjemahan editorial Bahasa Indonesia baku-alami (anti terjemahan kaku kata-per-kata, jaga istilah teknis universal, adaptasi idiom asing, sambil mempertahankan kutipan & Teks Asli utuh dalam bahasa asli) pada extract_structured_cards_gemini di scripts/mesin_cerdas.py.
 
 [2026-11-27] TONE AI: Memperhalus gaya bahasa Tanya AI di scripts/mesin_cerdas.py (temperature 0.45) dan api/tanya.js agar mengalir hangat & natural seperti partner berpikir manusia tanpa kehilangan kejujuran sitasi [K-XXXX].
+
+[2026-11-27] 4 LOMPATAN KECERDASAN + IMPOR BORONGAN: Menambahkan Local Vector Embeddings (Gemini gemini-embedding-001 tersimpan di .indeks.db/kartu_vektor) ke Hybrid RAG query_relevant_cards(), mesin analyze_deep_intelligence() (Sintesis Lintas-Cabang, Detektor Pertentangan/Kompas Sikap, Kurator Aksi Adaptif Jurnal↔Pohon) via /api/analisis?jenis=kecerdasan + tombol #7 di tab Analisis, serta fitur Impor Borongan Banyak Link / bookmarks.html di #tangkap.

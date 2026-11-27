@@ -2,8 +2,8 @@
   "mode": "publik",
   "dibangun": "2026-11-27",
   "ringkasan": {
-    "total_kartu": 32,
-    "total_sumber": 27,
+    "total_kartu": 33,
+    "total_sumber": 28,
     "total_cabang": 12,
     "penerapan": {}
   },
@@ -45,8 +45,8 @@
       "nama": "AI",
       "induk": "",
       "file": "cabang/ai/_cabang.md",
-      "jumlah_kartu_tercatat": 17,
-      "jumlah_sumber_tercatat": 12,
+      "jumlah_kartu_tercatat": 18,
+      "jumlah_sumber_tercatat": 13,
       "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "2 sumber berbeda (draf awal)",
       "ringkasan": "Paket 30 skill SEO open-source dan 4 server MCP aktif untuk Claude Code serta Cursor guna mengotomasi audit teknis, programmatic SEO, dan ekstraksi transkrip video. Lima pustaka skill desain frontend (Anti UI Slop, ThinkUI, Taste Skill, Emil Design Engineering, dan Vercel Web Design Guidelines) untuk menghilangkan tampilan web kaku khas AI. Trik 3 langkah mendapatkan promo resmi Black Friday Google AI Pro ($99/tahun, 5TB + model tingkat lanjut) dengan menghapus langganan pihak ketiga Jio lalu memakai batu loncatan paket bulanan.",
@@ -69,8 +69,8 @@
         "Prompt & Agen AI → `cabang/ai/prompt-dan-agen/_cabang.md` (0 kartu)",
         "Perbandingan Model & Alat AI → `cabang/ai/perbandingan-model/_cabang.md` (0 kartu)"
       ],
-      "jumlah_kartu": 17,
-      "jumlah_sumber": 12,
+      "jumlah_kartu": 18,
+      "jumlah_sumber": 13,
       "urutan": 0
     },
     {
@@ -78,8 +78,8 @@
       "nama": "Coding & Proyek AI",
       "induk": "ai",
       "file": "cabang/ai/coding-dan-proyek/_cabang.md",
-      "jumlah_kartu_tercatat": 9,
-      "jumlah_sumber_tercatat": 7,
+      "jumlah_kartu_tercatat": 10,
+      "jumlah_sumber_tercatat": 8,
       "diperbarui": "2026-11-27",
       "catatan_sudut_pandang": "belum ada sumber",
       "ringkasan": "Lima pustaka skill desain frontend (Anti UI Slop, ThinkUI, Taste Skill, Emil Design Engineering, dan Vercel Web Design Guidelines) untuk menghilangkan tampilan web kaku khas AI. Gunakan file instruksi sistem (seperti GEMINI.md di Gemini atau Codex) agar agen AI bertindak sebagai asisten teknis saat menyiapkan simulator Android MuMu dan skrip konfigurasi. Perkakas resmi google-colab-cli memungkinkan developer menyalakan runtime CPU, GPU, dan TPU Google Colab serta menjalankan kode lokal langsung dari terminal.",
@@ -96,8 +96,8 @@
         "Berikutnya: -"
       ],
       "sub_cabang": [],
-      "jumlah_kartu": 9,
-      "jumlah_sumber": 7,
+      "jumlah_kartu": 10,
+      "jumlah_sumber": 8,
       "urutan": 0
     },
     {
@@ -1792,6 +1792,10 @@
       "relasi": [
         {
           "tipe": "terkait",
+          "ke": "K-0040"
+        },
+        {
+          "tipe": "terkait",
           "ke": "K-0015"
         }
       ],
@@ -1807,6 +1811,52 @@
       "kutipan": "学 AI 推理工程，可以从下面的步骤来。",
       "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite (map-reduce 2 segmen), prompt v2.1, keyakinan=0.95, grounding=1.0).",
       "penulis": "美研芒格君 (@Kay2289123)"
+    },
+    {
+      "id": "K-0040",
+      "file": "kartu/K-0040.md",
+      "ide": "Langkah strategis masuk ke industri AI melalui jalur teknik inferensi meliputi penguasaan GPU, penerapan praktik proyek nyata, dan penawaran langsung ke perusahaan.",
+      "bidang": "ai",
+      "cabang": "ai/coding-dan-proyek",
+      "tahap": "sebelum-20",
+      "jenis": "nasihat",
+      "kepercayaan": "sedang",
+      "dasar": "pengalaman-pribadi",
+      "tag": [
+        "ai-inference",
+        "gpu",
+        "pytorch",
+        "startup-ai",
+        "x"
+      ],
+      "konsep": [
+        "teknik-inferensi",
+        "infrastruktur-ai",
+        "optimasi-model",
+        "pengembangan-karier"
+      ],
+      "kondisi_berlaku": "di bawah 30 tahun dan tidak punya uang",
+      "model_ekstrak": "gemini-3.5-flash-lite",
+      "versi_prompt": "v2.1",
+      "sumber": [
+        "S-0030"
+      ],
+      "relasi": [
+        {
+          "tipe": "terkait",
+          "ke": "K-0039"
+        }
+      ],
+      "dibuat": "2026-11-27",
+      "status": "aktif",
+      "bintang": 0,
+      "alat": [],
+      "tugas": "coding-dan-proyek",
+      "tahap_kerja": "skrip",
+      "penjelasan": "1. Pilih satu bidang spesifik seperti pemrograman GPU, CUDA, optimasi model, kuantisasi, atau inferensi terdistribusi dan kuasai dasar-dasarnya.\n2. Pelajari perkakas esensial seperti PyTorch, Triton, vLLM, TensorRT-LLM, dan inference serving.\n3. Bangun 3-5 proyek nyata untuk mengoptimalkan LLM, mengurangi biaya inferensi, meningkatkan latensi, atau membangun sistem penyajian berthroughput tinggi serta lakukan benchmark.\n4. Buat daftar 50 startup AI, penyedia cloud GPU, serta perusahaan inferensi, pelajari hambatan infrastruktur mereka, lalu hubungi pendiri atau pimpinan teknik secara langsung untuk magang atau bekerja.\n5. Setelah memahami infrastruktur produksi AI secara mendalam selama 12-18 bulan, bangun startup inferensi, konsultan optimasi, atau perusahaan infrastruktur GPU milik sendiri.",
+      "kutipan": "Learn AI inference engineering",
+      "catatan_agen": "[inferensi AI] 1-call terstruktur (gemini-3.5-flash-lite, prompt v2.1, keyakinan=1.0, grounding=0.95).",
+      "penulis": "Unnati (@Unnati_builds24)"
     }
   ],
   "sumber": [
@@ -2299,6 +2349,24 @@
       ],
       "kartu": [
         "K-0039"
+      ],
+      "saripati": "(1) Langkah strategis masuk ke industri AI melalui jalur teknik inferensi meliputi penguasaan GPU, penerapan praktik proyek nyata, dan penawaran langsung ke perusahaan."
+    },
+    {
+      "id": "S-0030",
+      "file": "sumber/S-0030.md",
+      "judul": "If you're under 30 and broke, I'm begging you:",
+      "jenis": "postingan",
+      "penulis": "Unnati (@Unnati_builds24)",
+      "platform": "X",
+      "url": "https://x.com/Unnati_builds24/status/2125720221524865048?a=fRiRc0XEk4h92s7Klj4&s=20",
+      "tanggal_terbit": "tidak diketahui",
+      "tanggal_masuk": "2026-11-27",
+      "bidang": [
+        "ai"
+      ],
+      "kartu": [
+        "K-0040"
       ],
       "saripati": "(1) Langkah strategis masuk ke industri AI melalui jalur teknik inferensi meliputi penguasaan GPU, penerapan praktik proyek nyata, dan penawaran langsung ke perusahaan."
     }

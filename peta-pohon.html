@@ -3954,6 +3954,28 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-27", "ringkasan":
             <button class="btn-primary" id="btn-save-src">Simpan ke Pohon & Perpustakaan</button>
             <span id="tk-save-out" style="font-size:13px;color:var(--text-2)"></span>
           </div>
+
+          <details style="margin-top:16px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--surface-alt)">
+            <summary style="cursor:pointer;font-size:13.5px;font-weight:700">📥 Impor Borongan Banyak Link / Markah Sekaligus (Otomatis Tarik &amp; Simpan)</summary>
+            <div style="margin-top:10px;display:grid;gap:8px">
+              <p style="font-size:12.5px;color:var(--text-2);margin:0">
+                Tempel banyak link sekaligus (1 link per baris, maks 25 per proses) — atau unggah file ekspor <code>bookmarks.html</code> dari Chrome/Edge. Sistem otomatis menarik isi setiap link lalu menyimpannya menjadi kartu satu per satu.
+              </p>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <label class="btn-secondary" style="cursor:pointer;font-size:12px">
+                  📂 Baca File bookmarks.html
+                  <input type="file" id="tk-bm-file" accept=".html,.htm,.txt" style="display:none">
+                </label>
+                <span id="tk-bm-count" style="font-size:12px;color:var(--text-3)"></span>
+              </div>
+              <textarea id="tk-batch-urls" rows="5" class="search-input" style="width:100%;font-family:ui-monospace,monospace;font-size:12px;resize:vertical" placeholder="https://x.com/...\nhttps://youtube.com/watch?v=...\nhttps://artikel-bagus.com/..."></textarea>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <button type="button" class="btn-primary" id="btn-batch-import">🚀 Tarik &amp; Masukkan Semua</button>
+                <span id="tk-batch-status" style="font-size:12.5px;color:var(--text-2)"></span>
+              </div>
+              <div id="tk-batch-log" style="font-size:12px;max-height:180px;overflow:auto;display:grid;gap:4px"></div>
+            </div>
+          </details>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:16px">
@@ -4399,6 +4421,61 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-27", "ringkasan":
         btnSave.textContent = "Simpan ke Pohon & Perpustakaan";
       }
     });
+
+    // Handler Impor Borongan Banyak Link / bookmarks.html
+    document.getElementById("tk-bm-file")?.addEventListener("change", async (e) => {
+      const f = e.target.files?.[0];
+      if (!f) return;
+      const txt = await f.text();
+      const found = [...new Set((txt.match(/https?:\/\/[^\s"'<>]+/gi) || []).filter(u => !/chrome\.google|localhost|127\.0\.0\.1/i.test(u)))];
+      const ta = document.getElementById("tk-batch-urls");
+      if (ta) ta.value = found.slice(0, 25).join("\n");
+      const cnt = document.getElementById("tk-bm-count");
+      if (cnt) cnt.textContent = `Ditemukan ${found.length} link (dimuat ${Math.min(25, found.length)} teratas).`;
+    });
+
+    document.getElementById("btn-batch-import")?.addEventListener("click", async () => {
+      const btn = document.getElementById("btn-batch-import");
+      const ta = document.getElementById("tk-batch-urls");
+      const st = document.getElementById("tk-batch-status");
+      const logBox = document.getElementById("tk-batch-log");
+      const urls = [...new Set((ta?.value || "").split(/\r?\n/).map(s => s.trim()).filter(s => /^https?:\/\//i.test(s)))].slice(0, 25);
+      if (!urls.length) { if (st) st.textContent = "Masukkan minimal 1 link diawali http:// atau https://"; return; }
+      btn.disabled = true;
+      logBox.innerHTML = "";
+      let okCnt = 0;
+      for (let i = 0; i < urls.length; i++) {
+        const u = urls[i];
+        st.textContent = `Memproses ${i + 1} / ${urls.length}...`;
+        const row = document.createElement("div");
+        row.textContent = `⏳ [${i + 1}/${urls.length}] Menarik ${u.slice(0, 65)}...`;
+        logBox.prepend(row);
+        try {
+          let payload = { url: u, judul: "", penulis: "", platform: "web", jenis: "postingan", bidang: "", tahap: "semua-usia", buat_draf: true, max_daun: 1, subcabang_baru: "", teks_asli: u };
+          const fr = await fetch("/api/ambil-link", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url: u }) });
+          const fd = await fr.json().catch(() => ({}));
+          if (fr.ok && fd.ok && (fd.teks_asli || "").length >= 15) {
+            payload.judul = fd.judul || "";
+            payload.penulis = fd.penulis || "";
+            payload.platform = fd.platform || "web";
+            payload.jenis = fd.jenis || "postingan";
+            payload.teks_asli = fd.teks_asli;
+          }
+          const sr = await fetch("/api/simpan-sumber", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+          const sd = await sr.json().catch(() => ({}));
+          if (sr.ok && sd.ok) {
+            okCnt++;
+            row.innerHTML = `✅ [${i + 1}/${urls.length}] <strong>${esc(sd.id)}</strong> → <strong>${esc(sd.kartu_id || sd.digabung_ke || "-")}</strong> (${esc(sd.bidang || "")}) · ${esc(u.slice(0, 50))}`;
+          } else {
+            row.innerHTML = `⚠️ [${i + 1}/${urls.length}] Gagal: ${esc(sd.error || "error")} · ${esc(u.slice(0, 50))}`;
+          }
+        } catch {
+          row.innerHTML = `❌ [${i + 1}/${urls.length}] Gagal koneksi · ${esc(u.slice(0, 50))}`;
+        }
+      }
+      st.innerHTML = `<strong>Selesai! ${okCnt}/${urls.length} link masuk ke Pohon.</strong> <button class="btn-secondary" onclick="location.reload()">Muat Ulang Pohon</button>`;
+      btn.disabled = false;
+    });
   }
 
   // ======================== 9. ANALISIS BIG DATA: BANDINGKAN & PLAYBOOK (LOKAL SAJA) ========================
@@ -4423,6 +4500,7 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-27", "ringkasan":
           <button type="button" class="btn-secondary" id="btn-an-sains">4. Cek Kelengkapan &amp; Kualitas</button>
           <button type="button" class="btn-primary" id="btn-an-keputusan" title="Analisis dilema lewat lensa CEO, COO, & CFO berbasis kartu & persona">🎯 5. Konsultasi Keputusan (CEO·COO·CFO)</button>
           <button type="button" class="btn-secondary" id="btn-an-briefing" title="Ringkasan 7 hari terakhir + 1 eksperimen prioritas minggu ini">☀️ 6. Briefing Mingguan</button>
+          <button type="button" class="btn-primary" id="btn-an-kecerdasan" title="Indeks Vector Makna + Pola Emas Lintas-Cabang + Deteksi Pertentangan + Aksi Adaptif Jurnal">🧠 7. Kecerdasan Lintas-Cabang &amp; Aksi</button>
         </div>
       </div>
       <div id="an-out" role="status" aria-live="polite"></div>
@@ -4649,6 +4727,54 @@ window.__POHON_DATA__ = {"mode": "lokal", "dibangun": "2026-11-27", "ringkasan":
     document.getElementById("btn-an-playbook").addEventListener("click", () => runAnalisis("playbook"));
     document.getElementById("btn-an-tren").addEventListener("click", () => runAnalisis("tren"));
     document.getElementById("btn-an-sains").addEventListener("click", () => runAnalisis("sains"));
+
+    document.getElementById("btn-an-kecerdasan")?.addEventListener("click", async () => {
+      if (!HAS_SERVER) { outEl.innerHTML = `<div class="panel">Jalankan <code>1-Buka-Aplikasi-Lokal.bat</code> untuk menjalankan Kecerdasan Lintas-Cabang &amp; Vector Embedding.</div>`; return; }
+      outEl.innerHTML = `<div class="panel">🧠 Mengindeks vektor makna (.indeks.db), mencari pola emas lintas-cabang, mengecek Kompas Sikap Jurnal, &amp; memilih aksi adaptif hari ini...</div>`;
+      try {
+        const resp = await fetch("/api/analisis?jenis=kecerdasan");
+        const d = await resp.json();
+        if (!resp.ok || !d.ok) { outEl.innerHTML = `<div class="panel">${esc(d.error || "Gagal memproses.")}</div>`; return; }
+        const sintesisHtml = d.sintesis_ai
+          ? `<div class="panel" style="margin-bottom:14px;border:2px solid var(--border-strong);background:var(--surface)">
+               <div class="k-card-top" style="margin-bottom:8px">
+                 <h3 style="margin:0">✨ Sintesis Otak Kedua (Lintas-Cabang &amp; Aksi Hari Ini)</h3>
+                 <span class="badge">Vector Makna: ${d.vektor_terindeks}/${d.total_kartu} kartu</span>
+               </div>
+               <div style="white-space:pre-wrap;line-height:1.65;font-size:13.5px">${esc(d.sintesis_ai)}</div>
+             </div>`
+          : "";
+        const bridgesHtml = (d.lintas_cabang || []).length
+          ? `<div class="panel" style="margin-bottom:14px">
+               <h3 style="margin-bottom:8px">🌉 Jembatan Lintas-Cabang Terkuat (${d.lintas_cabang.length})</h3>
+               <ul class="rel-list">${d.lintas_cabang.map(b => `
+                 <li style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:6px 0;border-bottom:1px solid var(--border)">
+                   <button type="button" class="btn-secondary" data-open-card="${esc(b.dari)}" style="font-size:12px">${esc(b.dari)} (${esc(b.cabang_a)})</button>
+                   <span>↔</span>
+                   <button type="button" class="btn-secondary" data-open-card="${esc(b.ke)}" style="font-size:12px">${esc(b.ke)} (${esc(b.cabang_b)})</button>
+                   <span class="badge">skor ${b.skor}</span>
+                   <div style="width:100%;font-size:12px;color:var(--text-2)">${esc(b.ide_a)} <strong>×</strong> ${esc(b.ide_b)}</div>
+                 </li>`).join("")}
+               </ul>
+             </div>`
+          : `<div class="panel" style="margin-bottom:14px">Belum ada jembatan lintas-cabang yang cukup kuat.</div>`;
+        const aksiHtml = (d.aksi_adaptif || []).length
+          ? `<div class="panel">
+               <h3 style="margin-bottom:8px">⚡ Kurator Aksi Adaptif (Jurnal + Persona → Pohon)</h3>
+               <ul class="rel-list">${d.aksi_adaptif.map(a => `
+                 <li><button type="button" class="rel-item" data-open-card="${esc(a.id)}">
+                   <span><strong>${esc(a.id)}</strong> (${esc(a.cabang)}) — ${esc(a.ide)}</span>
+                   <span class="badge">${esc(a.penerapan)}</span>
+                 </button></li>`).join("")}
+               </ul>
+             </div>`
+          : "";
+        outEl.innerHTML = sintesisHtml + bridgesHtml + aksiHtml;
+        outEl.querySelectorAll("[data-open-card]").forEach(el => el.addEventListener("click", () => openCardPage(el.dataset.openCard)));
+      } catch {
+        outEl.innerHTML = `<div class="panel">Gagal menghubungi server lokal.</div>`;
+      }
+    });
 
     document.getElementById("btn-an-keputusan")?.addEventListener("click", async () => {
       if (!HAS_SERVER) { outEl.innerHTML = `<div class="panel">Jalankan <code>1-Buka-Aplikasi-Lokal.bat</code> untuk Konsultasi Keputusan Eksekutif.</div>`; return; }

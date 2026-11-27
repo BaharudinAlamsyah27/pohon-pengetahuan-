@@ -1276,6 +1276,8 @@ class PohonHandler(BaseHTTPRequestHandler):
                     self._send_json(200, mesin_cerdas.analyze_playbook(q or "ai"))
                 elif jenis == "sains":
                     self._send_json(200, mesin_cerdas.analyze_data_science())
+                elif jenis == "kecerdasan":
+                    self._send_json(200, mesin_cerdas.analyze_deep_intelligence())
                 else:
                     self._send_json(200, mesin_cerdas.analyze_trends())
             except Exception as exc:

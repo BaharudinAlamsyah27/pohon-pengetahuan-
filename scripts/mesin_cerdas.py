@@ -18,10 +18,12 @@ Algoritma yang tersedia (Python 3 standard library murni):
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
 import re
+import sqlite3
 import sys
 import urllib.error
 import urllib.request
@@ -1281,8 +1283,110 @@ def extract_structured_cards_gemini(
     return None
 
 
-def query_relevant_cards(query: str, cards: dict[str, dict], limit: int = 80) -> list[dict]:
-    """Pencarian Hibrida (RRF): gabungkan FTS5 BM25 + TF-IDF Cosine + ekspansi sinonim ID<->EN."""
+# ===================== PENCARIAN MAKNA: LOCAL VECTOR EMBEDDINGS (SQLite .indeks.db) =====================
+
+EMBED_DB_PATH = ROOT / ".indeks.db"
+EMBED_MODELS = ["gemini-embedding-001", "text-embedding-004"]
+
+
+def _init_vector_table(conn: sqlite3.Connection) -> None:
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS kartu_vektor ("
+        "id TEXT PRIMARY KEY, "
+        "content_hash TEXT NOT NULL, "
+        "vec TEXT NOT NULL)"
+    )
+
+
+def _cosine_dense(a: list[float], b: list[float]) -> float:
+    if not a or not b or len(a) != len(b):
+        return 0.0
+    dot = sum(x * y for x, y in zip(a, b))
+    na = math.sqrt(sum(x * x for x in a))
+    nb = math.sqrt(sum(y * y for y in b))
+    if na == 0.0 or nb == 0.0:
+        return 0.0
+    return dot / (na * nb)
+
+
+def get_text_embedding(text: str, api_key: str = "") -> list[float] | None:
+    """Ambil vektor makna (256 dimensi) lewat Gemini Embedding API gratis (0 dependensi)."""
+    key = (api_key or "").strip()
+    if not key:
+        env = load_local_env()
+        key = (os.environ.get("GEMINI_API_KEY") or env.get("GEMINI_API_KEY") or "").strip()
+    if not key:
+        return None
+    snippet = (text or "").strip()[:1500]
+    if len(snippet) < 3:
+        return None
+    for mdl in EMBED_MODELS:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{mdl}:embedContent?key={key}"
+        payload = {
+            "model": f"models/{mdl}",
+            "content": {"parts": [{"text": snippet}]},
+            "outputDimensionality": 256,
+        }
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                data = json.loads(resp.read().decode("utf-8", errors="replace"))
+            vals = (data.get("embedding") or {}).get("values")
+            if isinstance(vals, list) and len(vals) >= 64:
+                return [float(v) for v in vals]
+        except Exception:
+            continue
+    return None
+
+
+def load_or_update_card_vectors(cards: dict[str, dict], max_new: int = 12) -> dict[str, list[float]]:
+    """Muat vektor kartu dari SQLite .indeks.db; hitung otomatis hingga max_new kartu baru/berubah."""
+    vecs: dict[str, list[float]] = {}
+    if not cards:
+        return vecs
+    env = load_local_env()
+    api_key = (os.environ.get("GEMINI_API_KEY") or env.get("GEMINI_API_KEY") or "").strip()
+    try:
+        conn = sqlite3.connect(str(EMBED_DB_PATH), timeout=5)
+        _init_vector_table(conn)
+        cached = {
+            row[0]: (row[1], row[2])
+            for row in conn.execute("SELECT id, content_hash, vec FROM kartu_vektor").fetchall()
+        }
+        updated = 0
+        for cid, c in cards.items():
+            blob = f"{c.get('cabang', '')} | {c.get('ide', '')} | {(c.get('penjelasan') or '')[:500]} | {' '.join(c.get('konsep') or [])}"
+            h = hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
+            if cid in cached and cached[cid][0] == h:
+                try:
+                    vecs[cid] = json.loads(cached[cid][1])
+                    continue
+                except Exception:
+                    pass
+            if api_key and updated < max_new:
+                emb = get_text_embedding(blob, api_key=api_key)
+                if emb:
+                    vecs[cid] = emb
+                    conn.execute(
+                        "INSERT OR REPLACE INTO kartu_vektor (id, content_hash, vec) VALUES (?, ?, ?)",
+                        (cid, h, json.dumps(emb)),
+                    )
+                    updated += 1
+        if updated:
+            conn.commit()
+        conn.close()
+    except Exception:
+        pass
+    return vecs
+
+
+def query_relevant_cards(query: str, cards: dict[str, dict], limit: int = 80, use_vectors: bool = True) -> list[dict]:
+    """Pencarian Hibrida (RRF): FTS5 BM25 + TF-IDF Cosine + Vector Embedding Makna + sinonim ID<->EN."""
     # Kecualikan cabang kliping-hiburan dari Tanya AI, Saran, dan Tanggapan Jurnal agar otak utama tetap bersih
     cards = {cid: c for cid, c in cards.items() if c.get("cabang") != "kliping-hiburan" and c.get("bidang") != "kliping-hiburan"}
     toks = tokenize(query)
@@ -1319,7 +1423,24 @@ def query_relevant_cards(query: str, cards: dict[str, dict], limit: int = 80) ->
             if sim > 0.01:
                 rrf_scores[cid] += 1.0 / (k_rrf + rank)
 
-    # 3) Boost kecocokan frasa / token langsung
+    # 3) Sinyal Vector Embeddings Makna (Hybrid Semantic RAG — menemukan makna sama meski 0 kata sama!)
+    if use_vectors and query and len(query.strip()) >= 4 and cards:
+        try:
+            card_vecs = load_or_update_card_vectors(cards, max_new=8)
+            if card_vecs:
+                q_emb = get_text_embedding(query)
+                if q_emb:
+                    sem_ranked = sorted(
+                        ((cid, _cosine_dense(q_emb, vec)) for cid, vec in card_vecs.items() if cid in rrf_scores),
+                        key=lambda x: -x[1],
+                    )
+                    for rank, (cid, sim) in enumerate(sem_ranked[:25], start=1):
+                        if sim >= 0.45:
+                            rrf_scores[cid] += 1.35 / (k_rrf + rank)
+        except Exception:
+            pass
+
+    # 4) Boost kecocokan frasa / token langsung
     low_q = (query or "").lower().strip()
     for cid, c in cards.items():
         blob = f"{c['ide']} {c['penjelasan']} {' '.join(c['tag'])} {c['cabang']} {' '.join(detect_tools_in_card(c))}".lower()
@@ -2091,6 +2212,139 @@ def answer_question(question: str) -> dict:
         "jawaban": level1_text,
         "rujukan": rujukan,
         "pertentangan": konflik_list,
+    }
+
+
+def analyze_deep_intelligence() -> dict:
+    """
+    Mesin 4 Lompatan Kecerdasan:
+      1. Indeks Vector Embedding Makna (.indeks.db / kartu_vektor)
+      2. Penemu Pola Lintas-Cabang (Cross-Domain Synthesis)
+      3. Detektor Pertentangan & Evolusi Prinsip (Kartu vs Kartu & Kartu vs Kompas Sikap Jurnal)
+      4. Kurator Aksi Adaptif (Jurnal terbaru + persona.md -> 1-2 kartu paling relevan hari ini)
+    """
+    cards_all, _, _ = load_active()
+    cards = {
+        cid: c for cid, c in cards_all.items()
+        if c.get("cabang") != "kliping-hiburan" and c.get("bidang") != "kliping-hiburan"
+    }
+    if not cards:
+        return {"ok": True, "vektor_terindeks": 0, "total_kartu": 0, "lintas_cabang": [], "pertentangan": [], "aksi_adaptif": [], "sintesis_ai": ""}
+
+    # 1. Perbarui cache vector embedding (maks 15 kartu per panggilan agar cepat)
+    vecs = load_or_update_card_vectors(cards, max_new=15)
+    tfidf_vecs = build_tfidf(cards)
+
+    # 2. Temukan pasangan kartu paling kuat dari BIDANG BERBEDA (Cross-Domain Bridges)
+    cids = sorted(cards.keys())
+    bridges: list[dict] = []
+    for i in range(len(cids)):
+        c1 = cards[cids[i]]
+        b1 = c1.get("bidang") or (c1.get("cabang") or "").split("/")[0]
+        for j in range(i + 1, len(cids)):
+            c2 = cards[cids[j]]
+            b2 = c2.get("bidang") or (c2.get("cabang") or "").split("/")[0]
+            if b1 == b2:
+                continue
+            sem_sim = _cosine_dense(vecs.get(cids[i], []), vecs.get(cids[j], [])) if (cids[i] in vecs and cids[j] in vecs) else 0.0
+            lex_sim = cosine_sim(tfidf_vecs.get(cids[i], {}), tfidf_vecs.get(cids[j], {}))
+            shared_k = sorted(set(c1.get("konsep") or []) & set(c2.get("konsep") or []))
+            score = (sem_sim * 0.65 if sem_sim > 0 else 0.0) + lex_sim * 0.35 + len(shared_k) * 0.12
+            if score >= 0.18 or (sem_sim >= 0.58):
+                bridges.append({
+                    "dari": c1["id"],
+                    "cabang_a": c1["cabang"],
+                    "ide_a": c1["ide"][:120],
+                    "ke": c2["id"],
+                    "cabang_b": c2["cabang"],
+                    "ide_b": c2["ide"][:120],
+                    "skor": round(score, 3),
+                    "konsep_bersama": shared_k,
+                })
+    bridges.sort(key=lambda x: -x["skor"])
+    top_bridges = bridges[:5]
+
+    # 3. Detektor Pertentangan & Evolusi Prinsip (antar-kartu + vs Kompas Sikap Jurnal)
+    conflicts: list[dict] = []
+    seen_pairs: set[tuple[str, str]] = set()
+    for cid, c in cards.items():
+        for rel in c.get("relasi") or []:
+            if rel.get("tipe") == "bertentangan-dengan":
+                other = rel.get("ke", "")
+                pair = tuple(sorted([cid, other]))
+                if other in cards and pair not in seen_pairs:
+                    seen_pairs.add(pair)
+                    conflicts.append({
+                        "jenis": "antar-kartu",
+                        "a": cid,
+                        "ide_a": c["ide"][:110],
+                        "b": other,
+                        "ide_b": cards[other]["ide"][:110],
+                    })
+    # Cek Kompas Sikap di jurnal/ (pribadi lokal saja)
+    kompas_lines: list[str] = []
+    kompas_fp = ROOT / "jurnal" / "_kompas_sikap.md"
+    if kompas_fp.is_file():
+        for ln in kompas_fp.read_text(encoding="utf-8", errors="ignore").splitlines():
+            if ln.strip().startswith("- "):
+                kompas_lines.append(ln.strip()[2:][:160])
+
+    # 4. Kurator Aksi Adaptif (Jurnal 3 hari terakhir + persona.md -> pilih 2 kartu belum-dicoba paling relevan)
+    jurnal_snippets: list[str] = []
+    jurnal_dir = ROOT / "jurnal"
+    if jurnal_dir.is_dir():
+        jfiles = sorted(
+            [p for p in jurnal_dir.rglob("*.md") if not p.name.startswith("_")],
+            key=lambda p: p.name,
+            reverse=True,
+        )[:3]
+        for jf in jfiles:
+            jurnal_snippets.append(jf.read_text(encoding="utf-8", errors="ignore")[:500])
+    persona_txt = (ROOT / "persona.md").read_text(encoding="utf-8", errors="ignore")[:800] if (ROOT / "persona.md").is_file() else ""
+    context_query = " ".join(jurnal_snippets) + " " + persona_txt
+    untried = {cid: c for cid, c in cards.items() if c.get("penerapan") in ("belum-dicoba", "sedang-dicoba")}
+    adaptive_pool = query_relevant_cards(context_query[:600], untried or cards, limit=3, use_vectors=True) if context_query.strip() else list((untried or cards).values())[:3]
+    aksi_adaptif = [
+        {
+            "id": c["id"],
+            "cabang": c["cabang"],
+            "ide": c["ide"],
+            "penerapan": c.get("penerapan", "belum-dicoba"),
+            "kepercayaan": c.get("kepercayaan", "sedang"),
+        }
+        for c in adaptive_pool[:2]
+    ]
+
+    # 5. Sintesis AI Hangat (Cross-Domain Prinsip Emas + Aksi Adaptif Hari Ini)
+    sintesis_ai = ""
+    if has_any_free_llm_key() and (top_bridges or aksi_adaptif):
+        bridge_txt = "\n".join(
+            f"- [{b['dari']}] ({b['cabang_a']}): {b['ide_a']}  <-->  [{b['ke']}] ({b['cabang_b']}): {b['ide_b']}"
+            for b in top_bridges[:4]
+        ) or "(belum ada jembatan lintas-cabang kuat)"
+        aksi_txt = "\n".join(f"- [{a['id']}] ({a['cabang']}): {a['ide']}" for a in aksi_adaptif)
+        kompas_txt = "\n".join(f"- {k}" for k in kompas_lines[:5]) or "(belum ada Kompas Sikap)"
+        sys_p = (
+            "Kamu adalah mentor strategis & otak kedua pengguna di Pohon Pengetahuan. "
+            "Tulis ringkasan singkat, hangat, mengalir alami dalam Bahasa Indonesia dengan 3 bagian padat:\n"
+            "1) **Pola Emas Lintas-Cabang**: tarik 1-2 wawasan besar yang menghubungkan kartu lintas bidang di bawah (wajib sebut ID [K-XXXX]).\n"
+            "2) **Cek Evolusi Prinsip**: soroti singkat jika ada ketegangan menarik antara kartu atau dengan Kompas Sikap (jika belum ada, katakan selaras).\n"
+            "3) **1 Langkah Aksi Hari Ini**: pilih 1 kartu adaptif paling berdampak dan beri 1 langkah konkret 10 menit yang bisa langsung dicoba hari ini."
+        )
+        usr_p = f"JEMBATAN LINTAS-CABANG:\n{bridge_txt}\n\nKARTU AKSI ADAPTIF:\n{aksi_txt}\n\nKOMPAS SIKAP JURNAL:\n{kompas_txt}"
+        ai_out, _, _ = call_free_llm_cascade(sys_p, usr_p, json_mode=False, max_tokens=1400, temperature=0.45)
+        if ai_out:
+            sintesis_ai = ai_out
+
+    return {
+        "ok": True,
+        "vektor_terindeks": len(vecs),
+        "total_kartu": len(cards),
+        "lintas_cabang": top_bridges,
+        "pertentangan": conflicts,
+        "kompas_sikap_count": len(kompas_lines),
+        "aksi_adaptif": aksi_adaptif,
+        "sintesis_ai": sintesis_ai,
     }
 
 
